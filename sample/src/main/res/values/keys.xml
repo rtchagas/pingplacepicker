@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- TODO: Move to Firebase remote configs -->
+    <string name="key_google_apis_android">Add here an Android restricted key</string>
+    <string name="key_google_apis_geolocation">Add here an Geolocation API only restricted key</string>
+
+</resources>

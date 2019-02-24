@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Ping Sample</string>
+    <string name="show_picker">Ping!</string>
+</resources>

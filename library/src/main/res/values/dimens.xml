@@ -1,0 +1,23 @@
+<resources>
+
+    <dimen name="icon_size_small">24dp</dimen>
+    <dimen name="icon_size_medium">32dp</dimen>
+    <dimen name="tall_toolbar_height">580dp</dimen>
+    <dimen name="button_my_location_size">48dp</dimen>
+    <dimen name="place_confirm_images_height">140dp</dimen>
+
+    <!-- Do not change! -->
+    <dimen name="default_margin">16dp</dimen>
+    <dimen name="guide_start_margin">16dp</dimen>
+    <dimen name="guide_content_margin">70dp</dimen>
+    <dimen name="guide_end_margin">16dp</dimen>
+    <dimen name="selector_margin">20dp</dimen>
+    <dimen name="card_search_height">48dp</dimen>
+    <dimen name="card_search_margin_top">@dimen/default_margin</dimen>
+    <dimen name="card_search_margin_horizontal">8dp</dimen>
+    <dimen name="card_search_content_start_margin">8dp</dimen>
+    <dimen name="card_search_content_margin">62dp</dimen>
+    <dimen name="dialog_margin">24dp</dimen>
+    <dimen name="marker_inner_icon_size">10dp</dimen>
+
+</resources>

@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Ping Place Picker</string>
+
+    <string name="picker_title">Select a location</string>
+    <string name="picker_select_this">Select this location</string>
+    <string name="picker_or_select_nearby">Or choose a nearby place</string>
+    <string name="picker_load_places_error">"Couldn't load nearby places…"</string>
+    <string name="picker_load_this_place_error">"Couldn't find the selected place…"</string>
+    <string name="picker_place_confirm">Use this place?</string>
+    <string name="picker_place_confirm_cancel">Change location</string>
+
+    <!-- Content descriptions -->
+    <string name="description_place_image">A photo of the selected place</string>
+    <string name="description_place_map">A map of the selected place</string>
+
+    <!-- Permissions -->
+    <string name="permission_fine_location_title">Location Permission</string>
+    <string name="permission_fine_location_message">We only need your location to help you find relevant nearby places.</string>
+
+</resources>

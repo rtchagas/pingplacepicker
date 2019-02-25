@@ -4,6 +4,7 @@
 Because Ping Is Not Google's Place Picker :)
 
 
+
 ### How to download
 
 Add Jitpack in your root build.gradle at the end of repositories:
@@ -20,3 +21,6 @@ Step 2. Add the dependency
 	dependencies {
 	        implementation 'com.github.rtchagas:pingplacepicker:1.0.0'
 	}
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbLTMxMjcwNTUxMl19
+-->

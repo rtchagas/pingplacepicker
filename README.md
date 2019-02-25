@@ -75,27 +75,27 @@ Check the [sample](https://github.com/rtchagas/pingplacepicker/tree/master/sampl
     }
     
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {  
-	    super.onActivityResult(requestCode, resultCode, data)  
-	    if ((requestCode == REQUEST_PLACE_PICKER) && (resultCode == Activity.RESULT_OK)) {  
-	        val place: Place? = PingPlacePicker.getPlace(data!!)  
-	        toast("You selected: ${place?.name}")  
-	    }  
+	super.onActivityResult(requestCode, resultCode, data)  
+	if ((requestCode == REQUEST_PLACE_PICKER) && (resultCode == Activity.RESULT_OK)) {  
+	    val place: Place? = PingPlacePicker.getPlace(data!!)  
+	    toast("You selected: ${place?.name}")  
+	}  
     }
 ```
 
 ### - Java
 ```java
     private void showPlacePicker() {
-		PingPlacePicker.IntentBuilder builder = new PingPlacePicker.IntentBuilder();
-		builder.setAndroidApiKey("YOUR_ANDROID_API_KEY")  
-		       .setGeolocationApiKey("YOUR_GEOLOCATION_API_KEY");
-		try {
-		    Intent placeIntent = builder.build(getActivity());  
-		    startActivityForResult(placeIntent, REQUEST_PLACE_PICKER);  
-		}  
-		catch (Exception ex) {  
-		    // Google Play services is not available... 
-		}
+	PingPlacePicker.IntentBuilder builder = new PingPlacePicker.IntentBuilder();
+	builder.setAndroidApiKey("YOUR_ANDROID_API_KEY")  
+	       .setGeolocationApiKey("YOUR_GEOLOCATION_API_KEY");
+	try {
+	    Intent placeIntent = builder.build(getActivity());  
+	    startActivityForResult(placeIntent, REQUEST_PLACE_PICKER);  
+	}  
+	catch (Exception ex) {  
+	    // Google Play services is not available... 
+	}
     }
     
     @Override  

@@ -29,7 +29,13 @@ class MainActivity : AppCompatActivity() {
         pingBuilder.setAndroidApiKey(getString(R.string.key_google_apis_android))
         pingBuilder.setGeolocationApiKey(getString(R.string.key_google_apis_geolocation))
 
-        startActivityForResult(pingBuilder.build(this), pingActivityRequestCode)
+        try {
+            val placeIntent = pingBuilder.build(this)
+            startActivityForResult(placeIntent, pingActivityRequestCode)
+        }
+        catch (ex: Exception) {
+            toast("Google Play Services is not Available")
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

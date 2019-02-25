@@ -1,8 +1,7 @@
-# PING Place Picker
+# PING - Because Ping Is Not Google's Place Picker 😉
 [![](https://jitpack.io/v/rtchagas/pingplacepicker.svg)](https://jitpack.io/#rtchagas/pingplacepicker)
 
-Because Ping Is Not Google's Place Picker :)
-
+ 
 If you're here looking for a place picker you probably read this:
 
 ![Google Place Picker was deprecated](https://github.com/rtchagas/pingplacepicker/blob/master/images/google_picker_deprecated.png?raw=true)
@@ -132,6 +131,12 @@ As some features are charged by Google, you can alter the default **PING** Place
 <!-- 0.007 USD per each (7.00 USD per 1000) -->  
 <bool name="show_confirmation_map">true</bool>
 ```
+
+## Contribute
+
+Let's together make PING awesome!
+
+Please feel free to contribute with improvements.
 
 <!--stackedit_data:
 eyJoaXN0b3J5IjpbLTE2OTEwOTMwMTIsNjk1MDQ1MzY0LDE4NT

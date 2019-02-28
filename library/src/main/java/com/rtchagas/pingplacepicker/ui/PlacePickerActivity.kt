@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.doOnLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -345,16 +346,22 @@ class PlacePickerActivity : AppCompatActivity(), OnMapReadyCallback,
         // Disable vertical scrolling on appBarLayout (it messes with the map...)
 
         // Set default behavior
-        val params = appBarLayout.layoutParams as CoordinatorLayout.LayoutParams
-        params.behavior = AppBarLayout.Behavior()
+        val appBarLayoutParams = appBarLayout.layoutParams as CoordinatorLayout.LayoutParams
+        appBarLayoutParams.behavior = AppBarLayout.Behavior()
 
         // Disable the drag
-        val behavior = params.behavior as AppBarLayout.Behavior
+        val behavior = appBarLayoutParams.behavior as AppBarLayout.Behavior
         behavior.setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
             override fun canDrag(appBarLayout: AppBarLayout): Boolean {
                 return false
             }
         })
+
+        // Set the size of AppBarLayout to 68% of the total height
+        coordinator.doOnLayout {
+            val size : Int = (it.height * 68) / 100
+            appBarLayoutParams.height = size
+        }
     }
 
     private fun initMap() {

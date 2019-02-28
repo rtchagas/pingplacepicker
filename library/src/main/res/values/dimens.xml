@@ -2,7 +2,6 @@
 
     <dimen name="icon_size_small">24dp</dimen>
     <dimen name="icon_size_medium">32dp</dimen>
-    <dimen name="tall_toolbar_height">580dp</dimen>
     <dimen name="button_my_location_size">48dp</dimen>
     <dimen name="place_confirm_images_height">140dp</dimen>
 

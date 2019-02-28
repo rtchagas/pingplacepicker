@@ -2,7 +2,7 @@
 [![](https://jitpack.io/v/rtchagas/pingplacepicker.svg)](https://jitpack.io/#rtchagas/pingplacepicker)
 
  
-If you're here looking for a place picker you probably read this:
+If you're here looking for a place picker you have probably read this:
 
 ![Google Place Picker was deprecated](https://github.com/rtchagas/pingplacepicker/blob/master/images/google_picker_deprecated.png?raw=true)
 

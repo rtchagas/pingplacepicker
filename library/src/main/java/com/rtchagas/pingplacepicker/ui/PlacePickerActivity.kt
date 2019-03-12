@@ -5,7 +5,9 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.location.Location
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -231,7 +233,14 @@ class PlacePickerActivity : AppCompatActivity(), OnMapReadyCallback,
             val locationResult = fusedLocationProviderClient.lastLocation
             locationResult
                     ?.addOnFailureListener(this) { setDefaultLocation() }
-                    ?.addOnSuccessListener(this) { location ->
+                    ?.addOnSuccessListener(this) { location: Location? ->
+
+                        // In rare cases location may be null...
+                        if (location == null) {
+                            Handler().postDelayed({ getDeviceLocation(animate) }, 1000)
+                            return@addOnSuccessListener
+                        }
+
                         // Set the map's camera position to the current location of the device.
                         lastKnownLocation = LatLng(location.latitude, location.longitude)
 
@@ -359,7 +368,7 @@ class PlacePickerActivity : AppCompatActivity(), OnMapReadyCallback,
 
         // Set the size of AppBarLayout to 68% of the total height
         coordinator.doOnLayout {
-            val size : Int = (it.height * 68) / 100
+            val size: Int = (it.height * 68) / 100
             appBarLayoutParams.height = size
         }
     }

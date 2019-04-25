@@ -43,7 +43,7 @@ Step 2. Add the dependency
 
 	dependencies {
 	        // Places library  
-            implementation 'com.google.android.libraries.places:places:1.0.0'
+            implementation 'com.google.android.libraries.places:places:1.1.0'
 	        // PING Place Picker
 	        implementation 'com.github.rtchagas:pingplacepicker:1.0.+'
 	}

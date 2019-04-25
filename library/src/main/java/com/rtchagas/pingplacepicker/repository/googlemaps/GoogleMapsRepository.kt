@@ -43,8 +43,8 @@ class GoogleMapsRepository @Inject constructor(
             googleClient.findCurrentPlace(request).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     task.result?.let {
-                        sortByLikelihood(it.placeLikelihoods)
-                        emitter.onSuccess(it.placeLikelihoods.map { likelihood -> likelihood.place })
+                        val placeList = sortByLikelihood(it.placeLikelihoods)
+                        emitter.onSuccess(placeList.map { likelihood -> likelihood.place })
                     }
                     // Empty result
                     emitter.onSuccess(listOf())
@@ -93,7 +93,7 @@ class GoogleMapsRepository @Inject constructor(
 
         return googleMapsAPI.findByLocation(paramLocation, PingPlacePicker.geoLocationApiKey)
                 .flatMap { result: GeocodeResult ->
-                    if (("OK" == result.status) && !result.results.isEmpty()) {
+                    if (("OK" == result.status) && result.results.isNotEmpty()) {
                         return@flatMap getPlaceById(result.results[0].placeId)
                     }
                     return@flatMap Single.just(null)
@@ -137,9 +137,12 @@ class GoogleMapsRepository @Inject constructor(
     /**
      * Sorts the list by Likelihood. The best ranked places come first.
      */
-    private fun sortByLikelihood(placeLikelihoods: MutableList<PlaceLikelihood>) {
+    private fun sortByLikelihood(placeLikelihoods: List<PlaceLikelihood>): List<PlaceLikelihood> {
 
-        placeLikelihoods.sortByDescending { it.likelihood }
+        val mutableList = placeLikelihoods.toMutableList()
 
+        mutableList.sortByDescending { it.likelihood }
+
+        return mutableList
     }
 }

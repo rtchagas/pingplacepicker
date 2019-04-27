@@ -57,10 +57,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
     implementation 'com.google.android.libraries.places:places:1.1.0'
 
-    // Dagger2
-    def dagger2Version = '2.21'
-    implementation "com.google.dagger:dagger:${dagger2Version}"
-    kapt "com.google.dagger:dagger-compiler:${dagger2Version}"
+    // Koin for Android
+    implementation 'org.koin:koin-android:2.0.0-rc-2'
+    implementation 'org.koin:koin-android-viewmodel:2.0.0-rc-2'
 
     // Rx
     implementation 'io.reactivex.rxjava2:rxjava:2.2.4'

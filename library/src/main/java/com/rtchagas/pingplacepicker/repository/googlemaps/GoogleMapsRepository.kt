@@ -15,10 +15,9 @@ import com.rtchagas.pingplacepicker.PingPlacePicker
 import com.rtchagas.pingplacepicker.model.GeocodeResult
 import com.rtchagas.pingplacepicker.repository.PlaceRepository
 import io.reactivex.Single
-import javax.inject.Inject
 
 
-class GoogleMapsRepository @Inject constructor(
+class GoogleMapsRepository constructor(
         private val googleClient: PlacesClient,
         private val googleMapsAPI: GoogleMapsAPI)
     : PlaceRepository {

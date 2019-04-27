@@ -8,9 +8,8 @@ import com.rtchagas.pingplacepicker.repository.PlaceRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
 
-class PlacePickerViewModel @Inject constructor(private var repository: PlaceRepository)
+class PlacePickerViewModel constructor(private var repository: PlaceRepository)
     : BaseViewModel() {
 
     // Keep the place list in this view model state

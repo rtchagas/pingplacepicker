@@ -18,7 +18,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.doOnLayout
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -37,16 +36,16 @@ import com.karumi.dexter.listener.single.BasePermissionListener
 import com.rtchagas.pingplacepicker.PingPlacePicker
 import com.rtchagas.pingplacepicker.R
 import com.rtchagas.pingplacepicker.helper.PermissionsHelper
-import com.rtchagas.pingplacepicker.inject.DaggerInjector
+import com.rtchagas.pingplacepicker.inject.PingKoinComponent
 import com.rtchagas.pingplacepicker.viewmodel.PlacePickerViewModel
 import com.rtchagas.pingplacepicker.viewmodel.Resource
-import com.rtchagas.pingplacepicker.viewmodel.inject.PingViewModelFactory
 import kotlinx.android.synthetic.main.activity_place_picker.*
 import org.jetbrains.anko.toast
-import javax.inject.Inject
+import org.koin.android.viewmodel.ext.android.viewModel
 
 
-class PlacePickerActivity : AppCompatActivity(), OnMapReadyCallback,
+class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
+        OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener,
         PlaceConfirmDialogFragment.OnPlaceConfirmedListener {
 
@@ -77,27 +76,17 @@ class PlacePickerActivity : AppCompatActivity(), OnMapReadyCallback,
 
     private var placeAdapter: PlacePickerAdapter? = null
 
+    private val viewModel: PlacePickerViewModel by viewModel()
+
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-
-    private lateinit var viewModel: PlacePickerViewModel
-
-    @Inject
-    lateinit var viewModelFactory: PingViewModelFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_place_picker)
 
-        // Inject dependencies
-        DaggerInjector.getInjector(application).inject(this)
-
         // Configure the toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        // Initialize the ViewModel for this activity
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get<PlacePickerViewModel>(PlacePickerViewModel::class.java)
 
         // Retrieve location and camera position from saved instance state.
         lastKnownLocation = savedInstanceState

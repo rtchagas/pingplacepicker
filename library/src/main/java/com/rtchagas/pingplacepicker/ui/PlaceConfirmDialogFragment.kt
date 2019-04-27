@@ -11,22 +11,20 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.transition.TransitionManager
 import com.google.android.libraries.places.api.model.Place
 import com.rtchagas.pingplacepicker.Config
 import com.rtchagas.pingplacepicker.PingPlacePicker
 import com.rtchagas.pingplacepicker.R
-import com.rtchagas.pingplacepicker.inject.DaggerInjector
+import com.rtchagas.pingplacepicker.inject.PingKoinComponent
 import com.rtchagas.pingplacepicker.viewmodel.PlaceConfirmDialogViewModel
 import com.rtchagas.pingplacepicker.viewmodel.Resource
-import com.rtchagas.pingplacepicker.viewmodel.inject.PingViewModelFactory
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_dialog_place_confirm.view.*
-import javax.inject.Inject
+import org.koin.android.viewmodel.ext.android.viewModel
 
 
-class PlaceConfirmDialogFragment : AppCompatDialogFragment() {
+class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent {
 
     companion object {
 
@@ -47,22 +45,12 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment() {
 
     var confirmListener: OnPlaceConfirmedListener? = null
 
-    @Inject
-    lateinit var viewModelFactory: PingViewModelFactory
-
-    private lateinit var viewModel: PlaceConfirmDialogViewModel
+    private val viewModel: PlaceConfirmDialogViewModel by viewModel()
 
     private lateinit var place: Place
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Inject dependencies
-        DaggerInjector.getInjector(activity!!.application).inject(this)
-
-        // Initialize the ViewModel for this fragment
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get<PlaceConfirmDialogViewModel>(PlaceConfirmDialogViewModel::class.java)
 
         // Check mandatory parameters for this fragment
         if ((arguments == null) || (arguments?.getParcelable<Place>(ARG_PLACE) == null)) {

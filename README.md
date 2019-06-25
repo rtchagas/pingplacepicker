@@ -113,12 +113,12 @@ Check the [sample](https://github.com/rtchagas/pingplacepicker/tree/master/sampl
 
 PING needs two API keys in order to work.
 
-It was decided to split the API keys to clearly distinguish what you're going to be charged for. Also, the Geolocation API does not allow an Android API key to be used. To not expose an unrestricted key for all APIs, the Geolocation API key is now required.
+It was decided to split the API keys to clearly distinguish what you're going to be charged for. Also, the Geocoding API does not allow an Android API key to be used. To not expose an unrestricted key for all APIs, the Geocoding API key is now required.
 
 | Key | Restriction | Purpose
 |--|--|--|
 | Android key | [Android Applications](https://developers.google.com/places/android-sdk/signup#restrict-key) | Used as the Places API key. Main purpose is to retrieve the nearby places.
-| Geolocation key | [API: Geolocation API only](https://cloud.google.com/docs/authentication/api-keys#api_key_restrictions) | Used to perform reverse geocoding on the current user position. That is, discover the address that the user is current pointing to.
+| Geocoding key | [API: Geocoding API only](https://cloud.google.com/docs/authentication/api-keys#api_key_restrictions) | Used to perform reverse geocoding on the current user position. That is, discover the address that the user is current pointing to.
 
 ## Configuration
 

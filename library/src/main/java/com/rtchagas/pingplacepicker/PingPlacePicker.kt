@@ -30,9 +30,18 @@ class PingPlacePicker private constructor() {
         }
 
         /**
-         * This key will be used to all reverse geolocation request to Google Maps API.
+         * This key will be used to all reverse geocoding request to Google Maps API.
          */
+        @Deprecated("This function will be removed in a future release.",
+                ReplaceWith("setGeocodingApiKey(geoKey)"))
         fun setGeolocationApiKey(geoKey: String): IntentBuilder {
+            return setGeocodingApiKey(geoKey)
+        }
+
+        /**
+         * This key will be used to all reverse geocoding request to Google Maps API.
+         */
+        fun setGeocodingApiKey(geoKey: String): IntentBuilder {
             geoLocationApiKey = geoKey
             return this
         }

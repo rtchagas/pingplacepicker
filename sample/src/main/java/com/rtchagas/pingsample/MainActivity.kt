@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         val pingBuilder = PingPlacePicker.IntentBuilder()
 
         pingBuilder.setAndroidApiKey(getString(R.string.key_google_apis_android))
-        pingBuilder.setGeolocationApiKey(getString(R.string.key_google_apis_geolocation))
+        pingBuilder.setGeocodingApiKey(getString(R.string.key_google_apis_geocoding))
 
         try {
             val placeIntent = pingBuilder.build(this)

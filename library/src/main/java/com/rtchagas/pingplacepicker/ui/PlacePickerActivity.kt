@@ -27,10 +27,12 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.RectangularBounds
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
+import com.google.maps.android.SphericalUtil
 import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.single.BasePermissionListener
@@ -215,6 +217,17 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
                 initMap()
             }
         })
+    }
+
+    private fun getCurrentLatLngBounds(): LatLngBounds {
+
+        val radius = resources.getInteger(R.integer.autocomplete_search_bias_radius).toDouble()
+        val location: LatLng = lastKnownLocation ?: defaultLocation
+
+        val northEast: LatLng = SphericalUtil.computeOffset(location, radius, 45.0)
+        val southWest: LatLng = SphericalUtil.computeOffset(location, radius, 225.0)
+
+        return LatLngBounds(southWest, northEast)
     }
 
     private fun getDeviceLocation(animate: Boolean) {
@@ -422,8 +435,11 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
                 Place.Field.TYPES,
                 Place.Field.PHOTO_METADATAS)
 
+        val rectangularBounds = RectangularBounds.newInstance(getCurrentLatLngBounds())
+
         // Start the autocomplete intent.
         val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, placeFields)
+                .setLocationBias(rectangularBounds)
                 .build(this)
 
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)

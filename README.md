@@ -64,7 +64,7 @@ Check the [sample](https://github.com/rtchagas/pingplacepicker/tree/master/sampl
     private fun showPlacePicker() {  
         val pingBuilder = PingPlacePicker.IntentBuilder()  
         pingBuilder.setAndroidApiKey("YOUR_ANDROID_API_KEY")  
-        pingBuilder.setGeolocationApiKey("YOUR_GEOLOCATION_API_KEY")
+        pingBuilder.setGeocodingApiKey("YOUR_GEOCODING_API_KEY")
         try {
             val placeIntent = pingBuilder.build(this)
             startActivityForResult(placeIntent, REQUEST_PLACE_PICKER)
@@ -88,7 +88,7 @@ Check the [sample](https://github.com/rtchagas/pingplacepicker/tree/master/sampl
     private void showPlacePicker() {
 	PingPlacePicker.IntentBuilder builder = new PingPlacePicker.IntentBuilder();
 	builder.setAndroidApiKey("YOUR_ANDROID_API_KEY")  
-	       .setGeolocationApiKey("YOUR_GEOLOCATION_API_KEY");
+	       .setGeocodingApiKey("YOUR_GEOCODING_API_KEY");
 	try {
 	    Intent placeIntent = builder.build(getActivity());  
 	    startActivityForResult(placeIntent, REQUEST_PLACE_PICKER);  

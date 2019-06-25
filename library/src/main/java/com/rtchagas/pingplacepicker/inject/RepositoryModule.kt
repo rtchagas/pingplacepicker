@@ -8,6 +8,7 @@ import com.rtchagas.pingplacepicker.repository.googlemaps.GoogleMapsRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
+import org.koin.dsl.bind
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -40,5 +41,7 @@ val repositoryModule = module {
     }
 
     // GoogleMapsRepository
-    single { GoogleMapsRepository(googleClient = get(), googleMapsAPI = get()) as PlaceRepository }
+    single {
+        GoogleMapsRepository(googleClient = get(), googleMapsAPI = get())
+    } bind PlaceRepository::class
 }

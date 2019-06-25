@@ -2,7 +2,7 @@
 <resources>
 
     <!-- TODO: Move to Firebase remote configs -->
-    <string name="key_google_apis_android">Add here an Android restricted key</string>
-    <string name="key_google_apis_geolocation">Add here an Geolocation API only restricted key</string>
+    <string name="key_google_apis_android" translatable="false">@string/key_android</string>
+    <string name="key_google_apis_geolocation" translatable="false">@string/key_geolocation</string>
 
 </resources>

@@ -38,23 +38,23 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     // KTX
-    implementation 'androidx.core:core-ktx:1.1.0-alpha05'
+    implementation 'androidx.core:core-ktx:1.2.0-alpha02'
 
     // Anko Commons
     implementation "org.jetbrains.anko:anko-commons:0.10.8"
 
     // Support library
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha04'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha4'
-    implementation 'com.google.android.material:material:1.1.0-alpha05'
+    implementation 'androidx.appcompat:appcompat:1.1.0-beta01'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
+    implementation 'com.google.android.material:material:1.1.0-alpha07'
 
     // Android architecture components
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0-alpha04'
-    implementation 'androidx.lifecycle:lifecycle-common-java8:2.1.0-alpha04'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0-alpha01'
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.2.0-alpha01'
 
     // Google Play Services
-    implementation 'com.google.android.gms:play-services-location:16.0.0'
-    implementation 'com.google.android.gms:play-services-maps:16.1.0'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.libraries.places:places:1.1.0'
 
     // Koin for Android
@@ -62,7 +62,7 @@ dependencies {
     implementation 'org.koin:koin-android-viewmodel:2.0.0-rc-2'
 
     // Rx
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.4'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.7'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
 
     // Moshi
@@ -70,9 +70,9 @@ dependencies {
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.8.0'
 
     // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.5.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.6.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.14.1'
 
     // Picasso
@@ -83,6 +83,6 @@ dependencies {
     implementation 'com.karumi:dexter:5.0.0'
 
     testImplementation 'junit:junit:4.13-beta-2'
-    androidTestImplementation 'androidx.test:runner:1.2.0-alpha04'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha04'
+    androidTestImplementation 'androidx.test:runner:1.3.0-alpha01'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha01'
 }

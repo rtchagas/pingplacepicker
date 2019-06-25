@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ping Place Picker</string>
+    <string name="app_name" translatable="false">Ping Place Picker</string>
 
     <string name="picker_title">Select a location</string>
     <string name="picker_select_this">Select this location</string>
@@ -8,6 +8,7 @@
     <string name="picker_load_this_place_error">"Couldn't find the selected place…"</string>
     <string name="picker_place_confirm">Use this place?</string>
     <string name="picker_place_confirm_cancel">Change location</string>
+    <string name="picker_location_unavailable">Location is unavailable</string>
 
     <!-- Content descriptions -->
     <string name="description_place_image">A photo of the selected place</string>

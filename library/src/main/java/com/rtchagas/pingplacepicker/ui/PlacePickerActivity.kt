@@ -30,6 +30,7 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.snackbar.Snackbar
 import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.single.BasePermissionListener
@@ -42,6 +43,7 @@ import com.rtchagas.pingplacepicker.viewmodel.Resource
 import kotlinx.android.synthetic.main.activity_place_picker.*
 import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.viewModel
+import kotlin.math.abs
 
 
 class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
@@ -73,6 +75,8 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
     private var defaultZoom = -1f
 
     private var lastKnownLocation: LatLng? = null
+
+    private var maxLocationRetries: Int = 3
 
     private var placeAdapter: PlacePickerAdapter? = null
 
@@ -226,7 +230,21 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
                         // In rare cases location may be null...
                         if (location == null) {
-                            Handler().postDelayed({ getDeviceLocation(animate) }, 1000)
+                            if (maxLocationRetries > 0) {
+                                maxLocationRetries--
+                                Handler().postDelayed({ getDeviceLocation(animate) }, 1000)
+                            }
+                            else {
+                                // Location is not available. Give up...
+                                setDefaultLocation()
+                                Snackbar.make(coordinator,
+                                        R.string.picker_location_unavailable,
+                                        Snackbar.LENGTH_INDEFINITE)
+                                        .setAction(R.string.places_try_again) {
+                                            getDeviceLocation(animate)
+                                        }
+                                        .show()
+                            }
                             return@addOnSuccessListener
                         }
 
@@ -338,7 +356,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         // Add a nice fade effect to toolbar
         appBarLayout.addOnOffsetChangedListener(
                 AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-                    toolbar.alpha = Math.abs(verticalOffset / appBarLayout.totalScrollRange.toFloat())
+                    toolbar.alpha = abs(verticalOffset / appBarLayout.totalScrollRange.toFloat())
                 })
 
         // Disable vertical scrolling on appBarLayout (it messes with the map...)

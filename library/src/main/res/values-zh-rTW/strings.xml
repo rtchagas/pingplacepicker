@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Ping Place Picker</string>
 
     <string name="picker_title">選擇附近的地點</string>
     <string name="picker_select_this">選取這個位置</string>
@@ -9,6 +8,7 @@
     <string name="picker_load_this_place_error">"找不到被選擇的地點"</string>
     <string name="picker_place_confirm">要使用這個位置嗎?</string>
     <string name="picker_place_confirm_cancel">變更位置</string>
+    <string name="picker_location_unavailable">位置不可用</string>
 
     <!-- Content descriptions -->
     <string name="description_place_image">A photo of the selected place</string>

@@ -27,6 +27,11 @@ To avoid our money being burned by using **/nearbysearch**, PING relies on Place
 
 Moreover, we don't fire a new request when the user moves the map.
 
+## Why use PING?
+
+PING is based entirely on Google Places and MAPs APIs. Google has the biggest places database available to us developers with most up to date and curated places information.
+
+It is worth to notice that Google provides US$ 200 (free) per month to be used with Places API. This should be more than enough for small applications that rely on Places data.
 
 ## Download
 

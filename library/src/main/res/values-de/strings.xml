@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">Einen Ort auswählen</string>
+    <string name="picker_select_this">Diesen Ort auswählen</string>
+    <string name="picker_place_confirm_cancel">Ort ändern</string>
+    <string name="picker_place_confirm">Diesen Ort verwenden?</string>
+    <string name="picker_or_select_nearby">Oder Ort in der Nähe auswählen</string>
+    <string name="picker_location_unavailable">Ort ist nicht verfügbar</string>
+    <string name="picker_load_this_place_error">Konnte den ausgewählten Ort nicht finden…</string>
+    <string name="picker_load_places_error">Konnte Orte in der Nähe nicht laden…</string>
+    <string name="permission_fine_location_title">Standort-Berechtigungen</string>
+    <string name="permission_fine_location_message">Wir benötigen Ihre Orte nur um Ihnen dabei zu helfen Orte in der Nähe zu finden.</string>
+    <string name="description_place_map">Eine Karte des ausgewählten Ortes</string>
+    <string name="description_place_image">Ein Foto des ausgewählten Ortes</string>
+</resources>

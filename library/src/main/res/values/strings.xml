@@ -9,6 +9,7 @@
     <string name="picker_place_confirm">Use this place?</string>
     <string name="picker_place_confirm_cancel">Change location</string>
     <string name="picker_location_unavailable">Location is unavailable</string>
+    <string name="picker_refresh_nearby_places">Refresh</string>
 
     <!-- Content descriptions -->
     <string name="description_place_image">A photo of the selected place</string>

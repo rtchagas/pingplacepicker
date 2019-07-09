@@ -47,7 +47,6 @@ import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 import kotlin.math.abs
 
-
 class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener,
@@ -123,6 +122,12 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         if ((requestCode == AUTOCOMPLETE_REQUEST_CODE) && (resultCode == Activity.RESULT_OK)) {
             data?.run {
                 val place = Autocomplete.getPlaceFromIntent(this)
+
+                val latLng: LatLng? = place.latLng
+                latLng?.let {
+                    googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, defaultZoom))
+                }
+
                 showConfirmPlacePopup(place)
             }
         }
@@ -184,8 +189,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
         if (placeAdapter == null) {
             placeAdapter = PlacePickerAdapter(places) { showConfirmPlacePopup(it) }
-        }
-        else {
+        } else {
             placeAdapter?.swapData(places)
         }
 
@@ -246,8 +250,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
                             if (maxLocationRetries > 0) {
                                 maxLocationRetries--
                                 Handler().postDelayed({ getDeviceLocation(animate) }, 1000)
-                            }
-                            else {
+                            } else {
                                 // Location is not available. Give up...
                                 setDefaultLocation()
                                 Snackbar.make(coordinator,
@@ -269,16 +272,14 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
                         if (animate) {
                             googleMap?.animateCamera(update)
-                        }
-                        else {
+                        } else {
                             googleMap?.moveCamera(update)
                         }
 
                         // Load the places near this location
                         loadNearbyPlaces()
                     }
-        }
-        catch (e: SecurityException) {
+        } catch (e: SecurityException) {
             Log.e(TAG, e.message)
         }
     }
@@ -357,6 +358,8 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
         // Bind the listeners
         btnMyLocation.setOnClickListener { getDeviceLocation(true) }
+        btnRefreshNearby.setOnClickListener { refreshNearbyPlacesByLocationMarker() }
+
         cardSearch.setOnClickListener { requestPlacesSearch() }
         ivMarkerSelect.setOnClickListener { selectThisPlace() }
         tvLocationSelect.setOnClickListener { selectThisPlace() }
@@ -406,21 +409,27 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
             if (lastKnownLocation == null) {
                 // Get the current location of the device and set the position of the map
                 getDeviceLocation(false)
-            }
-            else {
+            } else {
                 // Use the last know location to point the map to
                 setDefaultLocation()
                 loadNearbyPlaces()
             }
-        }
-        else {
+        } else {
             setDefaultLocation()
         }
     }
 
     private fun loadNearbyPlaces() {
-        viewModel.getNearbyPlaces(lastKnownLocation ?: defaultLocation)
+        viewModel.getNearbyDevicePlaces(lastKnownLocation ?: defaultLocation)
                 .observe(this, Observer { handlePlacesLoaded(it) })
+    }
+
+    private fun refreshNearbyPlacesByLocationMarker() {
+        googleMap?.cameraPosition?.run {
+            val markerLocation = this.target
+            viewModel.getNearbyMarkerPlaces(markerLocation)
+                    .observe(this@PlacePickerActivity, Observer { handlePlacesLoaded(it) })
+        }
     }
 
     private fun requestPlacesSearch() {
@@ -484,8 +493,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         if (isLocationPermissionGranted) {
             googleMap?.isMyLocationEnabled = true
             btnMyLocation.visibility = View.VISIBLE
-        }
-        else {
+        } else {
             btnMyLocation.visibility = View.GONE
             googleMap?.isMyLocationEnabled = false
         }

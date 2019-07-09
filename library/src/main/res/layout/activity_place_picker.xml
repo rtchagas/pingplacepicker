@@ -162,15 +162,38 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/guide_start_margin"
-                android:layout_marginTop="@dimen/default_margin"
-                android:layout_marginBottom="8dp"
-                android:text="@string/picker_or_select_nearby"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                android:textColor="@color/textColorSecondary" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/guide_start_margin"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:layout_marginBottom="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/picker_or_select_nearby"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    android:textColor="@color/textColorSecondary" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnRefreshNearby"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/guide_start_margin"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/guide_end_margin"
+                    android:layout_marginBottom="8dp"
+                    android:drawableStart="@drawable/ic_refresh_black_24dp"
+                    android:drawableTint="@color/colorPrimary"
+                    android:gravity="center_vertical"
+                    android:text="@string/picker_refresh_nearby_places"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    android:textColor="@color/textColorSecondary" />
+
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvNearbyPlaces"
@@ -180,6 +203,7 @@
                 tools:listitem="@layout/item_place" />
 
         </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

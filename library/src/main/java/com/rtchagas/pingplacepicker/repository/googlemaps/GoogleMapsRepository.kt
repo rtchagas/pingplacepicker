@@ -14,14 +14,13 @@ import com.rtchagas.pingplacepicker.Config
 import com.rtchagas.pingplacepicker.PingPlacePicker
 import com.rtchagas.pingplacepicker.model.GeocodeResult
 import com.rtchagas.pingplacepicker.repository.PlaceRepository
+import io.reactivex.Flowable
 import io.reactivex.Single
-
 
 class GoogleMapsRepository constructor(
         private val googleClient: PlacesClient,
         private val googleMapsAPI: GoogleMapsAPI)
     : PlaceRepository {
-
 
     /**
      * Finds all nearby places ranked by likelihood of being the place where the device is.
@@ -33,10 +32,8 @@ class GoogleMapsRepository constructor(
     @SuppressLint("MissingPermission")
     override fun getNearbyPlaces(): Single<List<Place>> {
 
-
         // Create request
         val request = FindCurrentPlaceRequest.builder(getPlaceFields()).build()
-
 
         return Single.create { emitter ->
             googleClient.findCurrentPlace(request).addOnCompleteListener { task ->
@@ -47,8 +44,7 @@ class GoogleMapsRepository constructor(
                     }
                     // Empty result
                     emitter.onSuccess(listOf())
-                }
-                else {
+                } else {
                     emitter.onError(task.exception ?: Exception("No places for you..."))
                 }
             }
@@ -78,6 +74,36 @@ class GoogleMapsRepository constructor(
                 emitter.onError(it)
             }
         }
+    }
+
+    /**
+     * Uses Google Maps GeoLocation API to retrieve a places by its latitude and longitude.
+     * This call will be charged according to
+     * [Places SDK for Android Usage and
+       Billing](https://developers.google.com/maps/documentation/geocoding/usage-and-billing#pricing-for-the-geocoding-api)
+     */
+    override fun getPlacesByLocation(location: LatLng): Single<List<Place>> {
+        val paramLocation = "${location.latitude},${location.longitude}"
+
+        return googleMapsAPI.findByLocation(paramLocation, PingPlacePicker.geoLocationApiKey)
+                .flatMap { result: GeocodeResult ->
+                    if (("OK" == result.status) && result.results.isNotEmpty()) {
+
+                        val subList = if (result.results.size > 5) {
+                            result.results.subList(0, 5)
+                        } else {
+                            result.results
+                        }
+
+                        return@flatMap Flowable.fromIterable(subList)
+                                .concatMap {
+                                    getPlaceById(it.placeId)
+                                            .toFlowable()
+                                }
+                                .toList()
+                    }
+                    return@flatMap Single.just(emptyList<Place>())
+                }
     }
 
     /**

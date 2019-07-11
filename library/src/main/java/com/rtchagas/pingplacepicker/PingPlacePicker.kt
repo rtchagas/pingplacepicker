@@ -85,6 +85,7 @@ class PingPlacePicker private constructor() {
         var androidApiKey: String = ""
         var geoLocationApiKey: String = ""
 
+        @JvmStatic
         fun getPlace(intent: Intent): Place? {
             return intent.getParcelableExtra(EXTRA_PLACE)
         }

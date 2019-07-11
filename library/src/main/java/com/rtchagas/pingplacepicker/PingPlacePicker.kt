@@ -70,9 +70,9 @@ class PingPlacePicker private constructor() {
             PingKoinContext.koinApp = koinApplication {
                 androidLogger()
                 androidContext(application)
-                modules(
+                modules(listOf(
                         repositoryModule,
-                        viewModelModule
+                        viewModelModule)
                 )
             }
         }

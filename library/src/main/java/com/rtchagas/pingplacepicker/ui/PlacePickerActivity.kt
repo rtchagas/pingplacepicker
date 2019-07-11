@@ -363,6 +363,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         cardSearch.setOnClickListener { requestPlacesSearch() }
         ivMarkerSelect.setOnClickListener { selectThisPlace() }
         tvLocationSelect.setOnClickListener { selectThisPlace() }
+        mapAndSelectLocationButtonContainer.setOnClickListener { selectThisPlace() }
 
         // Hide or show the card search according to the width
         cardSearch.visibility =

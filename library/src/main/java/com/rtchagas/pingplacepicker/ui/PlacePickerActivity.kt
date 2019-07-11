@@ -379,6 +379,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         cardSearch.setOnClickListener { requestPlacesSearch() }
         ivMarkerSelect.setOnClickListener { selectThisPlace() }
         tvLocationSelect.setOnClickListener { selectThisPlace() }
+        mapAndSelectLocationButtonContainer.setOnClickListener { selectThisPlace() }
 
         // Hide or show the refresh places button according to nearbysearch flag.
         if (PingPlacePicker.isNearbySearchEnabled) {

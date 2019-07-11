@@ -42,9 +42,12 @@ import com.rtchagas.pingplacepicker.helper.PermissionsHelper
 import com.rtchagas.pingplacepicker.inject.PingKoinComponent
 import com.rtchagas.pingplacepicker.viewmodel.PlacePickerViewModel
 import com.rtchagas.pingplacepicker.viewmodel.Resource
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.processors.PublishProcessor
 import kotlinx.android.synthetic.main.activity_place_picker.*
 import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
@@ -85,6 +88,10 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
+    private val compositeDisposable = CompositeDisposable()
+
+    private val selectThisLocationProcessor = PublishProcessor.create<Any>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_place_picker)
@@ -114,6 +121,12 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         // Initializes the map
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        compositeDisposable.addAll(
+                selectThisLocationProcessor
+                        .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                        .subscribe { selectThisPlace() }
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -361,9 +374,9 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         btnRefreshNearby.setOnClickListener { refreshNearbyPlacesByLocationMarker() }
 
         cardSearch.setOnClickListener { requestPlacesSearch() }
-        ivMarkerSelect.setOnClickListener { selectThisPlace() }
-        tvLocationSelect.setOnClickListener { selectThisPlace() }
-        mapAndSelectLocationButtonContainer.setOnClickListener { selectThisPlace() }
+        ivMarkerSelect.setOnClickListener { selectThisLocationProcessor.onNext(Any()) }
+        tvLocationSelect.setOnClickListener { selectThisLocationProcessor.onNext(Any()) }
+        mapAndSelectLocationButtonContainer.setOnClickListener { selectThisLocationProcessor.onNext(Any()) }
 
         // Hide or show the card search according to the width
         cardSearch.visibility =
@@ -471,8 +484,9 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
     private fun selectThisPlace() {
         googleMap?.cameraPosition?.run {
-            viewModel.getPlaceByLocation(this.target).observe(this@PlacePickerActivity,
-                    Observer { handlePlaceByLocation(it) })
+            viewModel
+                    .getPlaceByLocation(this.target)
+                    .observe(this@PlacePickerActivity, Observer { handlePlaceByLocation(it) })
         }
     }
 

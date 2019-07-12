@@ -147,7 +147,7 @@ It was decided to split the API keys to clearly distinguish what you're going to
 | Key | Restriction | Purpose
 |--|--|--|
 | Android key | [Android Applications](https://developers.google.com/places/android-sdk/signup#restrict-key) | Used as the Places API key. Main purpose is to retrieve the current places and place details.
-| Maps key | [APIs: Geocoding and Places API only](https://cloud.google.com/docs/authentication/api-keys#api_key_restrictions) | Used to fetch nearby places through Places Web API and perform reverse geocoding on the current user position. That is, discover the address that the user is current pointing to. Your key should look [like this](https://github.com/rtchagas/pingplacepicker/blob/master/images/maps_api_key.png)
+| Maps key | [APIs: Geocoding and Places API only](https://cloud.google.com/docs/authentication/api-keys#api_key_restrictions) | Used to fetch nearby places through Places Web API and perform reverse geocoding on the current user position. That is, discover the address that the user is current pointing to. Your key should look [like this](https://raw.githubusercontent.com/rtchagas/pingplacepicker/master/images/maps_api_key.png).
 
 **TIP:** It is strongly recommended to **not expose** you Maps API key in your resource files. Anyone could decompile your apk and have access to that key. Instead, a nice approach is to save the key to "Firebase remote config" and fetch it at runtime.
 

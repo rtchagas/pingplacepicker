@@ -17,6 +17,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.doOnLayout
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -57,6 +58,9 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
         private const val TAG = "Ping#PlacePicker"
 
+        // For passing extra parameters to this activity.
+        const val EXTRA_LOCATION = "extra_location"
+
         // Keys for storing activity state.
         private const val STATE_CAMERA_POSITION = "state_camera_position"
         private const val STATE_LOCATION = "state_location"
@@ -93,6 +97,11 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         // Configure the toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        // Check whether a pre-defined location was set.
+        intent.getParcelableExtra<LatLng?>(EXTRA_LOCATION)?.let {
+            lastKnownLocation = it
+        }
 
         // Retrieve location and camera position from saved instance state.
         lastKnownLocation = savedInstanceState
@@ -192,6 +201,8 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         rvNearbyPlaces.adapter = placeAdapter
 
         // Bind to the map
+
+        googleMap?.clear()
 
         for (place in places) {
 
@@ -361,6 +372,15 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         ivMarkerSelect.setOnClickListener { selectThisPlace() }
         tvLocationSelect.setOnClickListener { selectThisPlace() }
 
+        // Hide or show the refresh places button according to nearbysearch flag.
+        if (PingPlacePicker.isNearbySearchEnabled) {
+            btnRefreshLocation.isVisible = true
+            btnRefreshLocation.setOnClickListener { refreshNearbyPlaces() }
+        }
+        else {
+            btnRefreshLocation.isVisible = false
+        }
+
         // Hide or show the card search according to the width
         cardSearch.visibility =
                 if (resources.getBoolean(R.bool.show_card_search)) View.VISIBLE
@@ -423,6 +443,13 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
                 .observe(this, Observer { handlePlacesLoaded(it) })
     }
 
+    private fun refreshNearbyPlaces() {
+        googleMap?.cameraPosition?.run {
+            viewModel.getNearbyPlaces(target)
+                    .observe(this@PlacePickerActivity, Observer { handlePlacesLoaded(it) })
+        }
+    }
+
     private fun requestPlacesSearch() {
 
         // These fields are not charged by Google:
@@ -461,7 +488,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
     private fun selectThisPlace() {
         googleMap?.cameraPosition?.run {
-            viewModel.getPlaceByLocation(this.target).observe(this@PlacePickerActivity,
+            viewModel.getPlaceByLocation(target).observe(this@PlacePickerActivity,
                     Observer { handlePlaceByLocation(it) })
         }
     }

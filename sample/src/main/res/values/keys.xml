@@ -3,6 +3,6 @@
 
     <!-- TODO: Move to Firebase remote configs -->
     <string name="key_google_apis_android" translatable="false">@string/key_android</string>
-    <string name="key_google_apis_geocoding" translatable="false">@string/key_geocoding</string>
+    <string name="key_google_apis_geocoding" translatable="false">@string/key_maps</string>
 
 </resources>

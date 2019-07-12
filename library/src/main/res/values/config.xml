@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Do not change this one -->
-    <bool name="show_card_search">true</bool>
+    <!--
+        Use /nearbysearch from Places Web API instead of findCurrentPlace()
+            from Places for Android API
+        - findCurrentPlace(): 0.030 USD per each (30.00 USD per 1000)
+        - /nearbysearch: 0.040 USB per each (40.00 USD per 1000)
+    -->
+    <bool name="enable_nearby_search">true</bool>
 
     <!-- 0.002 USD per each (2.00 USD per 1000) -->
     <bool name="show_confirmation_photo">true</bool>
 
     <!-- 0.007 USD per each (7.00 USD per 1000) -->
     <bool name="show_confirmation_map">true</bool>
+
+    <!-- Do not change this one -->
+    <bool name="show_card_search">true</bool>
 
     <integer name="default_zoom">17</integer>
 

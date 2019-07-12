@@ -12,7 +12,7 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.rtchagas.pingplacepicker.Config
 import com.rtchagas.pingplacepicker.PingPlacePicker
-import com.rtchagas.pingplacepicker.model.GeocodeResult
+import com.rtchagas.pingplacepicker.model.SearchResult
 import com.rtchagas.pingplacepicker.repository.PlaceRepository
 import io.reactivex.Single
 
@@ -33,10 +33,8 @@ class GoogleMapsRepository constructor(
     @SuppressLint("MissingPermission")
     override fun getNearbyPlaces(): Single<List<Place>> {
 
-
         // Create request
         val request = FindCurrentPlaceRequest.builder(getPlaceFields()).build()
-
 
         return Single.create { emitter ->
             googleClient.findCurrentPlace(request).addOnCompleteListener { task ->
@@ -53,6 +51,35 @@ class GoogleMapsRepository constructor(
                 }
             }
         }
+    }
+
+    /** Finds all nearby places ranked by distance from the requested location.
+     *
+     * This call will be charged according to
+     * [Places SDK WEB API Usage and
+    Billing](https://developers.google.com/maps/billing/understanding-cost-of-use#nearby-search)
+     */
+    override fun getNearbyPlaces(location: LatLng): Single<List<Place>> {
+
+        val locationParam = "${location.latitude},${location.longitude}"
+
+        return googleMapsAPI.searchNearby(locationParam, PingPlacePicker.mapsApiKey)
+                .flatMap { searchResult ->
+
+                    val singles = mutableListOf<Single<Place>>()
+
+                    searchResult.results.forEach {
+                        singles.add(getPlaceById(it.placeId))
+                    }
+
+                    return@flatMap Single.zip(singles) { listOfResults ->
+                        val places = mutableListOf<Place>()
+                        listOfResults.forEach {
+                            places.add(it as Place)
+                        }
+                        return@zip places
+                    }
+                }
     }
 
     /**
@@ -90,8 +117,8 @@ class GoogleMapsRepository constructor(
 
         val paramLocation = "${location.latitude},${location.longitude}"
 
-        return googleMapsAPI.findByLocation(paramLocation, PingPlacePicker.geoLocationApiKey)
-                .flatMap { result: GeocodeResult ->
+        return googleMapsAPI.findByLocation(paramLocation, PingPlacePicker.mapsApiKey)
+                .flatMap { result: SearchResult ->
                     if (("OK" == result.status) && result.results.isNotEmpty()) {
                         return@flatMap getPlaceById(result.results[0].placeId)
                     }

@@ -69,6 +69,21 @@
                     tools:ignore="ContentDescription"
                     tools:targetApi="lollipop" />
 
+                <ImageButton
+                    android:id="@+id/btnRefreshLocation"
+                    android:layout_width="@dimen/button_my_location_size"
+                    android:layout_height="@dimen/button_my_location_size"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginBottom="@dimen/default_margin"
+                    android:background="@drawable/bg_button_round"
+                    android:elevation="@dimen/material_elevation_fab"
+                    android:tint="@color/colorPrimary"
+                    app:layout_constraintBottom_toTopOf="@id/btnMyLocation"
+                    app:layout_constraintEnd_toEndOf="@id/frameMap"
+                    app:srcCompat="@drawable/ic_refresh_black_24dp"
+                    tools:ignore="ContentDescription"
+                    tools:targetApi="lollipop" />
+
                 <ImageView
                     android:id="@+id/ivMarkerSelect"
                     android:layout_width="@dimen/icon_size_small"

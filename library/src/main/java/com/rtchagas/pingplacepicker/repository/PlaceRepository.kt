@@ -16,6 +16,8 @@ interface PlaceRepository {
 
     fun getNearbyPlaces(): Single<List<Place>>
 
+    fun getNearbyPlaces(location: LatLng): Single<List<Place>>
+
     fun getPlacePhoto(photoMetadata: PhotoMetadata): Single<Bitmap>
 
     fun getPlaceByLocation(location: LatLng): Single<Place?>

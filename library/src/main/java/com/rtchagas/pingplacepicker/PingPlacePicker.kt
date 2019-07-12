@@ -6,6 +6,7 @@ import android.content.Intent
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.Place
 import com.rtchagas.pingplacepicker.inject.PingKoinContext
 import com.rtchagas.pingplacepicker.inject.repositoryModule
@@ -30,19 +31,20 @@ class PingPlacePicker private constructor() {
         }
 
         /**
-         * This key will be used to all reverse geocoding request to Google Maps API.
+         * This key will be used to nearby searches and reverse geocoding
+         * requests to Google Maps HTTP API.
          */
-        @Deprecated("This function will be removed in a future release.",
-                ReplaceWith("setGeocodingApiKey(geoKey)"))
-        fun setGeolocationApiKey(geoKey: String): IntentBuilder {
-            return setGeocodingApiKey(geoKey)
+        fun setMapsApiKey(geoKey: String): IntentBuilder {
+            mapsApiKey = geoKey
+            return this
         }
 
         /**
-         * This key will be used to all reverse geocoding request to Google Maps API.
+         * The initial location that the map must be pointing to.
+         * If this is set, PING will search for places near this location.
          */
-        fun setGeocodingApiKey(geoKey: String): IntentBuilder {
-            geoLocationApiKey = geoKey
+        fun setLatLng(location: LatLng): IntentBuilder {
+            intent.putExtra(PlacePickerActivity.EXTRA_LOCATION, location)
             return this
         }
 
@@ -57,6 +59,8 @@ class PingPlacePicker private constructor() {
             if (ConnectionResult.SUCCESS != result) {
                 throw GooglePlayServicesNotAvailableException(result)
             }
+
+            isNearbySearchEnabled = activity.resources.getBoolean(R.bool.enable_nearby_search)
 
             intent.setClass(activity, PlacePickerActivity::class.java)
             return intent
@@ -83,7 +87,9 @@ class PingPlacePicker private constructor() {
         const val EXTRA_PLACE = "extra_place"
 
         var androidApiKey: String = ""
-        var geoLocationApiKey: String = ""
+        var mapsApiKey: String = ""
+
+        var isNearbySearchEnabled = false
 
         @JvmStatic
         fun getPlace(intent: Intent): Place? {

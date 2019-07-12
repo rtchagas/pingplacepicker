@@ -27,7 +27,11 @@ class MainActivity : AppCompatActivity() {
         val pingBuilder = PingPlacePicker.IntentBuilder()
 
         pingBuilder.setAndroidApiKey(getString(R.string.key_google_apis_android))
-        pingBuilder.setGeocodingApiKey(getString(R.string.key_google_apis_geocoding))
+        pingBuilder.setMapsApiKey(getString(R.string.key_google_apis_geocoding))
+
+        // If you want to set a initial location
+        // rather then the current device location.
+        // pingBuilder.setLatLng(LatLng(37.4219999, -122.0862462))
 
         try {
             val placeIntent = pingBuilder.build(this)

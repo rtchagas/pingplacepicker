@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.Place
+import com.rtchagas.pingplacepicker.PingPlacePicker
 import com.rtchagas.pingplacepicker.repository.PlaceRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -21,14 +22,20 @@ class PlacePickerViewModel constructor(private var repository: PlaceRepository)
 
         // If we already loaded the places for this location, return the same live data
         // instead of fetching (and charging) again.
-        placeList.value?.let {
+        placeList.value?.run {
             if (lastLocation == location) return placeList
         }
 
         // Update the last fetched location
         lastLocation = location
 
-        val disposable: Disposable = repository.getNearbyPlaces()
+        val placeQuery =
+                if (PingPlacePicker.isNearbySearchEnabled)
+                    repository.getNearbyPlaces(location)
+                else
+                    repository.getNearbyPlaces()
+
+        val disposable: Disposable = placeQuery
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { placeList.value = Resource.loading() }

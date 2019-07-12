@@ -15,7 +15,7 @@ The main reason was due the new pricing model of the [Places API](https://develo
 
 ## A key difference
 
-Different than Google's Place Picker, PING by default **doesn't** search for places according to where the user is pointing the map to. Instead, it shows only the nearby places of the **current** location.
+Different than Google's Place Picker, PING by default **doesn't** search for places according to where the user is pointing the map to. Instead, it shows only the nearby places in the **current** location.
 
 This was intentional and the reason is simple. By using the **/nearbysearch** from [Google Places Web API](https://developers.google.com/places/web-service/search#PlaceSearchRequests) we are going to be charged *a lot* for each map movement.
 
@@ -149,7 +149,8 @@ It was decided to split the API keys to clearly distinguish what you're going to
 | Android key | [Android Applications](https://developers.google.com/places/android-sdk/signup#restrict-key) | Used as the Places API key. Main purpose is to retrieve the current places and place details.
 | Maps key | [APIs: Geocoding and Places API only](https://cloud.google.com/docs/authentication/api-keys#api_key_restrictions) | Used to fetch nearby places through Places Web API and perform reverse geocoding on the current user position. That is, discover the address that the user is current pointing to. Your key should look [like this](https://raw.githubusercontent.com/rtchagas/pingplacepicker/master/images/maps_api_key.png).
 
-**TIP:** It is strongly recommended to **not expose** you Maps API key in your resource files. Anyone could decompile your apk and have access to that key. Instead, a nice approach is to save the key to "Firebase remote config" and fetch it at runtime.
+**TIP:** It is strongly recommended to **not expose** your Maps API key in your resource files. Anyone could decompile your apk and have access to that key. To avoid this, the key should be at least obfuscated.
+A nice approach is to save the key in the cloud through "Firebase remote config" and fetch it at runtime.
 
 ## Configuration
 

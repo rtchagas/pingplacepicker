@@ -24,20 +24,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun showPlacePicker() {
 
-        val pingBuilder = PingPlacePicker.IntentBuilder()
+        val builder = PingPlacePicker.IntentBuilder()
 
-        pingBuilder.setAndroidApiKey(getString(R.string.key_google_apis_android))
-        pingBuilder.setMapsApiKey(getString(R.string.key_google_apis_geocoding))
+        builder.setAndroidApiKey(getString(R.string.key_google_apis_android))
+                .setMapsApiKey(getString(R.string.key_google_apis_maps))
 
         // If you want to set a initial location
         // rather then the current device location.
         // pingBuilder.setLatLng(LatLng(37.4219999, -122.0862462))
 
         try {
-            val placeIntent = pingBuilder.build(this)
+            val placeIntent = builder.build(this)
             startActivityForResult(placeIntent, pingActivityRequestCode)
-        }
-        catch (ex: Exception) {
+        } catch (ex: Exception) {
             toast("Google Play Services is not Available")
         }
     }

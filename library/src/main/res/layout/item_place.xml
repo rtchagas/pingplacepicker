@@ -37,7 +37,7 @@
             android:id="@+id/ivPlaceType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:tint="@color/colorPrimary"
+            android:tint="?attr/colorPrimary"
             app:layout_constraintBottom_toBottomOf="@+id/tvPlaceAddress"
             app:layout_constraintStart_toStartOf="@id/gdMarginStart"
             app:layout_constraintTop_toTopOf="@+id/tvPlaceName"

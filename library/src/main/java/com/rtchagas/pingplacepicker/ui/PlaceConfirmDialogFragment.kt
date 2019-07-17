@@ -101,7 +101,7 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
             val staticMapUrl = Config.STATIC_MAP_URL
                     .format(place.latLng?.latitude,
                             place.latLng?.longitude,
-                            PingPlacePicker.androidApiKey)
+                            PingPlacePicker.mapsApiKey)
             Picasso.get().load(staticMapUrl).into(contentView.ivPlaceMap)
         }
         else {

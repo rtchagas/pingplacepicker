@@ -3,9 +3,9 @@
 
     <!--
         Use /nearbysearch from Places Web API instead of findCurrentPlace()
-            from Places for Android API
+        from Places for Android API
         - findCurrentPlace(): 0.030 USD per each (30.00 USD per 1000)
-        - /nearbysearch: 0.040 USB per each (40.00 USD per 1000)
+        - /nearbysearch:      0.040 USD per each (40.00 USD per 1000)
     -->
     <bool name="enable_nearby_search">false</bool>
 
@@ -13,14 +13,17 @@
     <bool name="show_confirmation_photo">true</bool>
 
     <!-- 0.007 USD per each (7.00 USD per 1000) -->
+    <!-- Must enable Maps Static API in the key -->
     <bool name="show_confirmation_map">true</bool>
 
-    <!-- Do not change this one -->
-    <bool name="show_card_search">true</bool>
-
+    <!-- The zoom level that is initially applied to the map -->
     <integer name="default_zoom">17</integer>
 
     <!-- Radius in meters from the map center from
         where to bias the autocomplete search results -->
     <integer name="autocomplete_search_bias_radius">5000</integer>
+
+    <!-- Do not change this one -->
+    <bool name="show_card_search">true</bool>
+
 </resources>

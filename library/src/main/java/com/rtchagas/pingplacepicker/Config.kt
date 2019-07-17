@@ -9,4 +9,7 @@ object Config {
             "size=${PLACE_IMG_WIDTH}x$PLACE_IMG_HEIGHT" +
             "&markers=color:red|%.6f,%.6f" +
             "&key=%s"
+
+    const val STATIC_MAP_URL_SIGN = STATIC_MAP_URL +
+            "&signature=%s"
 }

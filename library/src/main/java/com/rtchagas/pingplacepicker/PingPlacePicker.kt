@@ -48,6 +48,15 @@ class PingPlacePicker private constructor() {
             return this
         }
 
+        /**
+         * Sets a signature to be used in API calls.
+         * Key must be one listed in PingPlacePicker.KEY_SIGNATURE_*
+         */
+        fun setSignature(key: String, value: String): IntentBuilder {
+            signatureMap[key] = value
+            return this
+        }
+
         @Throws(GooglePlayServicesNotAvailableException::class)
         fun build(activity: Activity): Intent {
 
@@ -84,12 +93,17 @@ class PingPlacePicker private constructor() {
 
     companion object {
 
-        const val EXTRA_PLACE = "extra_place"
+        internal const val EXTRA_PLACE = "extra_place"
 
-        var androidApiKey: String = ""
-        var mapsApiKey: String = ""
+        internal var androidApiKey: String = ""
+        internal var mapsApiKey: String = ""
 
-        var isNearbySearchEnabled = false
+        internal var isNearbySearchEnabled = false
+
+        internal val signatureMap = mutableMapOf<String, String>()
+
+        const val KEY_SIGNATURE_MAPS_STATIC_API = "key_maps_static_api"
+        const val KEY_SIGNATURE_GEOCODING_API = "key_geocoding_api"
 
         @JvmStatic
         fun getPlace(intent: Intent): Place? {

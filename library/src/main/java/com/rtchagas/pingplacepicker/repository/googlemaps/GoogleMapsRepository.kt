@@ -117,7 +117,10 @@ class GoogleMapsRepository constructor(
 
         val paramLocation = "${location.latitude},${location.longitude}"
 
-        return googleMapsAPI.findByLocation(paramLocation, PingPlacePicker.mapsApiKey)
+        val paramSignature: String? =
+                PingPlacePicker.signatureMap[PingPlacePicker.KEY_SIGNATURE_GEOCODING_API]
+
+        return googleMapsAPI.findByLocation(paramLocation, PingPlacePicker.mapsApiKey, paramSignature)
                 .flatMap { result: SearchResult ->
                     if (("OK" == result.status) && result.results.isNotEmpty()) {
                         return@flatMap getPlaceById(result.results[0].placeId)

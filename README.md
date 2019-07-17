@@ -36,7 +36,7 @@ To do that, enable this flag in your project:
  <bool name="enable_nearby_search">true</bool>
 ```
 
-By doing so, PING behavior will be slightly changed:
+By doing so, PING behaviour will be slightly changed:
 - All places will be fetched by /nearbysearch queries.
 - You get a button to refresh the the places for the current location.
 - You can set the initial map position to get the places from via `pingBuilder.setLatLng(LatLng)`
@@ -147,7 +147,7 @@ It was decided to split the API keys to clearly distinguish what you're going to
 | Key | Restriction | Purpose
 |--|--|--|
 | Android key | [Android Applications](https://developers.google.com/places/android-sdk/signup#restrict-key) | Used as the Places API key. Main purpose is to retrieve the current places and place details.
-| Maps key | [APIs: Geocoding and Places API only](https://cloud.google.com/docs/authentication/api-keys#api_key_restrictions) | Used to fetch nearby places through Places Web API and perform reverse geocoding on the current user position. That is, discover the address that the user is current pointing to. Your key should look [like this](https://raw.githubusercontent.com/rtchagas/pingplacepicker/master/images/maps_api_key.png).
+| Maps key | [APIs: Geocoding, Maps Static and Places API only](https://cloud.google.com/docs/authentication/api-keys#api_key_restrictions) | Used to fetch static maps, nearby places through Places Web API and perform reverse geocoding on the current user position. That is, discover the address that the user is current pointing to. Your key should look [like this](https://raw.githubusercontent.com/rtchagas/pingplacepicker/master/images/maps_api_key.png).
 
 **TIP:** It is strongly recommended to **not expose** your Maps API key in your resource files. Anyone could decompile your apk and have access to that key. To avoid this, the key should be at least obfuscated.
 A nice approach is to save the key in the cloud through "Firebase remote config" and fetch it at runtime.

@@ -31,8 +31,11 @@ class PingPlacePicker private constructor() {
         }
 
         /**
-         * This key will be used to nearby searches and reverse geocoding
-         * requests to Google Maps HTTP API.
+         * This key will be used to nearby searches, static maps and
+         * reverse geocoding requests to Google Maps APIs.
+         *
+         * Refer to the [documentation](https://raw.githubusercontent.com/rtchagas/pingplacepicker/master/images/maps_api_key.png)
+         * to check how your key must be configured.
          */
         fun setMapsApiKey(geoKey: String): IntentBuilder {
             mapsApiKey = geoKey
@@ -50,6 +53,7 @@ class PingPlacePicker private constructor() {
 
         /**
          * Sets a signature to be used in API calls.
+         *
          * Key must be one listed in PingPlacePicker.KEY_SIGNATURE_*
          */
         fun setSignature(key: String, value: String): IntentBuilder {

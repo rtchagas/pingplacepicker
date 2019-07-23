@@ -48,6 +48,18 @@ class PingPlacePicker private constructor() {
             return this
         }
 
+        /**
+         * Enables URL signing for Google APIs that require it.
+         *
+         * Currently only Maps Statics API requires signing for some users.
+         *
+         * More info [here](https://developers.google.com/maps/documentation/maps-static/get-api-key#generating-digital-signatures)
+         */
+        fun setUrlSigningSecret(secretKey: String): IntentBuilder {
+            urlSigningSecret = secretKey
+            return this
+        }
+
         @Throws(GooglePlayServicesNotAvailableException::class)
         fun build(activity: Activity): Intent {
 
@@ -88,6 +100,8 @@ class PingPlacePicker private constructor() {
 
         var androidApiKey: String = ""
         var mapsApiKey: String = ""
+
+        var urlSigningSecret = ""
 
         var isNearbySearchEnabled = false
 

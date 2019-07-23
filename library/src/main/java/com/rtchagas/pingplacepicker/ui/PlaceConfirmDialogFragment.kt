@@ -16,6 +16,7 @@ import com.google.android.libraries.places.api.model.Place
 import com.rtchagas.pingplacepicker.Config
 import com.rtchagas.pingplacepicker.PingPlacePicker
 import com.rtchagas.pingplacepicker.R
+import com.rtchagas.pingplacepicker.helper.UrlSignerHelper
 import com.rtchagas.pingplacepicker.inject.PingKoinComponent
 import com.rtchagas.pingplacepicker.viewmodel.PlaceConfirmDialogViewModel
 import com.rtchagas.pingplacepicker.viewmodel.Resource
@@ -98,10 +99,7 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
     private fun fetchPlaceMap(contentView: View) {
 
         if (resources.getBoolean(R.bool.show_confirmation_map)) {
-            val staticMapUrl = Config.STATIC_MAP_URL
-                    .format(place.latLng?.latitude,
-                            place.latLng?.longitude,
-                            PingPlacePicker.mapsApiKey)
+            val staticMapUrl = getFinalMapUrl()
             Picasso.get().load(staticMapUrl).into(contentView.ivPlaceMap)
         }
         else {
@@ -120,6 +118,21 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
         else {
             contentView.ivPlacePhoto.visibility = View.GONE
         }
+    }
+
+    private fun getFinalMapUrl(): String {
+
+        val mapUrl = Config.STATIC_MAP_URL
+                .format(place.latLng?.latitude,
+                        place.latLng?.longitude,
+                        PingPlacePicker.mapsApiKey)
+
+        if (PingPlacePicker.urlSigningSecret.isNotEmpty()) {
+            // Sign the URL
+            return UrlSignerHelper.signUrl(mapUrl, PingPlacePicker.urlSigningSecret)
+        }
+
+        return mapUrl
     }
 
     private fun handlePlacePhotoLoaded(contentView: View, result: Resource<Bitmap>) {

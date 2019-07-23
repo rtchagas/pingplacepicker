@@ -31,11 +31,8 @@ class PingPlacePicker private constructor() {
         }
 
         /**
-         * This key will be used to nearby searches, static maps and
-         * reverse geocoding requests to Google Maps APIs.
-         *
-         * Refer to the [documentation](https://raw.githubusercontent.com/rtchagas/pingplacepicker/master/images/maps_api_key.png)
-         * to check how your key must be configured.
+         * This key will be used to nearby searches and reverse geocoding
+         * requests to Google Maps HTTP API.
          */
         fun setMapsApiKey(geoKey: String): IntentBuilder {
             mapsApiKey = geoKey
@@ -48,16 +45,6 @@ class PingPlacePicker private constructor() {
          */
         fun setLatLng(location: LatLng): IntentBuilder {
             intent.putExtra(PlacePickerActivity.EXTRA_LOCATION, location)
-            return this
-        }
-
-        /**
-         * Sets a signature to be used in API calls.
-         *
-         * Key must be one listed in PingPlacePicker.KEY_SIGNATURE_*
-         */
-        fun setSignature(key: String, value: String): IntentBuilder {
-            signatureMap[key] = value
             return this
         }
 
@@ -97,17 +84,12 @@ class PingPlacePicker private constructor() {
 
     companion object {
 
-        internal const val EXTRA_PLACE = "extra_place"
+        const val EXTRA_PLACE = "extra_place"
 
-        internal var androidApiKey: String = ""
-        internal var mapsApiKey: String = ""
+        var androidApiKey: String = ""
+        var mapsApiKey: String = ""
 
-        internal var isNearbySearchEnabled = false
-
-        internal val signatureMap = mutableMapOf<String, String>()
-
-        const val KEY_SIGNATURE_MAPS_STATIC_API = "key_maps_static_api"
-        const val KEY_SIGNATURE_GEOCODING_API = "key_geocoding_api"
+        var isNearbySearchEnabled = false
 
         @JvmStatic
         fun getPlace(intent: Intent): Place? {

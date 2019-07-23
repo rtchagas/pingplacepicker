@@ -14,7 +14,6 @@ interface GoogleMapsAPI {
 
     @GET("geocode/json")
     fun findByLocation(@Query("latlng") location: String,
-                       @Query("key") apiKey: String,
-                       @Query("signature") signature: String?)
+                       @Query("key") apiKey: String)
             : Single<SearchResult>
 }

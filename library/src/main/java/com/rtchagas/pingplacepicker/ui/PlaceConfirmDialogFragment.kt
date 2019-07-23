@@ -95,30 +95,13 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
         return content
     }
 
-    private fun getStaticMapUrl(): String {
-
-        val signature: String? =
-                PingPlacePicker.signatureMap[PingPlacePicker.KEY_SIGNATURE_MAPS_STATIC_API]
-
-        if (signature.isNullOrEmpty()) {
-
-            return Config.STATIC_MAP_URL
-                    .format(place.latLng?.latitude,
-                            place.latLng?.longitude,
-                            PingPlacePicker.mapsApiKey)
-        }
-
-        return Config.STATIC_MAP_URL_SIGN
-                .format(place.latLng?.latitude,
-                        place.latLng?.longitude,
-                        PingPlacePicker.mapsApiKey,
-                        signature)
-    }
-
     private fun fetchPlaceMap(contentView: View) {
 
         if (resources.getBoolean(R.bool.show_confirmation_map)) {
-            val staticMapUrl = getStaticMapUrl()
+            val staticMapUrl = Config.STATIC_MAP_URL
+                    .format(place.latLng?.latitude,
+                            place.latLng?.longitude,
+                            PingPlacePicker.mapsApiKey)
             Picasso.get().load(staticMapUrl).into(contentView.ivPlaceMap)
         }
         else {

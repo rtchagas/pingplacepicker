@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="description_place_image">"Imagem do local "</string>
+    <string name="description_place_map">Mapa do local selecionado</string>
+    <string name="permission_fine_location_message">Precisamos da sua localização apenas para encontrar locais relevantes ao seu redor.</string>
+    <string name="permission_fine_location_title">Permissão de Localização</string>
+    <string name="picker_load_places_error">Não foi possível encontrar locais ao re</string>
+    <string name="picker_load_this_place_error">" Não foi possível encontrar o local selecionado…"</string>
+    <string name="picker_location_unavailable">Localização não está disponível</string>
+    <string name="picker_or_select_nearby">Ou escolha um local ao redor</string>
+    <string name="picker_place_confirm">Utilizar este local?</string>
+    <string name="picker_place_confirm_cancel">Alterar localização</string>
+    <string name="picker_select_this">Selecionar este local</string>
+    <string name="picker_title">Escolha um local</string>
+</resources>

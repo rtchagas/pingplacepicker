@@ -41,6 +41,7 @@ import com.rtchagas.pingplacepicker.PingPlacePicker
 import com.rtchagas.pingplacepicker.R
 import com.rtchagas.pingplacepicker.helper.PermissionsHelper
 import com.rtchagas.pingplacepicker.inject.PingKoinComponent
+import com.rtchagas.pingplacepicker.inject.PingKoinContext
 import com.rtchagas.pingplacepicker.viewmodel.PlacePickerViewModel
 import com.rtchagas.pingplacepicker.viewmodel.Resource
 import kotlinx.android.synthetic.main.activity_place_picker.*
@@ -93,6 +94,13 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_place_picker)
+
+        // Check if PING was killed for some reason.
+        // If so, should restart the activity and init everything again.
+        if (PingKoinContext.koinApp == null) {
+            finish()
+            return
+        }
 
         // Configure the toolbar
         setSupportActionBar(toolbar)

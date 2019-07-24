@@ -46,7 +46,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0-alpha08'
 
     // Places library
-    implementation 'com.google.android.libraries.places:places:1.1.0'
+    implementation 'com.google.android.libraries.places:places:2.0.0'
 
     testImplementation 'junit:junit:4.13-beta-2'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

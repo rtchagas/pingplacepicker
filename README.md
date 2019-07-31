@@ -38,7 +38,7 @@ To do that, enable this flag in your project:
 
 By doing so, PING behaviour will be slightly changed:
 - All places will be fetched by /nearbysearch queries.
-- You get a button to refresh the the places for the current location.
+- You get a button to refresh the places for the current location.
 - You can set the initial map position to get the places from via `pingBuilder.setLatLng(LatLng)`
 
 ## Why use PING?

@@ -460,6 +460,12 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
     private fun requestPlacesSearch() {
 
+        // This only works if location permission is granted
+        if (!isLocationPermissionGranted) {
+            checkForPermission()
+            return
+        }
+
         // These fields are not charged by Google:
         // https://developers.google.com/places/android-sdk/usage-and-billing#basic-data
         val placeFields = listOf(

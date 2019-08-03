@@ -44,6 +44,7 @@ import com.rtchagas.pingplacepicker.inject.PingKoinComponent
 import com.rtchagas.pingplacepicker.inject.PingKoinContext
 import com.rtchagas.pingplacepicker.viewmodel.PlacePickerViewModel
 import com.rtchagas.pingplacepicker.viewmodel.Resource
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_place_picker.*
 import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -88,6 +89,8 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
     private var placeAdapter: PlacePickerAdapter? = null
 
     private val viewModel: PlacePickerViewModel by viewModel()
+
+    private val disposables = CompositeDisposable()
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
@@ -172,6 +175,11 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         super.onSaveInstanceState(outState)
         outState.putParcelable(STATE_CAMERA_POSITION, googleMap?.cameraPosition)
         outState.putParcelable(STATE_LOCATION, lastKnownLocation)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.clear()
     }
 
     override fun onMapReady(map: GoogleMap?) {
@@ -371,24 +379,19 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
     private fun initializeUi() {
 
-        // Initialize the recycler view.
+        // Initialize the recycler view
         rvNearbyPlaces.layoutManager = LinearLayoutManager(this)
 
-        // Bind the listeners
-        btnMyLocation.setOnClickListener { getDeviceLocation(true) }
-        cardSearch.setOnClickListener { requestPlacesSearch() }
-        ivMarkerSelect.setOnClickListener { selectThisPlace() }
-        tvLocationSelect.setOnClickListener { selectThisPlace() }
-        mapAndSelectLocationButtonContainer.setOnClickListener { selectThisPlace() }
+        // Bind the click listeners
+        disposables.addAll(
+                btnMyLocation.onclick { getDeviceLocation(true) },
+                btnRefreshLocation.onclick { refreshNearbyPlaces() },
+                cardSearch.onclick { requestPlacesSearch() },
+                mapContainer.onclick { selectThisPlace() }
+        )
 
-        // Hide or show the refresh places button according to nearbysearch flag.
-        if (PingPlacePicker.isNearbySearchEnabled) {
-            btnRefreshLocation.isVisible = true
-            btnRefreshLocation.setOnClickListener { refreshNearbyPlaces() }
-        }
-        else {
-            btnRefreshLocation.isVisible = false
-        }
+        // Hide or show the refresh places button according to nearby search flag
+        btnRefreshLocation.isVisible = PingPlacePicker.isNearbySearchEnabled
 
         // Hide or show the card search according to the width
         cardSearch.visibility =

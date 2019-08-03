@@ -23,7 +23,7 @@
             app:titleEnabled="false">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/mapAndSelectLocationButtonContainer"
+                android:id="@+id/mapContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/material_white"

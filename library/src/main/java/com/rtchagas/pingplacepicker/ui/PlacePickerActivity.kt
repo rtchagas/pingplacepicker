@@ -394,9 +394,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         btnRefreshLocation.isVisible = PingPlacePicker.isNearbySearchEnabled
 
         // Hide or show the card search according to the width
-        cardSearch.visibility =
-                if (resources.getBoolean(R.bool.show_card_search)) View.VISIBLE
-                else View.GONE
+        cardSearch.isVisible = resources.getBoolean(R.bool.show_card_search)
 
         // Add a nice fade effect to toolbar
         appBarLayout.addOnOffsetChangedListener(

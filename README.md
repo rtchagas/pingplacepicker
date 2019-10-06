@@ -1,5 +1,5 @@
 # PING - Because Ping Is Not Google's Place Picker 😉
-[![](https://jitpack.io/v/rtchagas/pingplacepicker.svg)](https://jitpack.io/#rtchagas/pingplacepicker)
+[![](https://jitpack.io/v/rtchagas/pingplacepicker.svg)](https://jitpack.io/#rtchagas/pingplacepicker) [![](https://img.shields.io/badge/MinSDK-19-blue)](#)
 
  
 If you're here looking for a place picker you have probably read this:

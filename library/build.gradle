@@ -12,6 +12,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 28
@@ -38,24 +42,24 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     // KTX
-    implementation 'androidx.core:core-ktx:1.2.0-alpha02'
+    implementation 'androidx.core:core-ktx:1.2.0-alpha04'
 
     // Anko Commons
     implementation "org.jetbrains.anko:anko-commons:0.10.8"
 
     // Support library
-    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
-    implementation 'com.google.android.material:material:1.1.0-alpha09'
+    implementation 'com.google.android.material:material:1.1.0-beta01'
 
     // Android architecture components
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0-alpha02'
-    implementation 'androidx.lifecycle:lifecycle-common-java8:2.2.0-alpha02'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0-alpha05'
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.2.0-alpha05'
 
     // Google Play Services
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'com.google.maps.android:android-maps-utils:0.5'
+    implementation 'com.google.maps.android:android-maps-utils:0.6.1'
     implementation 'com.google.android.libraries.places:places:2.0.0'
 
     // Koin for Android
@@ -72,9 +76,9 @@ dependencies {
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.8.0'
 
     // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.6.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.6.2'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.2'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.3'
 
     // Picasso
@@ -82,9 +86,9 @@ dependencies {
 
     // 3rd party
     implementation 'com.github.mcginty:material-colors:1.1.0'
-    implementation 'com.karumi:dexter:5.0.0'
+    implementation 'com.karumi:dexter:6.0.0'
 
-    testImplementation 'junit:junit:4.13-beta-2'
+    testImplementation 'junit:junit:4.13-beta-3'
     androidTestImplementation 'androidx.test:runner:1.3.0-alpha02'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
 }

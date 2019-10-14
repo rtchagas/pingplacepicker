@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="picker_title">Select a location</string>
+    <string name="picker_select_this">Bu konumu seç</string>
+    <string name="picker_or_select_nearby">İsterseniz yakındaki bir yeri seçin</string>
+    <string name="picker_load_places_error">"Yakında bir yer bulunamadı…"</string>
+    <string name="picker_load_this_place_error">"Seçtiğiniz yer bulunamadı…"</string>
+    <string name="picker_place_confirm">Bu konum kullanılsın mı?</string>
+    <string name="picker_place_confirm_cancel">Konumu Değiştir</string>
+    <string name="picker_location_unavailable">Lokasyon Bulunamadı</string>
+
+    <!-- Content descriptions -->
+    <string name="description_place_image">Seçilen yerin fotoğrafı</string>
+    <string name="description_place_map">Seçilen yerin haritası</string>
+
+    <!-- Permissions -->
+    <string name="permission_fine_location_title">Konum İzini</string>
+    <string name="permission_fine_location_message">Yakındaki yerleri gösterebilmek için konum izinine ihtiyacımız var.</string>
+
+</resources>

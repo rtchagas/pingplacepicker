@@ -468,6 +468,11 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
             return
         }
 
+        // Places API needs a location as well...
+        if (lastKnownLocation == null) {
+            return
+        }
+
         // These fields are not charged by Google:
         // https://developers.google.com/places/android-sdk/usage-and-billing#basic-data
         val placeFields = listOf(

@@ -39,7 +39,7 @@
     <LinearLayout
         android:id="@+id/llPlaceImages"
         android:layout_width="0dp"
-        android:layout_height="@dimen/place_confirm_images_height"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_margin"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,21 +48,27 @@
 
         <ImageView
             android:id="@+id/ivPlacePhoto"
+            android:layout_height="@dimen/place_confirm_images_height"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
             android:layout_weight="0.65"
             android:contentDescription="@string/description_place_image"
             android:scaleType="centerCrop"
-            tools:srcCompat="@tools:sample/backgrounds/scenic[11]" />
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:srcCompat="@tools:sample/backgrounds/scenic[11]"
+            />
 
         <ImageView
             android:id="@+id/ivPlaceMap"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/place_confirm_images_height"
             android:layout_weight="0.35"
             android:contentDescription="@string/description_place_map"
             android:scaleType="centerCrop"
-            tools:srcCompat="@tools:sample/backgrounds/scenic[4]" />
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:srcCompat="@tools:sample/backgrounds/scenic[4]"
+            />
 
     </LinearLayout>
 

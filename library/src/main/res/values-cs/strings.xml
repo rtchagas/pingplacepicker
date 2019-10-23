@@ -1,0 +1,19 @@
+<resources>
+    <string name="picker_title">Vyberte místo</string>
+    <string name="picker_select_this">Vybrat toto umístění</string>
+    <string name="picker_or_select_nearby">Nebo vyberte místo v okolí</string>
+    <string name="picker_load_places_error">Nemohu načíst místa v okolí…</string>
+    <string name="picker_load_this_place_error">"Nemohu najít vybrané místo…"</string>
+    <string name="picker_place_confirm">Zvolit toto místo?</string>
+    <string name="picker_place_confirm_cancel">Změnit umístění</string>
+    <string name="picker_location_unavailable">Umístění není dostupné</string>
+
+    <!-- Content descriptions -->
+    <string name="description_place_image">Obrázek zvoleného místa</string>
+    <string name="description_place_map">Mapa zvoleného místa</string>
+
+    <!-- Permissions -->
+    <string name="permission_fine_location_title">Oprávnění k přístupu k poloze</string>
+    <string name="permission_fine_location_message">Potřebujeme znát vaši polohu, abychom mohli najít vhodná místa v okolí.</string>
+
+</resources>

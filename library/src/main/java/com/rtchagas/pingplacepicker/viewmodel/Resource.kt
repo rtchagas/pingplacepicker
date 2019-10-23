@@ -11,7 +11,8 @@ class Resource<T> private constructor(val status: Status, val data: T?, val erro
     enum class Status {
         LOADING,
         SUCCESS,
-        ERROR
+        ERROR,
+        NO_DATA
     }
 
     companion object {
@@ -24,8 +25,12 @@ class Resource<T> private constructor(val status: Status, val data: T?, val erro
             return Resource(Status.SUCCESS, data, null)
         }
 
-        fun <T> error(error: Throwable): Resource<T> {
+        fun <T> error(error: Throwable?): Resource<T> {
             return Resource(Status.ERROR, null, error)
+        }
+
+        fun <T> noData(): Resource<T> {
+            return Resource(Status.NO_DATA, null, null)
         }
     }
 }

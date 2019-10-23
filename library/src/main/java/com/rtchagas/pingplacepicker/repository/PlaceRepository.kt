@@ -20,5 +20,5 @@ interface PlaceRepository {
 
     fun getPlacePhoto(photoMetadata: PhotoMetadata): Single<Bitmap>
 
-    fun getPlaceByLocation(location: LatLng): Single<Place?>
+    fun getPlaceByLocation(location: LatLng): Single<Place>
 }

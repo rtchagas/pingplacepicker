@@ -162,6 +162,10 @@ As some features are charged by Google, you can alter the default **PING** Place
 
 <!-- 0.007 USD per each (7.00 USD per 1000) -->  
 <bool name="show_confirmation_map">true</bool>
+
+<!-- If true, the map will automatically center (pan) to
+     the selected marker -->
+<bool name="auto_center_on_marker_click">false</bool>
 ```
 
 ## Contribute

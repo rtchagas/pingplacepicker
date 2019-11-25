@@ -25,14 +25,13 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_dialog_place_confirm.view.*
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.lang.Exception
 
 
 class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent {
 
     companion object {
 
-        private const val LOG_TAG = "PlaceConfirmDialogFrag"
+        private const val TAG = "Ping#PlaceConfirmDialog"
         private const val ARG_PLACE = "arg_place"
 
         fun newInstance(place: Place,
@@ -58,7 +57,7 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
         super.onCreate(savedInstanceState)
 
         // Check mandatory parameters for this fragment
-        if ((arguments == null) || (arguments?.getParcelable<Place>(ARG_PLACE) == null)) {
+        if (requireArguments().getParcelable<Place>(ARG_PLACE) == null) {
             throw IllegalArgumentException("You must pass a Place as argument to this fragment")
         }
 
@@ -73,11 +72,11 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
 
         builder.setTitle(R.string.picker_place_confirm)
                 .setView(getContentView(activity!!))
-                .setPositiveButton(android.R.string.ok) { dialog, which ->
+                .setPositiveButton(android.R.string.ok) { _, _ ->
                     confirmListener?.onPlaceConfirmed(place)
                     dismiss()
                 }
-                .setNegativeButton(R.string.picker_place_confirm_cancel) { dialog, which ->
+                .setNegativeButton(R.string.picker_place_confirm_cancel) { _, _ ->
                     // Just dismiss here...
                     dismiss()
                 }
@@ -105,11 +104,13 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
         if (resources.getBoolean(R.bool.show_confirmation_map)) {
             val staticMapUrl = getFinalMapUrl()
             Picasso.get().load(staticMapUrl).into(contentView.ivPlaceMap, object : Callback {
+
                 override fun onSuccess() {
                     contentView.ivPlaceMap.visibility = View.VISIBLE
                 }
+
                 override fun onError(e: Exception?) {
-                    Log.e(LOG_TAG, "Error loading map image", e)
+                    Log.e(TAG, "Error loading map image", e)
                     contentView.ivPlaceMap.visibility = View.GONE
                 }
             })

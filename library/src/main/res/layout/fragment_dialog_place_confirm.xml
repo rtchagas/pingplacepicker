@@ -48,15 +48,14 @@
 
         <ImageView
             android:id="@+id/ivPlacePhoto"
-            android:layout_height="@dimen/place_confirm_images_height"
             android:layout_width="0dp"
+            android:layout_height="@dimen/place_confirm_images_height"
             android:layout_weight="0.65"
             android:contentDescription="@string/description_place_image"
             android:scaleType="centerCrop"
             android:visibility="gone"
-            tools:visibility="visible"
             tools:srcCompat="@tools:sample/backgrounds/scenic[11]"
-            />
+            tools:visibility="visible" />
 
         <ImageView
             android:id="@+id/ivPlaceMap"
@@ -66,9 +65,8 @@
             android:contentDescription="@string/description_place_map"
             android:scaleType="centerCrop"
             android:visibility="gone"
-            tools:visibility="visible"
             tools:srcCompat="@tools:sample/backgrounds/scenic[4]"
-            />
+            tools:visibility="visible" />
 
     </LinearLayout>
 

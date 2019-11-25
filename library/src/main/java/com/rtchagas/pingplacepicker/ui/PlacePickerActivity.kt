@@ -193,7 +193,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         val place = marker.tag as Place
         showConfirmPlacePopup(place)
 
-        return false
+        return true
     }
 
     override fun onPlaceConfirmed(place: Place) {
@@ -218,15 +218,18 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
         // Bind to the map
 
-        googleMap?.clear()
+        googleMap?.run {
 
-        for (place in places) {
+            clear()
 
-            val marker: Marker? = googleMap?.addMarker(MarkerOptions()
-                    .position(place.latLng!!)
-                    .icon(getPlaceMarkerBitmap(place)))
+            for (place in places) {
 
-            marker?.tag = place
+                val marker: Marker = addMarker(MarkerOptions()
+                        .position(place.latLng!!)
+                        .icon(getPlaceMarkerBitmap(place)))
+
+                marker.tag = place
+            }
         }
     }
 
@@ -304,8 +307,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
                         // Load the places near this location
                         loadNearbyPlaces()
                     }
-        }
-        catch (e: SecurityException) {
+        } catch (e: SecurityException) {
             Log.e(TAG, e.message)
         }
     }
@@ -356,6 +358,9 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
                 toast(R.string.picker_load_this_place_error)
                 pbLoading.hide()
             }
+            Resource.Status.NO_DATA -> {
+                Log.d(TAG, "No places data found...")
+            }
         }
 
     }
@@ -373,6 +378,9 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
             Resource.Status.ERROR -> {
                 toast(R.string.picker_load_places_error)
                 pbLoading.hide()
+            }
+            Resource.Status.NO_DATA -> {
+                Log.d(TAG, "No places data found...")
             }
         }
     }
@@ -527,15 +535,19 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
     @SuppressLint("MissingPermission")
     private fun updateLocationUI() {
 
-        googleMap?.uiSettings?.isMyLocationButtonEnabled = false
+        googleMap?.let {
 
-        if (isLocationPermissionGranted) {
-            googleMap?.isMyLocationEnabled = true
-            btnMyLocation.visibility = View.VISIBLE
-        }
-        else {
-            btnMyLocation.visibility = View.GONE
-            googleMap?.isMyLocationEnabled = false
+            it.uiSettings?.isMyLocationButtonEnabled = false
+            it.uiSettings?.isMapToolbarEnabled = false
+
+            if (isLocationPermissionGranted) {
+                it.isMyLocationEnabled = true
+                btnMyLocation.visibility = View.VISIBLE
+            }
+            else {
+                btnMyLocation.visibility = View.GONE
+                it.isMyLocationEnabled = false
+            }
         }
     }
 }

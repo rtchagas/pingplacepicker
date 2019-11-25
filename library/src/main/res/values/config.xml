@@ -23,6 +23,10 @@
         where to bias the autocomplete search results -->
     <integer name="autocomplete_search_bias_radius">5000</integer>
 
+    <!-- If true, the map will automatically center (pan) to
+        the selected marker -->
+    <bool name="auto_center_on_marker_click">false</bool>
+
     <!-- Do not change this one -->
     <bool name="show_card_search">true</bool>
 

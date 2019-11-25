@@ -193,7 +193,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         val place = marker.tag as Place
         showConfirmPlacePopup(place)
 
-        return true
+        return !resources.getBoolean(R.bool.auto_center_on_marker_click)
     }
 
     override fun onPlaceConfirmed(place: Place) {

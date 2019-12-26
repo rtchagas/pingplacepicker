@@ -42,8 +42,8 @@ dependencies {
 
     // Support library
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta3'
-    implementation 'com.google.android.material:material:1.2.0-alpha02'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
+    implementation 'com.google.android.material:material:1.2.0-alpha03'
 
     // Places library
     implementation 'com.google.android.libraries.places:places:2.1.0'

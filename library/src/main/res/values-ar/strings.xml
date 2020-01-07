@@ -1,0 +1,19 @@
+<resources>
+<string name="picker_title">اختر موقع</string>
+<string name="picker_select_this">اختيار هذا الموقع</string>
+<string name="picker_or_select_nearby">او اختيار مكان مجاور</string>
+<string name="picker_load_places_error">"لا يمكن تحميل الاماكن المجاورة…"</string>
+<string name="picker_load_this_place_error">"لا يمكن العثور على المكان المحدد…"</string>
+<string name="picker_place_confirm">استخدام هذا المكان؟</string>
+<string name="picker_place_confirm_cancel">تغيير الموقع</string>
+<string name="picker_location_unavailable">الموقع غير متاح</string>
+
+<!-- Content descriptions -->
+<string name="description_place_image">صورة المكان المحدد</string>
+<string name="description_place_map">خريطة المكان المحدد</string>
+
+<!-- Permissions -->
+<string name="permission_fine_location_title">اذن الموقع</string>
+<string name="permission_fine_location_message">نحن فى حاجة الى موقعك حتى نستطيع العثور على الاماكن المجاورة المرتبطة بك.</string>
+
+</resources>

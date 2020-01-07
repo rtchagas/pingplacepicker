@@ -203,6 +203,10 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         finish()
     }
 
+    override fun onPlaceChangeRequest(place: Place) {
+        googleMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(place.latLng, defaultZoom))
+    }
+
     private fun bindPlaces(places: List<Place>) {
 
         // Bind to the recycler view

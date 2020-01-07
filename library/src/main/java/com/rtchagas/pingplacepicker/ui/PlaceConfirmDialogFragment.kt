@@ -78,6 +78,7 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
                 }
                 .setNegativeButton(R.string.picker_place_confirm_cancel) { _, _ ->
                     // Just dismiss here...
+                    confirmListener?.onPlaceChangeRequest(place)
                     dismiss()
                 }
 
@@ -168,5 +169,6 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
      */
     interface OnPlaceConfirmedListener {
         fun onPlaceConfirmed(place: Place)
+        fun onPlaceChangeRequest(place: Place)
     }
 }

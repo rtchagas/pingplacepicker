@@ -50,7 +50,6 @@ import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 import kotlin.math.abs
 
-
 class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener,
@@ -143,6 +142,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         if ((requestCode == AUTOCOMPLETE_REQUEST_CODE) && (resultCode == Activity.RESULT_OK)) {
             data?.run {
                 val place = Autocomplete.getPlaceFromIntent(this)
+                moveCameraToSelectedPlace(place)
                 showConfirmPlacePopup(place)
             }
         }
@@ -213,8 +213,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
         if (placeAdapter == null) {
             placeAdapter = PlacePickerAdapter(places) { showConfirmPlacePopup(it) }
-        }
-        else {
+        } else {
             placeAdapter?.swapData(places)
         }
 
@@ -280,8 +279,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
                             if (maxLocationRetries > 0) {
                                 maxLocationRetries--
                                 Handler().postDelayed({ getDeviceLocation(animate) }, 1000)
-                            }
-                            else {
+                            } else {
                                 // Location is not available. Give up...
                                 setDefaultLocation()
                                 Snackbar.make(coordinator,
@@ -303,8 +301,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
                         if (animate) {
                             googleMap?.animateCamera(update)
-                        }
-                        else {
+                        } else {
                             googleMap?.moveCamera(update)
                         }
 
@@ -448,14 +445,12 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
             if (lastKnownLocation == null) {
                 // Get the current location of the device and set the position of the map
                 getDeviceLocation(false)
-            }
-            else {
+            } else {
                 // Use the last know location to point the map to
                 setDefaultLocation()
                 loadNearbyPlaces()
             }
-        }
-        else {
+        } else {
             setDefaultLocation()
         }
     }
@@ -536,6 +531,12 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         fragment.show(supportFragmentManager, DIALOG_CONFIRM_PLACE_TAG)
     }
 
+    private fun moveCameraToSelectedPlace(place: Place) {
+        place.latLng?.let {
+            googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(it, defaultZoom))
+        }
+    }
+
     @SuppressLint("MissingPermission")
     private fun updateLocationUI() {
 
@@ -547,8 +548,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
             if (isLocationPermissionGranted) {
                 it.isMyLocationEnabled = true
                 btnMyLocation.visibility = View.VISIBLE
-            }
-            else {
+            } else {
                 btnMyLocation.visibility = View.GONE
                 it.isMyLocationEnabled = false
             }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">@color/material_bluegrey200</color>
+    <color name="colorPrimaryDark">@color/material_bluegrey500</color>
+    <color name="colorOnPrimary">@color/material_black</color>
+
+    <color name="colorSecondary">@color/material_pink200</color>
+    <color name="colorSecondaryDark">@color/material_pink500</color>
+    <color name="colorOnSecondary">@color/material_black</color>
+
+    <color name="colorSurface">#202125</color>
+    <color name="colorOnSurface">@color/material_white</color>
+
+    <color name="textColorPrimary">@color/material_on_surface_emphasis_high_type</color>
+    <color name="textColorSecondary">@color/material_on_surface_emphasis_medium</color>
+
+    <color name="colorMarker">@color/material_red200</color>
+    <color name="colorMarkerInnerIcon">@color/colorSurface</color>
+
+</resources>

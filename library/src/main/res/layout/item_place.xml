@@ -1,75 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/root"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gdMarginStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/guide_start_margin" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/gdMarginStart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="@dimen/guide_start_margin"/>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gdContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/guide_content_margin" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/gdContent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="@dimen/guide_content_margin"/>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/gdMarginEnd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_end="@dimen/guide_end_margin"/>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gdMarginEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/guide_end_margin" />
 
 
-        <ImageView
-            android:id="@+id/ivPlaceType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:tint="?attr/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="@+id/tvPlaceAddress"
-            app:layout_constraintStart_toStartOf="@id/gdMarginStart"
-            app:layout_constraintTop_toTopOf="@+id/tvPlaceName"
-            app:srcCompat="@drawable/ic_map_marker_black_24dp"
-            tools:ignore="ContentDescription"/>
+    <ImageView
+        android:id="@+id/ivPlaceType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tint="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/tvPlaceAddress"
+        app:layout_constraintStart_toStartOf="@id/gdMarginStart"
+        app:layout_constraintTop_toTopOf="@+id/tvPlaceName"
+        app:srcCompat="@drawable/ic_map_marker_black_24dp"
+        tools:ignore="ContentDescription" />
 
-        <TextView
-            android:id="@+id/tvPlaceName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintEnd_toEndOf="@id/gdMarginEnd"
-            app:layout_constraintStart_toStartOf="@id/gdContent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Eiffel Tower"/>
+    <TextView
+        android:id="@+id/tvPlaceName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        app:layout_constraintEnd_toEndOf="@id/gdMarginEnd"
+        app:layout_constraintStart_toStartOf="@id/gdContent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Eiffel Tower" />
 
-        <TextView
-            android:id="@+id/tvPlaceAddress"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            android:textColor="?android:textColorSecondary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/gdMarginEnd"
-            app:layout_constraintStart_toStartOf="@+id/tvPlaceName"
-            app:layout_constraintTop_toBottomOf="@+id/tvPlaceName"
-            tools:text="Champ de Mars, Avenue Anatole France, Paris, France"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</LinearLayout>
+    <TextView
+        android:id="@+id/tvPlaceAddress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:textColor="?android:textColorSecondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/gdMarginEnd"
+        app:layout_constraintStart_toStartOf="@+id/tvPlaceName"
+        app:layout_constraintTop_toBottomOf="@+id/tvPlaceName"
+        tools:text="Champ de Mars, Avenue Anatole France, Paris, France" />
+</androidx.constraintlayout.widget.ConstraintLayout>

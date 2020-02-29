@@ -32,6 +32,7 @@ import com.google.android.libraries.places.api.model.RectangularBounds
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
 import com.google.maps.android.SphericalUtil
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -51,9 +52,9 @@ import org.koin.android.viewmodel.ext.android.viewModel
 import kotlin.math.abs
 
 class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
-        OnMapReadyCallback,
-        GoogleMap.OnMarkerClickListener,
-        PlaceConfirmDialogFragment.OnPlaceConfirmedListener {
+    OnMapReadyCallback,
+    GoogleMap.OnMarkerClickListener,
+    PlaceConfirmDialogFragment.OnPlaceConfirmedListener {
 
     companion object {
 
@@ -115,9 +116,9 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
         // Retrieve location and camera position from saved instance state.
         lastKnownLocation = savedInstanceState
-                ?.getParcelable(STATE_LOCATION) ?: lastKnownLocation
+            ?.getParcelable(STATE_LOCATION) ?: lastKnownLocation
         cameraPosition = savedInstanceState
-                ?.getParcelable(STATE_CAMERA_POSITION) ?: cameraPosition
+            ?.getParcelable(STATE_CAMERA_POSITION) ?: cameraPosition
 
         // Construct a FusedLocationProviderClient
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
@@ -184,6 +185,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
     override fun onMapReady(map: GoogleMap?) {
         googleMap = map
+        setMapStyle()
         map?.setOnMarkerClickListener(this)
         checkForPermission()
     }
@@ -227,9 +229,11 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
             for (place in places) {
 
-                val marker: Marker = addMarker(MarkerOptions()
+                val marker: Marker = addMarker(
+                    MarkerOptions()
                         .position(place.latLng!!)
-                        .icon(getPlaceMarkerBitmap(place)))
+                        .icon(getPlaceMarkerBitmap(place))
+                )
 
                 marker.tag = place
             }
@@ -271,45 +275,47 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         try {
             val locationResult = fusedLocationProviderClient.lastLocation
             locationResult
-                    ?.addOnFailureListener(this) { setDefaultLocation() }
-                    ?.addOnSuccessListener(this) { location: Location? ->
+                ?.addOnFailureListener(this) { setDefaultLocation() }
+                ?.addOnSuccessListener(this) { location: Location? ->
 
-                        // In rare cases location may be null...
-                        if (location == null) {
-                            if (maxLocationRetries > 0) {
-                                maxLocationRetries--
-                                Handler().postDelayed({ getDeviceLocation(animate) }, 1000)
-                            } else {
-                                // Location is not available. Give up...
-                                setDefaultLocation()
-                                Snackbar.make(coordinator,
-                                        R.string.picker_location_unavailable,
-                                        Snackbar.LENGTH_INDEFINITE)
-                                        .setAction(R.string.places_try_again) {
-                                            getDeviceLocation(animate)
-                                        }
-                                        .show()
-                            }
-                            return@addOnSuccessListener
-                        }
-
-                        // Set the map's camera position to the current location of the device.
-                        lastKnownLocation = LatLng(location.latitude, location.longitude)
-
-                        val update = CameraUpdateFactory
-                                .newLatLngZoom(lastKnownLocation, defaultZoom)
-
-                        if (animate) {
-                            googleMap?.animateCamera(update)
+                    // In rare cases location may be null...
+                    if (location == null) {
+                        if (maxLocationRetries > 0) {
+                            maxLocationRetries--
+                            Handler().postDelayed({ getDeviceLocation(animate) }, 1000)
                         } else {
-                            googleMap?.moveCamera(update)
+                            // Location is not available. Give up...
+                            setDefaultLocation()
+                            Snackbar.make(
+                                coordinator,
+                                R.string.picker_location_unavailable,
+                                Snackbar.LENGTH_INDEFINITE
+                            )
+                                .setAction(R.string.places_try_again) {
+                                    getDeviceLocation(animate)
+                                }
+                                .show()
                         }
-
-                        // Load the places near this location
-                        loadNearbyPlaces()
+                        return@addOnSuccessListener
                     }
+
+                    // Set the map's camera position to the current location of the device.
+                    lastKnownLocation = LatLng(location.latitude, location.longitude)
+
+                    val update = CameraUpdateFactory
+                        .newLatLngZoom(lastKnownLocation, defaultZoom)
+
+                    if (animate) {
+                        googleMap?.animateCamera(update)
+                    } else {
+                        googleMap?.moveCamera(update)
+                    }
+
+                    // Load the places near this location
+                    loadNearbyPlaces()
+                }
         } catch (e: SecurityException) {
-            Log.e(TAG, e.message)
+            Log.e(TAG, e.toString())
         }
     }
 
@@ -318,15 +324,21 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
         val innerIconSize: Int = resources.getDimensionPixelSize(R.dimen.marker_inner_icon_size)
 
-        val bgDrawable = ResourcesCompat.getDrawable(resources,
-                R.drawable.ic_map_marker_solid_red_32dp, null)!!
+        val bgDrawable = ResourcesCompat.getDrawable(
+            resources,
+            R.drawable.ic_map_marker_solid_red_32dp, null
+        )!!
 
-        val fgDrawable = ResourcesCompat.getDrawable(resources,
-                UiUtils.getPlaceDrawableRes(this, place), null)!!
+        val fgDrawable = ResourcesCompat.getDrawable(
+            resources,
+            UiUtils.getPlaceDrawableRes(this, place), null
+        )!!
         DrawableCompat.setTint(fgDrawable, resources.getColor(R.color.colorMarkerInnerIcon))
 
-        val bitmap = Bitmap.createBitmap(bgDrawable.intrinsicWidth,
-                bgDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val bitmap = Bitmap.createBitmap(
+            bgDrawable.intrinsicWidth,
+            bgDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888
+        )
 
         val canvas = Canvas(bitmap)
 
@@ -393,10 +405,10 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
         // Bind the click listeners
         disposables.addAll(
-                btnMyLocation.onclick { getDeviceLocation(true) },
-                btnRefreshLocation.onclick { refreshNearbyPlaces() },
-                cardSearch.onclick { requestPlacesSearch() },
-                mapContainer.onclick { selectThisPlace() }
+            btnMyLocation.onclick { getDeviceLocation(true) },
+            btnRefreshLocation.onclick { refreshNearbyPlaces() },
+            cardSearch.onclick { requestPlacesSearch() },
+            mapContainer.onclick { selectThisPlace() }
         )
 
         // Hide or show the refresh places button according to nearby search flag
@@ -405,11 +417,20 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         // Hide or show the card search according to the width
         cardSearch.isVisible = resources.getBoolean(R.bool.show_card_search)
 
+        // Set the correct elevation overlay to the CollapsingToolbarLayout
+        val elevatedColor: Int = ElevationOverlayProvider(this)
+            .compositeOverlayWithThemeSurfaceColorIfNeeded(
+                resources.getDimension(R.dimen.material_elevation_app_bar)
+            )
+
+        collapsingToolbarLayout.setContentScrimColor(elevatedColor)
+        mapContainer.setBackgroundColor(elevatedColor)
+
         // Add a nice fade effect to toolbar
         appBarLayout.addOnOffsetChangedListener(
-                AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-                    toolbar.alpha = abs(verticalOffset / appBarLayout.totalScrollRange.toFloat())
-                })
+            AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+                toolbar.alpha = abs(verticalOffset / appBarLayout.totalScrollRange.toFloat())
+            })
 
         // Disable vertical scrolling on appBarLayout (it messes with the map...)
 
@@ -457,13 +478,19 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
     private fun loadNearbyPlaces() {
         viewModel.getNearbyPlaces(lastKnownLocation ?: defaultLocation)
-                .observe(this, Observer { handlePlacesLoaded(it) })
+            .observe(this, Observer { handlePlacesLoaded(it) })
+    }
+
+    private fun moveCameraToSelectedPlace(place: Place) {
+        place.latLng?.let {
+            googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(it, defaultZoom))
+        }
     }
 
     private fun refreshNearbyPlaces() {
         googleMap?.cameraPosition?.run {
             viewModel.getNearbyPlaces(target)
-                    .observe(this@PlacePickerActivity, Observer { handlePlacesLoaded(it) })
+                .observe(this@PlacePickerActivity, Observer { handlePlacesLoaded(it) })
         }
     }
 
@@ -483,26 +510,27 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         // These fields are not charged by Google:
         // https://developers.google.com/places/android-sdk/usage-and-billing#basic-data
         val placeFields = listOf(
-                Place.Field.ID,
-                Place.Field.NAME,
-                Place.Field.ADDRESS,
-                Place.Field.LAT_LNG,
-                Place.Field.TYPES,
-                Place.Field.PHOTO_METADATAS)
+            Place.Field.ID,
+            Place.Field.NAME,
+            Place.Field.ADDRESS,
+            Place.Field.LAT_LNG,
+            Place.Field.TYPES,
+            Place.Field.PHOTO_METADATAS
+        )
 
         val rectangularBounds = RectangularBounds.newInstance(getCurrentLatLngBounds())
 
         // Start the autocomplete intent.
         val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, placeFields)
-                .setLocationBias(rectangularBounds)
-                .build(this)
+            .setLocationBias(rectangularBounds)
+            .build(this)
 
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
     }
 
     private fun restoreFragments() {
         val confirmFragment = supportFragmentManager
-                .findFragmentByTag(DIALOG_CONFIRM_PLACE_TAG) as PlaceConfirmDialogFragment?
+            .findFragmentByTag(DIALOG_CONFIRM_PLACE_TAG) as PlaceConfirmDialogFragment?
         confirmFragment?.run {
             confirmListener = this@PlacePickerActivity
         }
@@ -517,7 +545,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
     private fun selectThisPlace() {
         googleMap?.cameraPosition?.run {
             viewModel.getPlaceByLocation(target).observe(this@PlacePickerActivity,
-                    Observer { handlePlaceByLocation(it) })
+                Observer { handlePlaceByLocation(it) })
         }
     }
 
@@ -526,15 +554,34 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(default, defaultZoom))
     }
 
+    /**
+     * Customise the styling of the base map using a JSON object defined in a raw resource file.
+     */
+    private fun setMapStyle() {
+
+        if (!UiUtils.isNightModeEnabled()) {
+            return
+        }
+
+        try {
+            googleMap?.run {
+                val success = setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                        this@PlacePickerActivity, R.raw.maps_night_style
+                    )
+                )
+                if (!success) {
+                    Log.e(TAG, "Style parsing failed.")
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Can't style the map", e)
+        }
+    }
+
     private fun showConfirmPlacePopup(place: Place) {
         val fragment = PlaceConfirmDialogFragment.newInstance(place, this)
         fragment.show(supportFragmentManager, DIALOG_CONFIRM_PLACE_TAG)
-    }
-
-    private fun moveCameraToSelectedPlace(place: Place) {
-        place.latLng?.let {
-            googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(it, defaultZoom))
-        }
     }
 
     @SuppressLint("MissingPermission")

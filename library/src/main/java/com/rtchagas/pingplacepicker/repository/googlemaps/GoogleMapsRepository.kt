@@ -47,7 +47,7 @@ class GoogleMapsRepository constructor(
                     emitter.onSuccess(listOf())
                 }
                 else {
-                    emitter.onError(task.exception ?: Exception("No places for you..."))
+                    emitter.tryOnError(task.exception ?: Exception("No places for you..."))
                 }
             }
         }
@@ -102,7 +102,7 @@ class GoogleMapsRepository constructor(
                 val bitmap = it.bitmap
                 emitter.onSuccess(bitmap)
             }.addOnFailureListener {
-                emitter.onError(it)
+                emitter.tryOnError(it)
             }
         }
     }
@@ -142,7 +142,7 @@ class GoogleMapsRepository constructor(
                         emitter.onSuccess(it.place)
                     }
                     .addOnFailureListener {
-                        emitter.onError(it)
+                        emitter.tryOnError(it)
                     }
         }
     }

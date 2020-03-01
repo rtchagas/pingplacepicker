@@ -51,21 +51,25 @@ It is worth to notice that Google provides US$ 200 (free) per month to be used w
 
 Add Jitpack in your root build.gradle at the end of repositories:
 
-	allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
-	}
-  
+```gradle
+    allprojects {
+        repositories {
+            ...
+            maven { url 'https://jitpack.io' }
+        }
+    }
+```
+
 Step 2. Add the dependency
 
-	dependencies {
-	        // Places library  
+```gradle
+    dependencies {
+            // Places library
             implementation 'com.google.android.libraries.places:places:2.0.0'
-	        // PING Place Picker
-	        implementation 'com.github.rtchagas:pingplacepicker:1.1.+'
-	}
+            // PING Place Picker
+            implementation 'com.github.rtchagas:pingplacepicker:2.0.+'
+    }
+```
 
 ## Setup
 

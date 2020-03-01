@@ -205,10 +205,6 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         finish()
     }
 
-    override fun onPlaceChangeRequest(place: Place) {
-        googleMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(place.latLng, defaultZoom))
-    }
-
     private fun adjustElevationOverlayColors() {
 
         // Set the correct elevation overlay to the CollapsingToolbarLayout

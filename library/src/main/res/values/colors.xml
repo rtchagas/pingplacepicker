@@ -9,6 +9,9 @@
     <color name="colorSecondaryDark">@color/material_pink800</color>
     <color name="colorOnSecondary">@color/material_white</color>
 
+    <color name="colorBackground">@color/material_grey200</color>
+    <color name="colorOnBackground">@color/material_black</color>
+
     <color name="colorSurface">@color/material_white</color>
     <color name="colorOnSurface">@color/material_black</color>
 

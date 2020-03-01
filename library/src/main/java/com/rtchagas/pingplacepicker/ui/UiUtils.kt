@@ -3,6 +3,8 @@ package com.rtchagas.pingplacepicker.ui
 import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.util.TypedValue
+import androidx.annotation.ColorInt
 import com.google.android.libraries.places.api.model.Place
 import com.rtchagas.pingplacepicker.R
 
@@ -39,5 +41,12 @@ object UiUtils {
             (Resources.getSystem().configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
 
         return currentNightMode == Configuration.UI_MODE_NIGHT_YES
+    }
+
+    @ColorInt
+    fun getColorAttr(context: Context, colorAttr: Int): Int {
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(colorAttr, typedValue, true)
+        return typedValue.data
     }
 }

@@ -8,8 +8,8 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
 
-        <item name="android:windowBackground">?colorSurface</item>
-        <item name="android:colorBackground">?colorSurface</item>
+        <item name="android:windowBackground">@color/colorBackground</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
 
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -24,7 +24,7 @@
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
         <item name="colorOnSurface">@color/colorOnSurface</item>
-        <item name="colorOnBackground">@color/colorOnSurface</item>
+        <item name="colorOnBackground">@color/colorOnBackground</item>
 
         <item name="colorControlNormal">@color/colorControlNormal</item>
 

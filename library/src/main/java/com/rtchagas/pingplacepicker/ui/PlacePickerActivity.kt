@@ -209,6 +209,24 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         googleMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(place.latLng, defaultZoom))
     }
 
+    private fun adjustElevationOverlayColors() {
+
+        // Set the correct elevation overlay to the CollapsingToolbarLayout
+        val elevationOverlayProvider = ElevationOverlayProvider(this)
+
+        val scrimColor: Int = elevationOverlayProvider.compositeOverlayIfNeeded(
+            UiUtils.getColorAttr(this, R.attr.colorPrimarySurface),
+            resources.getDimension(R.dimen.material_elevation_app_bar)
+        )
+        collapsingToolbarLayout.setContentScrimColor(scrimColor)
+
+        // Set the correct elevation to the content container
+        val containerColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
+            resources.getDimension(R.dimen.material_elevation_app_bar)
+        )
+        mapContainer.setBackgroundColor(containerColor)
+    }
+
     private fun bindPlaces(places: List<Place>) {
 
         // Bind to the recycler view
@@ -400,6 +418,10 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
     private fun initializeUi() {
 
+        // Some material components still don't support setting the correct
+        // elevation for dark themes, so we should handle that
+        adjustElevationOverlayColors()
+
         // Initialize the recycler view
         rvNearbyPlaces.layoutManager = LinearLayoutManager(this)
 
@@ -416,15 +438,6 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
         // Hide or show the card search according to the width
         cardSearch.isVisible = resources.getBoolean(R.bool.show_card_search)
-
-        // Set the correct elevation overlay to the CollapsingToolbarLayout
-        val elevatedColor: Int = ElevationOverlayProvider(this)
-            .compositeOverlayWithThemeSurfaceColorIfNeeded(
-                resources.getDimension(R.dimen.material_elevation_app_bar)
-            )
-
-        collapsingToolbarLayout.setContentScrimColor(elevatedColor)
-        mapContainer.setBackgroundColor(elevatedColor)
 
         // Add a nice fade effect to toolbar
         appBarLayout.addOnOffsetChangedListener(

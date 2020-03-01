@@ -2,7 +2,7 @@
 <resources>
 
     <color name="colorPrimary">@color/material_bluegrey200</color>
-    <color name="colorPrimaryDark">@color/material_bluegrey500</color>
+    <color name="colorPrimaryDark">@color/colorSurface</color>
     <color name="colorOnPrimary">@color/material_black</color>
 
     <color name="colorSecondary">@color/material_pink200</color>

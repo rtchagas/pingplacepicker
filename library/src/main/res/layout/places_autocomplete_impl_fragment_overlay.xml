@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="8dp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/places_autocomplete_overlay_padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layoutDirection="locale"
+            android:orientation="vertical"
+            android:textDirection="locale">
+
+            <LinearLayout
+                android:id="@+id/places_autocomplete_search_bar_container"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/card_search_height"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/places_autocomplete_back_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/card_search_content_start_margin"
+                    android:layout_marginEnd="20dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/places_cancel"
+                    android:src="@drawable/quantum_ic_arrow_back_grey600_24"
+                    android:tint="@color/colorControlNormal" />
+
+                <EditText
+                    android:id="@+id/places_autocomplete_search_bar"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/places_autocomplete_search_hint"
+                    android:imeOptions="flagNoExtractUi|actionSearch"
+                    android:inputType="textNoSuggestions"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    android:textColor="?android:textColorSecondary" />
+
+                <ImageButton
+                    android:id="@+id/places_autocomplete_clear_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/places_autocomplete_clear_button"
+                    android:padding="@dimen/places_autocomplete_search_bar_button_padding"
+                    android:src="@drawable/quantum_ic_clear_grey600_24"
+                    android:tint="@color/colorControlNormal" />
+
+            </LinearLayout>
+
+            <!-- Separator line below the search bar -->
+            <View
+                android:id="@+id/places_autocomplete_search_bar_separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="1dp"
+                android:background="?colorSecondary" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/places_autocomplete_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                tools:listitem="@layout/places_autocomplete_item_prediction" />
+
+            <!-- Error handling -->
+
+            <include layout="@layout/places_autocomplete_impl_error" />
+
+            <!-- Powered by Google -->
+
+            <View
+                android:id="@+id/places_autocomplete_powered_by_google_separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/places_autocomplete_separator" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ProgressBar
+                    android:id="@+id/places_autocomplete_progress"
+                    style="@style/Widget.AppCompat.ProgressBar"
+                    android:layout_width="@dimen/places_autocomplete_progress_size"
+                    android:layout_height="@dimen/places_autocomplete_progress_size"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/places_autocomplete_progress_horizontal_margin"
+                    android:indeterminate="true"
+                    android:indeterminateTint="?colorSecondary"
+                    android:indeterminateTintMode="src_atop"
+                    android:padding="4dp"
+                    tools:targetApi="lollipop" />
+
+                <ImageView
+                    android:id="@+id/places_autocomplete_powered_by_google"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/places_autocomplete_powered_by_google_height"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/places_powered_by_google"
+                    android:scaleType="center"
+                    android:src="@drawable/wrapper_places_powered_by_google" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</FrameLayout>

@@ -14,8 +14,8 @@
     <dimen name="card_search_height">48dp</dimen>
     <dimen name="card_search_margin_top">@dimen/default_margin</dimen>
     <dimen name="card_search_margin_horizontal">8dp</dimen>
-    <dimen name="card_search_content_start_margin">8dp</dimen>
-    <dimen name="card_search_content_margin">62dp</dimen>
+    <dimen name="card_search_content_start_margin">16dp</dimen>
+    <dimen name="card_search_content_margin">60dp</dimen>
     <dimen name="dialog_margin">24dp</dimen>
     <dimen name="marker_inner_icon_size">10dp</dimen>
 

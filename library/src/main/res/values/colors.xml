@@ -12,10 +12,19 @@
     <color name="colorSurface">@color/material_white</color>
     <color name="colorOnSurface">@color/material_black</color>
 
+    <color name="colorControlNormal">@color/material_on_surface_emphasis_medium</color>
+
     <color name="textColorPrimary">@color/material_on_surface_emphasis_high_type</color>
     <color name="textColorSecondary">@color/material_on_surface_emphasis_medium</color>
 
     <color name="colorMarker">@color/material_red400</color>
     <color name="colorMarkerInnerIcon">@color/material_white</color>
+
+    <!-- Do not change -->
+    <color name="places_autocomplete_prediction_primary_text">@color/textColorPrimary</color>
+    <color name="places_autocomplete_prediction_primary_text_highlight">@color/colorSecondary</color>
+    <color name="places_autocomplete_prediction_secondary_text">@color/textColorSecondary</color>
+    <color name="places_autocomplete_progress_tint">@color/colorSecondary</color>
+    <color name="places_autocomplete_error_button">@color/colorPrimary</color>
 
 </resources>

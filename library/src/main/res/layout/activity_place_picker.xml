@@ -144,7 +144,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="@dimen/card_search_content_start_margin"
                     android:contentDescription="@android:string/search_go"
-                    android:tint="?colorControlNormal"
+                    android:tint="@color/colorControlNormal"
                     app:srcCompat="@drawable/ic_magnify_black_24dp" />
 
                 <TextView
@@ -154,7 +154,7 @@
                     android:layout_marginStart="@dimen/card_search_content_margin"
                     android:text="@android:string/search_go"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                    android:textColor="?android:textColorSecondary" />
+                    android:textColor="@color/colorControlNormal" />
 
             </com.google.android.material.card.MaterialCardView>
 

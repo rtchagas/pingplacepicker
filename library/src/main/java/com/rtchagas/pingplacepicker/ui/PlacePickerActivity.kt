@@ -521,7 +521,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         val rectangularBounds = RectangularBounds.newInstance(getCurrentLatLngBounds())
 
         // Start the autocomplete intent.
-        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, placeFields)
+        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, placeFields)
             .setLocationBias(rectangularBounds)
             .build(this)
 

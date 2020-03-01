@@ -34,8 +34,10 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
         private const val TAG = "Ping#PlaceConfirmDialog"
         private const val ARG_PLACE = "arg_place"
 
-        fun newInstance(place: Place,
-                        listener: OnPlaceConfirmedListener): PlaceConfirmDialogFragment {
+        fun newInstance(
+            place: Place,
+            listener: OnPlaceConfirmedListener
+        ): PlaceConfirmDialogFragment {
 
             val args = Bundle()
             args.putParcelable(ARG_PLACE, place)
@@ -71,16 +73,16 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
         val builder = AlertDialog.Builder(activity!!)
 
         builder.setTitle(R.string.picker_place_confirm)
-                .setView(getContentView(activity!!))
-                .setPositiveButton(android.R.string.ok) { _, _ ->
-                    confirmListener?.onPlaceConfirmed(place)
-                    dismiss()
-                }
-                .setNegativeButton(R.string.picker_place_confirm_cancel) { _, _ ->
-                    // Just dismiss here...
-                    confirmListener?.onPlaceChangeRequest(place)
-                    dismiss()
-                }
+            .setView(getContentView(activity!!))
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                confirmListener?.onPlaceConfirmed(place)
+                dismiss()
+            }
+            .setNegativeButton(R.string.picker_place_confirm_cancel) { _, _ ->
+                // Just dismiss here...
+                confirmListener?.onPlaceChangeRequest(place)
+                dismiss()
+            }
 
         return builder.create()
     }
@@ -89,7 +91,7 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
     private fun getContentView(context: Context): View {
 
         val content = LayoutInflater.from(context)
-                .inflate(R.layout.fragment_dialog_place_confirm, null)
+            .inflate(R.layout.fragment_dialog_place_confirm, null)
 
         content.tvPlaceName.text = place.name
         content.tvPlaceAddress.text = place.address
@@ -115,8 +117,7 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
                     contentView.ivPlaceMap.visibility = View.GONE
                 }
             })
-        }
-        else {
+        } else {
             contentView.ivPlaceMap.visibility = View.GONE
         }
     }
@@ -126,24 +127,29 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
         val photoMetadatas = place.photoMetadatas
 
         if (resources.getBoolean(R.bool.show_confirmation_photo)
-                && photoMetadatas != null
-                && photoMetadatas.isNotEmpty()
+            && photoMetadatas != null
+            && photoMetadatas.isNotEmpty()
         ) {
             val photoMetadata = photoMetadatas[0]
             viewModel.getPlacePhoto(photoMetadata).observe(this,
-                    Observer { handlePlacePhotoLoaded(contentView, it) })
-        }
-        else {
+                Observer { handlePlacePhotoLoaded(contentView, it) })
+        } else {
             handlePlacePhotoLoaded(contentView, Resource.noData())
         }
     }
 
     private fun getFinalMapUrl(): String {
 
-        val mapUrl = Config.STATIC_MAP_URL
-                .format(place.latLng?.latitude,
-                        place.latLng?.longitude,
-                        PingPlacePicker.mapsApiKey)
+        var mapUrl = Config.STATIC_MAP_URL
+            .format(
+                place.latLng?.latitude,
+                place.latLng?.longitude,
+                PingPlacePicker.mapsApiKey
+            )
+
+        if (UiUtils.isNightModeEnabled()) {
+            mapUrl += Config.STATIC_MAP_URL_STYLE_DARK
+        }
 
         if (PingPlacePicker.urlSigningSecret.isNotEmpty()) {
             // Sign the URL
@@ -158,8 +164,7 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
             TransitionManager.beginDelayedTransition(contentView as ViewGroup)
             contentView.ivPlacePhoto.visibility = View.VISIBLE
             contentView.ivPlacePhoto.setImageBitmap(result.data)
-        }
-        else {
+        } else {
             contentView.ivPlacePhoto.visibility = View.GONE
         }
     }

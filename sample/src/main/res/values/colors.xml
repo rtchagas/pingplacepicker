@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+
+    <color name="colorPrimary">@color/material_teal500</color>
+    <color name="colorPrimaryDark">@color/material_teal800</color>
+    <color name="colorOnPrimary">@color/material_white</color>
+
+    <color name="colorSecondary">@color/material_deeporange500</color>
+    <color name="colorSecondaryDark">@color/material_deeporange800</color>
+    <color name="colorOnSecondary">@color/material_white</color>
+
+    <color name="colorBackground">@color/material_grey200</color>
+    <color name="colorOnBackground">@color/material_black</color>
+
+    <color name="colorSurface">@color/material_white</color>
+    <color name="colorOnSurface">@color/material_black</color>
+
+    <color name="textColorPrimary">@color/material_on_surface_emphasis_high_type</color>
+    <color name="textColorSecondary">@color/material_on_surface_emphasis_medium</color>
+
+    <color name="colorMarker">@color/material_deeporange400</color>
+    <color name="colorMarkerInnerIcon">@color/material_white</color>
+
 </resources>

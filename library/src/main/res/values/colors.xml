@@ -15,8 +15,6 @@
     <color name="colorSurface">@color/material_white</color>
     <color name="colorOnSurface">@color/material_black</color>
 
-    <color name="colorControlNormal">@color/material_on_surface_emphasis_medium</color>
-
     <color name="textColorPrimary">@color/material_on_surface_emphasis_high_type</color>
     <color name="textColorSecondary">@color/material_on_surface_emphasis_medium</color>
 

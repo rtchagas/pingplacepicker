@@ -85,12 +85,10 @@
 
                 <ImageView
                     android:id="@+id/ivMarkerSelect"
-                    android:layout_width="@dimen/icon_size_small"
-                    android:layout_height="@dimen/icon_size_small"
+                    style="@style/Icon.Secondary"
                     android:layout_marginStart="@dimen/guide_start_margin"
                     android:layout_marginBottom="@dimen/selector_margin"
                     android:contentDescription="@string/picker_select_this"
-                    android:tint="?colorSecondary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:srcCompat="@drawable/ic_map_marker_black_24dp" />
@@ -124,6 +122,7 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 style="@style/ToolbarStyle"
+                android:theme="@style/PingTheme.AppBarOverlay"
                 app:layout_collapseMode="pin"
                 app:title="@string/picker_title" />
 
@@ -140,12 +139,10 @@
                 app:rippleColor="@android:color/transparent">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/Icon.OnSurface"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="@dimen/card_search_content_start_margin"
                     android:contentDescription="@android:string/search_go"
-                    android:tint="@color/colorControlNormal"
                     app:srcCompat="@drawable/ic_magnify_black_24dp" />
 
                 <TextView
@@ -155,7 +152,7 @@
                     android:layout_marginStart="@dimen/card_search_content_margin"
                     android:text="@android:string/search_go"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                    android:textColor="@color/colorControlNormal" />
+                    android:textColor="@color/material_on_surface_emphasis_medium" />
 
             </com.google.android.material.card.MaterialCardView>
 

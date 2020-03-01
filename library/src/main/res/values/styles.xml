@@ -26,8 +26,6 @@
         <item name="colorOnSurface">@color/colorOnSurface</item>
         <item name="colorOnBackground">@color/colorOnBackground</item>
 
-        <item name="colorControlNormal">@color/colorControlNormal</item>
-
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
     </style>
@@ -36,6 +34,7 @@
 
     <style name="PingTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
         <item name="colorControlNormal">?attr/colorOnPrimarySurface</item>
+        <item name="actionMenuTextColor">?attr/colorOnPrimarySurface</item>
     </style>
 
     <style name="PingTheme.NoStatus">
@@ -47,6 +46,30 @@
         <item name="android:background">@null</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="titleTextColor">?attr/colorOnPrimarySurface</item>
+    </style>
+
+    <style name="Icon">
+        <item name="android:layout_width">@dimen/icon_size_small</item>
+        <item name="android:layout_height">@dimen/icon_size_small</item>
+        <item name="android:alpha">0.54</item>
+    </style>
+
+    <style name="Icon.OnPrimary">
+        <item name="android:tint">?attr/colorOnPrimary</item>
+    </style>
+
+    <style name="Icon.OnSurface">
+        <item name="android:tint">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="Icon.OnPrimarySurface">
+        <item name="android:tint">?attr/colorOnPrimarySurface</item>
+    </style>
+
+    <style name="Icon.Secondary">
+        <item name="android:alpha">1</item>
+        <item name="android:tint">?attr/colorSecondary</item>
     </style>
 
     <!-- Do not change or inherit -->

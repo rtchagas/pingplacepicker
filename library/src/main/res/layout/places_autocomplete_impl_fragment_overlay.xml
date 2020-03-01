@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,15 +27,13 @@
 
                 <ImageButton
                     android:id="@+id/places_autocomplete_back_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/Icon.OnSurface"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="@dimen/card_search_content_start_margin"
                     android:layout_marginEnd="20dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/places_cancel"
-                    android:src="@drawable/quantum_ic_arrow_back_grey600_24"
-                    android:tint="@color/colorControlNormal" />
+                    app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
 
                 <EditText
                     android:id="@+id/places_autocomplete_search_bar"
@@ -49,18 +48,17 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                    android:textColor="?android:textColorSecondary" />
+                    android:textColor="@color/material_on_surface_emphasis_medium" />
 
                 <ImageButton
                     android:id="@+id/places_autocomplete_clear_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/Icon.OnSurface"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="16dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/places_autocomplete_clear_button"
                     android:padding="@dimen/places_autocomplete_search_bar_button_padding"
-                    android:src="@drawable/quantum_ic_clear_grey600_24"
-                    android:tint="@color/colorControlNormal" />
+                    app:srcCompat="@drawable/ic_close_black_24dp" />
 
             </LinearLayout>
 

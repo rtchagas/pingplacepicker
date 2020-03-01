@@ -85,7 +85,7 @@
 
                 <ImageView
                     android:id="@+id/ivMarkerSelect"
-                    style="@style/Icon.Secondary"
+                    style="@style/PingIcon.Secondary"
                     android:layout_marginStart="@dimen/guide_start_margin"
                     android:layout_marginBottom="@dimen/selector_margin"
                     android:contentDescription="@string/picker_select_this"
@@ -121,7 +121,7 @@
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
-                style="@style/ToolbarStyle"
+                style="@style/PingToolbarStyle"
                 android:theme="@style/PingTheme.AppBarOverlay"
                 app:layout_collapseMode="pin"
                 app:title="@string/picker_title" />
@@ -139,7 +139,7 @@
                 app:rippleColor="@android:color/transparent">
 
                 <ImageView
-                    style="@style/Icon.OnSurface"
+                    style="@style/PingIcon.OnSurface"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="@dimen/card_search_content_start_margin"
                     android:contentDescription="@android:string/search_go"

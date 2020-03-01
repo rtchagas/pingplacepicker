@@ -27,7 +27,7 @@
 
                 <ImageButton
                     android:id="@+id/places_autocomplete_back_button"
-                    style="@style/Icon.OnSurface"
+                    style="@style/PingIcon.OnSurface"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="@dimen/card_search_content_start_margin"
                     android:layout_marginEnd="20dp"
@@ -52,7 +52,7 @@
 
                 <ImageButton
                     android:id="@+id/places_autocomplete_clear_button"
-                    style="@style/Icon.OnSurface"
+                    style="@style/PingIcon.OnSurface"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="16dp"
                     android:background="?attr/selectableItemBackgroundBorderless"

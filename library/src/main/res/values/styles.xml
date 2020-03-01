@@ -41,7 +41,7 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <style name="ToolbarStyle" parent="Widget.MaterialComponents.Toolbar.Surface">
+    <style name="PingToolbarStyle" parent="Widget.MaterialComponents.Toolbar.Surface">
         <!-- Toolbar should always be within an AppBarLayout which provides the background. -->
         <item name="android:background">@null</item>
         <item name="android:layout_width">match_parent</item>
@@ -49,25 +49,25 @@
         <item name="titleTextColor">?attr/colorOnPrimarySurface</item>
     </style>
 
-    <style name="Icon">
+    <style name="PingIcon">
         <item name="android:layout_width">@dimen/icon_size_small</item>
         <item name="android:layout_height">@dimen/icon_size_small</item>
         <item name="android:alpha">0.54</item>
     </style>
 
-    <style name="Icon.OnPrimary">
+    <style name="PingIcon.OnPrimary">
         <item name="android:tint">?attr/colorOnPrimary</item>
     </style>
 
-    <style name="Icon.OnSurface">
+    <style name="PingIcon.OnSurface">
         <item name="android:tint">?attr/colorOnSurface</item>
     </style>
 
-    <style name="Icon.OnPrimarySurface">
+    <style name="PingIcon.OnPrimarySurface">
         <item name="android:tint">?attr/colorOnPrimarySurface</item>
     </style>
 
-    <style name="Icon.Secondary">
+    <style name="PingIcon.Secondary">
         <item name="android:alpha">1</item>
         <item name="android:tint">?attr/colorSecondary</item>
     </style>

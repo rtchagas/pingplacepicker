@@ -123,9 +123,18 @@ internal class PlaceFromCoordinates(private val latitude: Double, private val lo
     }
 
     private fun replaceDelimiters(original: String): String {
-        val parts = original.split(":")
-        val idx = parts[2].indexOfAny(arrayOf(',','.').toCharArray())
-        val seconds = parts[2].subSequence(0, idx)
-        return "${parts[0]}° ${parts[1]}' $seconds\""
+
+        val parts: List<String> = original.split(":")
+
+        val degrees: String = parts[0]
+        val minutes: String = parts[1]
+        var seconds: String = parts[2]
+
+        val idx = seconds.indexOfAny(charArrayOf(',', '.'))
+        if (idx >= 0) {
+            seconds = seconds.substring(0, idx)
+        }
+
+        return "${degrees}° ${minutes}' ${seconds}\""
     }
 }

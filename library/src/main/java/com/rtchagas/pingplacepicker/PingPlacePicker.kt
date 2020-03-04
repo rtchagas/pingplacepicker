@@ -60,6 +60,14 @@ class PingPlacePicker private constructor() {
             return this
         }
 
+        /**
+         * Set whether the library should return the place coordinate retrieved from GooglePlace or the actual selected location from google map
+         */
+        fun setShouldReturnActualLatLng(shouldReturnActualLatLng: Boolean): IntentBuilder {
+            intent.putExtra(PlacePickerActivity.IS_SHOULD_RETURN_ACTUAL_LATLNG, shouldReturnActualLatLng)
+            return this
+        }
+
         @Throws(GooglePlayServicesNotAvailableException::class)
         fun build(activity: Activity): Intent {
 
@@ -97,6 +105,7 @@ class PingPlacePicker private constructor() {
     companion object {
 
         const val EXTRA_PLACE = "extra_place"
+        const val ACTUAL_SELECTED_LATLNG = "actual_selected_latlng"
 
         var androidApiKey: String = ""
         var mapsApiKey: String = ""
@@ -108,6 +117,11 @@ class PingPlacePicker private constructor() {
         @JvmStatic
         fun getPlace(intent: Intent): Place? {
             return intent.getParcelableExtra(EXTRA_PLACE)
+        }
+
+        @JvmStatic
+        fun getActualLatLng(intent: Intent): LatLng? {
+            return intent.getParcelableExtra(ACTUAL_SELECTED_LATLNG)
         }
     }
 }

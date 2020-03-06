@@ -64,7 +64,7 @@ class PingPlacePicker private constructor() {
          * Set whether the library should return the place coordinate retrieved from GooglePlace or the actual selected location from google map
          */
         fun setShouldReturnActualLatLng(shouldReturnActualLatLng: Boolean): IntentBuilder {
-            intent.putExtra(PlacePickerActivity.EXTRA_SHOULD_RETURN_ACTUAL_LATLNG, shouldReturnActualLatLng)
+            intent.putExtra(PlacePickerActivity.EXTRA_RETURN_ACTUAL_LATLNG, shouldReturnActualLatLng)
             return this
         }
 

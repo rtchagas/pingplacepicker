@@ -146,7 +146,7 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
                 PingPlacePicker.mapsApiKey
             )
 
-        if (UiUtils.isNightModeEnabled()) {
+        if (UiUtils.isNightModeEnabled(requireContext())) {
             mapUrl += Config.STATIC_MAP_URL_STYLE_DARK
         }
 

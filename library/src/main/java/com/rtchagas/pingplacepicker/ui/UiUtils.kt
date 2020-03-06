@@ -2,11 +2,12 @@ package com.rtchagas.pingplacepicker.ui
 
 import android.content.Context
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.util.TypedValue
 import androidx.annotation.ColorInt
 import com.google.android.libraries.places.api.model.Place
 import com.rtchagas.pingplacepicker.R
+import org.jetbrains.anko.configuration
+import java.util.*
 
 
 object UiUtils {
@@ -21,7 +22,7 @@ object UiUtils {
 
         place.types?.let {
             for (type: Place.Type in it) {
-                val name = type.name.toLowerCase()
+                val name = type.name.toLowerCase(Locale.ENGLISH)
                 val id: Int = context.resources
                     .getIdentifier("ic_places_$name", defType, defPackage)
                 if (id > 0) return id
@@ -35,12 +36,11 @@ object UiUtils {
     /**
      * Returns whether the current selected theme is night mode or not
      */
-    fun isNightModeEnabled(): Boolean {
+    fun isNightModeEnabled(context: Context): Boolean {
 
-        val currentNightMode =
-            (Resources.getSystem().configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
+        val nightMode = (context.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
 
-        return currentNightMode == Configuration.UI_MODE_NIGHT_YES
+        return nightMode == Configuration.UI_MODE_NIGHT_YES
     }
 
     @ColorInt

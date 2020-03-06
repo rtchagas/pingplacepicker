@@ -62,7 +62,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
         // For passing extra parameters to this activity.
         const val EXTRA_LOCATION = "extra_location"
-        const val EXTRA_SHOULD_RETURN_ACTUAL_LATLNG = "extra_should_return_actual_latlng"
+        const val EXTRA_RETURN_ACTUAL_LATLNG = "extra_return_actual_latlng"
 
         // Keys for storing activity state.
         private const val STATE_CAMERA_POSITION = "state_camera_position"
@@ -204,7 +204,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
     override fun onPlaceConfirmed(place: Place) {
         val data = Intent()
 
-        if (intent.getBooleanExtra(EXTRA_SHOULD_RETURN_ACTUAL_LATLNG, false)){
+        if (intent.getBooleanExtra(EXTRA_RETURN_ACTUAL_LATLNG, false)){
             data.putExtra(PingPlacePicker.EXTRA_ACTUAL_LATLNG, selectedLatLng)
         }
         else {
@@ -580,7 +580,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
      */
     private fun setMapStyle() {
 
-        if (!UiUtils.isNightModeEnabled()) {
+        if (!UiUtils.isNightModeEnabled(this)) {
             return
         }
 

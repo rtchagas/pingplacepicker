@@ -253,14 +253,15 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
             clear()
 
             for (place in places) {
+                place.latLng?.let {
+                    val marker: Marker = addMarker(
+                            MarkerOptions()
+                                    .position(it)
+                                    .icon(getPlaceMarkerBitmap(place))
+                    )
 
-                val marker: Marker = addMarker(
-                    MarkerOptions()
-                        .position(place.latLng!!)
-                        .icon(getPlaceMarkerBitmap(place))
-                )
-
-                marker.tag = place
+                    marker.tag = place
+                }
             }
         }
     }

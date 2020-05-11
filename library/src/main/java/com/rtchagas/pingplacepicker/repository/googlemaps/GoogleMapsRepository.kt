@@ -13,14 +13,16 @@ import com.google.android.libraries.places.api.net.PlacesClient
 import com.rtchagas.pingplacepicker.Config
 import com.rtchagas.pingplacepicker.PingPlacePicker
 import com.rtchagas.pingplacepicker.model.SearchResult
+import com.rtchagas.pingplacepicker.model.SimplePlace
 import com.rtchagas.pingplacepicker.repository.PlaceRepository
 import io.reactivex.Single
+import java.util.*
 
 
 class GoogleMapsRepository constructor(
-        private val googleClient: PlacesClient,
-        private val googleMapsAPI: GoogleMapsAPI)
-    : PlaceRepository {
+    private val googleClient: PlacesClient,
+    private val googleMapsAPI: GoogleMapsAPI
+) : PlaceRepository {
 
 
     /**
@@ -45,8 +47,7 @@ class GoogleMapsRepository constructor(
                     }
                     // Empty result
                     emitter.onSuccess(listOf())
-                }
-                else {
+                } else {
                     emitter.tryOnError(task.exception ?: Exception("No places for you..."))
                 }
             }
@@ -64,22 +65,13 @@ class GoogleMapsRepository constructor(
         val locationParam = "${location.latitude},${location.longitude}"
 
         return googleMapsAPI.searchNearby(locationParam, PingPlacePicker.mapsApiKey)
-                .flatMap { searchResult ->
-
-                    val singles = mutableListOf<Single<Place>>()
-
-                    searchResult.results.forEach {
-                        singles.add(getPlaceById(it.placeId))
-                    }
-
-                    return@flatMap Single.zip(singles) { listOfResults ->
-                        val places = mutableListOf<Place>()
-                        listOfResults.forEach {
-                            places.add(it as Place)
-                        }
-                        return@zip places
-                    }
+            .map { searchResult ->
+                val placeList = mutableListOf<NearbyPlace>()
+                for (simplePlace in searchResult.results) {
+                    placeList.add(mapToNearbyPlace(simplePlace))
                 }
+                placeList
+            }
     }
 
     /**
@@ -93,9 +85,9 @@ class GoogleMapsRepository constructor(
 
         // Create a FetchPhotoRequest.
         val photoRequest = FetchPhotoRequest.builder(photoMetadata)
-                .setMaxWidth(Config.PLACE_IMG_WIDTH)
-                .setMaxHeight(Config.PLACE_IMG_HEIGHT)
-                .build()
+            .setMaxWidth(Config.PLACE_IMG_WIDTH)
+            .setMaxHeight(Config.PLACE_IMG_HEIGHT)
+            .build()
 
         return Single.create { emitter ->
             googleClient.fetchPhoto(photoRequest).addOnSuccessListener {
@@ -118,18 +110,22 @@ class GoogleMapsRepository constructor(
         val paramLocation = "${location.latitude},${location.longitude}"
 
         return googleMapsAPI.findByLocation(paramLocation, PingPlacePicker.mapsApiKey)
-                .flatMap { result: SearchResult ->
-                    if (("OK" == result.status) && result.results.isNotEmpty()) {
-                        return@flatMap getPlaceById(result.results[0].placeId)
-                    }
-                    return@flatMap Single.just(PlaceFromCoordinates(
-                            location.latitude,
-                            location.longitude))
+            .flatMap { result: SearchResult ->
+                if (("OK" == result.status) && result.results.isNotEmpty()) {
+                    return@flatMap getPlaceById(result.results[0].placeId)
                 }
+                return@flatMap Single.just(
+                    PlaceFromCoordinates(
+                        location.latitude,
+                        location.longitude
+                    )
+                )
+            }
     }
 
     /**
-     * This call to Google Places API is totally free :)
+     * Billed according to
+     * https://developers.google.com/places/android-sdk/usage-and-billing#places-details
      */
     private fun getPlaceById(placeId: String): Single<Place> {
 
@@ -138,12 +134,12 @@ class GoogleMapsRepository constructor(
 
         return Single.create { emitter ->
             googleClient.fetchPlace(request)
-                    .addOnSuccessListener {
-                        emitter.onSuccess(it.place)
-                    }
-                    .addOnFailureListener {
-                        emitter.tryOnError(it)
-                    }
+                .addOnSuccessListener {
+                    emitter.onSuccess(it.place)
+                }
+                .addOnFailureListener {
+                    emitter.tryOnError(it)
+                }
         }
     }
 
@@ -154,12 +150,37 @@ class GoogleMapsRepository constructor(
     private fun getPlaceFields(): List<Place.Field> {
 
         return listOf(
-                Place.Field.ID,
-                Place.Field.NAME,
-                Place.Field.ADDRESS,
-                Place.Field.LAT_LNG,
-                Place.Field.TYPES,
-                Place.Field.PHOTO_METADATAS)
+            Place.Field.ID,
+            Place.Field.NAME,
+            Place.Field.ADDRESS,
+            Place.Field.LAT_LNG,
+            Place.Field.TYPES,
+            Place.Field.PHOTO_METADATAS
+        )
+    }
+
+    private fun mapToNearbyPlace(place: SimplePlace): NearbyPlace {
+
+        val photoList = mutableListOf<PhotoMetadata>()
+        place.photos.forEach {
+            val photoMetadata = PhotoMetadata.builder(it.photoReference)
+                .setAttributions(it.htmlAttributions.toString())
+                .setHeight(it.height)
+                .setWidth(it.width)
+                .build()
+            photoList.add(photoMetadata)
+        }
+
+        val typeList = mutableListOf<Place.Type>()
+        place.types.forEach { simpleType ->
+            val placeType = Place.Type.values()
+                .find { it.name == simpleType.toUpperCase(Locale.US) } ?: Place.Type.OTHER
+            typeList.add(placeType)
+        }
+
+        val latLng = LatLng(place.geometry.location.lat, place.geometry.location.lng)
+
+        return NearbyPlace(place.name, photoList, place.vicinity, typeList, latLng)
     }
 
     /**

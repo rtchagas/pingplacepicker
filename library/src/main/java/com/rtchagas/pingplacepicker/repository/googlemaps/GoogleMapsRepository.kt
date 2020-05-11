@@ -180,7 +180,7 @@ class GoogleMapsRepository constructor(
 
         val latLng = LatLng(place.geometry.location.lat, place.geometry.location.lng)
 
-        return NearbyPlace(place.name, photoList, place.vicinity, typeList, latLng)
+        return NearbyPlace(place.placeId, place.name, photoList, place.vicinity, typeList, latLng)
     }
 
     /**

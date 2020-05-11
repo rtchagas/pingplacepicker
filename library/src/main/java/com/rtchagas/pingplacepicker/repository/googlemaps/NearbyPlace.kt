@@ -8,6 +8,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 class NearbyPlace(
+    var placeId: String,
     var placeName: String,
     var placePhotos: MutableList<PhotoMetadata>,
     var placeAddress: String,
@@ -28,7 +29,7 @@ class NearbyPlace(
     }
 
     override fun getId(): String? {
-        return null
+        return placeId
     }
 
     override fun getPhotoMetadatas(): MutableList<PhotoMetadata> {

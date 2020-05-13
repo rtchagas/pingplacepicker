@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
             val place: Place? = PingPlacePicker.getPlace(data!!)
 
-            toast("You selected: ${place?.name}")
+            toast("You selected: ${place?.name}\n ${place?.id}")
         }
     }
 }

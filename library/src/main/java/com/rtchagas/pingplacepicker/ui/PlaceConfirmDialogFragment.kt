@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.transition.TransitionManager
 import com.google.android.libraries.places.api.model.Place
@@ -73,7 +74,7 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
         val builder = AlertDialog.Builder(activity!!)
 
         builder.setTitle(R.string.picker_place_confirm)
-            .setView(getContentView(activity!!))
+            .setView(getContentView(requireContext()))
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 confirmListener?.onPlaceConfirmed(place)
                 dismiss()
@@ -92,7 +93,12 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
         val content = LayoutInflater.from(context)
             .inflate(R.layout.fragment_dialog_place_confirm, null)
 
-        content.tvPlaceName.text = place.name
+        if (place.name.isNullOrEmpty()) {
+            content.tvPlaceName.isVisible = false
+        } else {
+            content.tvPlaceName.text = place.name
+        }
+
         content.tvPlaceAddress.text = place.address
 
         fetchPlaceMap(content)

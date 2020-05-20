@@ -17,5 +17,7 @@ data class SimplePlace(
     @Json(name = "types")
     val types: List<String> = emptyList(),
     @Json(name = "vicinity")
-    val vicinity: String = ""
+    val vicinity: String = "",
+    @Json(name = "formatted_address")
+    val formattedAddress: String = ""
 )

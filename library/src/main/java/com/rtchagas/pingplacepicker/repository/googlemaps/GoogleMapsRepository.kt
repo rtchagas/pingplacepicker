@@ -7,7 +7,6 @@ import com.google.android.libraries.places.api.model.PhotoMetadata
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.PlaceLikelihood
 import com.google.android.libraries.places.api.net.FetchPhotoRequest
-import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.rtchagas.pingplacepicker.Config
@@ -66,9 +65,9 @@ class GoogleMapsRepository constructor(
 
         return googleMapsAPI.searchNearby(locationParam, PingPlacePicker.mapsApiKey)
             .map { searchResult ->
-                val placeList = mutableListOf<NearbyPlace>()
+                val placeList = mutableListOf<CustomPlace>()
                 for (simplePlace in searchResult.results) {
-                    placeList.add(mapToNearbyPlace(simplePlace))
+                    placeList.add(mapToCustomPlace(simplePlace))
                 }
                 placeList
             }
@@ -110,37 +109,12 @@ class GoogleMapsRepository constructor(
         val paramLocation = "${location.latitude},${location.longitude}"
 
         return googleMapsAPI.findByLocation(paramLocation, PingPlacePicker.mapsApiKey)
-            .flatMap { result: SearchResult ->
+            .map { result: SearchResult ->
                 if (("OK" == result.status) && result.results.isNotEmpty()) {
-                    return@flatMap getPlaceById(result.results[0].placeId)
+                    return@map mapToCustomPlace(result.results[0])
                 }
-                return@flatMap Single.just(
-                    PlaceFromCoordinates(
-                        location.latitude,
-                        location.longitude
-                    )
-                )
+                return@map PlaceFromCoordinates(location.latitude, location.longitude)
             }
-    }
-
-    /**
-     * Billed according to
-     * https://developers.google.com/places/android-sdk/usage-and-billing#places-details
-     */
-    private fun getPlaceById(placeId: String): Single<Place> {
-
-        // Create the request
-        val request = FetchPlaceRequest.builder(placeId, getPlaceFields()).build()
-
-        return Single.create { emitter ->
-            googleClient.fetchPlace(request)
-                .addOnSuccessListener {
-                    emitter.onSuccess(it.place)
-                }
-                .addOnFailureListener {
-                    emitter.tryOnError(it)
-                }
-        }
     }
 
     /**
@@ -159,7 +133,7 @@ class GoogleMapsRepository constructor(
         )
     }
 
-    private fun mapToNearbyPlace(place: SimplePlace): NearbyPlace {
+    private fun mapToCustomPlace(place: SimplePlace): CustomPlace {
 
         val photoList = mutableListOf<PhotoMetadata>()
         place.photos.forEach {
@@ -180,7 +154,11 @@ class GoogleMapsRepository constructor(
 
         val latLng = LatLng(place.geometry.location.lat, place.geometry.location.lng)
 
-        return NearbyPlace(place.placeId, place.name, photoList, place.vicinity, typeList, latLng)
+        val address =
+            if (place.formattedAddress.isNotEmpty()) place.formattedAddress
+            else place.vicinity
+
+        return CustomPlace(place.placeId, place.name, photoList, address, typeList, latLng)
     }
 
     /**

@@ -7,7 +7,7 @@ import com.google.android.libraries.places.api.model.*
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class NearbyPlace(
+class CustomPlace(
     var placeId: String,
     var placeName: String,
     var placePhotos: MutableList<PhotoMetadata>,

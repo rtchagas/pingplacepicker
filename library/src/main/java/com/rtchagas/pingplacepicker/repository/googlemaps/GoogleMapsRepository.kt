@@ -154,11 +154,22 @@ class GoogleMapsRepository constructor(
 
         val latLng = LatLng(place.geometry.location.lat, place.geometry.location.lng)
 
-        val address =
+        val address: String =
             if (place.formattedAddress.isNotEmpty()) place.formattedAddress
             else place.vicinity
 
-        return CustomPlace(place.placeId, place.name, photoList, address, typeList, latLng)
+        val name: String = buildPlaceName(place.name, address)
+
+        return CustomPlace(place.placeId, name, photoList, address, typeList, latLng)
+    }
+
+    private fun buildPlaceName(originalName: String, address: String): String {
+        // We have a nice name, use it
+        if (originalName.isNotEmpty()) {
+            return originalName
+        }
+        // Return the first part of the address, usually the street + number
+        return address.split(",").first()
     }
 
     /**

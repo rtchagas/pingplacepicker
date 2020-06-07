@@ -20,6 +20,14 @@ class CustomPlace(
         return null
     }
 
+    /**
+     * Default value only.
+     * Clients shouldn't rely on this.
+     */
+    override fun getBusinessStatus(): BusinessStatus? {
+        return BusinessStatus.OPERATIONAL
+    }
+
     override fun getName(): String? {
         return placeName
     }

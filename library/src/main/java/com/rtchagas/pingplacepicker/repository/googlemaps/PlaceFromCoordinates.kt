@@ -6,23 +6,29 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.libraries.places.api.model.AddressComponents
-import com.google.android.libraries.places.api.model.OpeningHours
-import com.google.android.libraries.places.api.model.PhotoMetadata
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.model.PlusCode
+import com.google.android.libraries.places.api.model.*
 import kotlin.math.absoluteValue
 
 /**
  * Place without any additional info. Just latitude and longitude.
  */
-internal class PlaceFromCoordinates(private val latitude: Double, private val longitude: Double) : Place() {
+internal class PlaceFromCoordinates(private val latitude: Double, private val longitude: Double) :
+    Place() {
     constructor(parcel: Parcel) : this(
-            parcel.readDouble(),
-            parcel.readDouble())
+        parcel.readDouble(),
+        parcel.readDouble()
+    )
 
     override fun getUserRatingsTotal(): Int? {
         return null
+    }
+
+    /**
+     * Default value only.
+     * Clients shouldn't rely on this.
+     */
+    override fun getBusinessStatus(): BusinessStatus? {
+        return BusinessStatus.OPERATIONAL
     }
 
     override fun getName(): String? {
@@ -112,14 +118,22 @@ internal class PlaceFromCoordinates(private val latitude: Double, private val lo
 
     private fun formatLatitude(latitude: Double): String {
         val direction = if (latitude > 0) "N" else "S"
-        return "${replaceDelimiters(Location.convert(latitude.absoluteValue,
-                Location.FORMAT_SECONDS))} $direction"
+        return "${replaceDelimiters(
+            Location.convert(
+                latitude.absoluteValue,
+                Location.FORMAT_SECONDS
+            )
+        )} $direction"
     }
 
     private fun formatLongitude(longitude: Double): String {
         val direction = if (longitude > 0) "W" else "E"
-        return "${replaceDelimiters(Location.convert(longitude.absoluteValue,
-                Location.FORMAT_SECONDS))} $direction"
+        return "${replaceDelimiters(
+            Location.convert(
+                longitude.absoluteValue,
+                Location.FORMAT_SECONDS
+            )
+        )} $direction"
     }
 
     private fun replaceDelimiters(original: String): String {

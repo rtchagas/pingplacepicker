@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">위치 선택</string>
+    <string name="picker_select_this">현재 위치 선택</string>
+    <string name="picker_or_select_nearby">근처 장소</string>
+    <string name="picker_load_places_error">"근처 장소를 확인할 수 없습니다."</string>
+    <string name="picker_load_this_place_error">"선택한 장소를 찾을 수 없습니다."</string>
+    <string name="picker_place_confirm">이 장소를 사용 하시겠습니까?</string>
+    <string name="picker_place_confirm_cancel">장소 변경</string>
+    <string name="picker_location_unavailable">위치를 사용할 수 없습니다.</string>
+
+    <!-- Content descriptions -->
+    <string name="description_place_image">선택한 장소의 사진</string>
+    <string name="description_place_map">선택한 장소의 지도</string>
+
+    <!-- Permissions -->
+    <string name="permission_fine_location_title">위치 권한</string>
+    <string name="permission_fine_location_message">주변 장소를 찾기 위해 위치 권한이 필요합니다.</string>
+</resources>

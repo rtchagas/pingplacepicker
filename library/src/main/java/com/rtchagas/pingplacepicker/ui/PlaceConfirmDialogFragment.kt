@@ -26,6 +26,7 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_dialog_place_confirm.view.*
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.util.*
 
 
 class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent {
@@ -149,7 +150,8 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
             .format(
                 place.latLng?.latitude,
                 place.latLng?.longitude,
-                PingPlacePicker.mapsApiKey
+                PingPlacePicker.mapsApiKey,
+                Locale.getDefault().language
             )
 
         if (UiUtils.isNightModeEnabled(requireContext())) {

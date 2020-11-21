@@ -63,8 +63,8 @@ dependencies {
     implementation 'com.google.android.libraries.places:places:2.4.0'
 
     // Koin for Android
-    implementation 'org.koin:koin-android:2.0.1'
-    implementation 'org.koin:koin-android-viewmodel:2.0.1'
+    implementation 'org.koin:koin-android:2.1.5'
+    implementation 'org.koin:koin-android-viewmodel:2.1.5'
 
     // Rx
     implementation 'io.reactivex.rxjava2:rxjava:2.2.10'

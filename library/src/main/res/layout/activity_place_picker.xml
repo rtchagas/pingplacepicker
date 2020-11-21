@@ -101,9 +101,9 @@
                     android:text="@string/picker_select_this"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:textColor="?colorSecondary"
-                    app:layout_constraintBottom_toTopOf="@id/ivMarkerSelect"
+                    app:layout_constraintBottom_toBottomOf="@id/ivMarkerSelect"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ivMarkerSelect" />
+                    app:layout_constraintTop_toTopOf="@id/ivMarkerSelect" />
 
                 <androidx.core.widget.ContentLoadingProgressBar
                     android:id="@+id/pbLoading"
@@ -112,10 +112,10 @@
                     android:layout_height="@dimen/icon_size_small"
                     android:indeterminate="true"
                     android:visibility="visible"
-                    app:layout_constraintBottom_toTopOf="@id/ivMarkerSelect"
+                    app:layout_constraintBottom_toBottomOf="@id/ivMarkerSelect"
                     app:layout_constraintEnd_toStartOf="@id/btnMyLocation"
                     app:layout_constraintStart_toEndOf="@id/btnMyLocation"
-                    app:layout_constraintTop_toBottomOf="@id/ivMarkerSelect" />
+                    app:layout_constraintTop_toTopOf="@id/ivMarkerSelect" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

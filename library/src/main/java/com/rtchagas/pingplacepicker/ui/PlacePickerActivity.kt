@@ -18,7 +18,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -42,7 +41,6 @@ import com.rtchagas.pingplacepicker.PingPlacePicker
 import com.rtchagas.pingplacepicker.R
 import com.rtchagas.pingplacepicker.helper.PermissionsHelper
 import com.rtchagas.pingplacepicker.inject.PingKoinComponent
-import com.rtchagas.pingplacepicker.inject.PingKoinContext
 import com.rtchagas.pingplacepicker.viewmodel.PlacePickerViewModel
 import com.rtchagas.pingplacepicker.viewmodel.Resource
 import io.reactivex.disposables.CompositeDisposable
@@ -51,7 +49,8 @@ import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 import kotlin.math.abs
 
-class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
+class PlacePickerActivity : AppCompatActivity(),
+    PingKoinComponent,
     OnMapReadyCallback,
     GoogleMap.OnMarkerClickListener,
     PlaceConfirmDialogFragment.OnPlaceConfirmedListener {
@@ -100,13 +99,6 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_place_picker)
-
-        // Check if PING was killed for some reason.
-        // If so, should restart the activity and init everything again.
-        if (PingKoinContext.koinApp == null) {
-            finish()
-            return
-        }
 
         // Configure the toolbar
         setSupportActionBar(toolbar)
@@ -204,10 +196,9 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
     override fun onPlaceConfirmed(place: Place) {
         val data = Intent()
 
-        if (intent.getBooleanExtra(EXTRA_RETURN_ACTUAL_LATLNG, false)){
+        if (intent.getBooleanExtra(EXTRA_RETURN_ACTUAL_LATLNG, false)) {
             data.putExtra(PingPlacePicker.EXTRA_ACTUAL_LATLNG, selectedLatLng)
-        }
-        else {
+        } else {
             data.putExtra(PingPlacePicker.EXTRA_ACTUAL_LATLNG, place.latLng)
         }
 
@@ -255,9 +246,9 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
             for (place in places) {
                 place.latLng?.let {
                     val marker: Marker = addMarker(
-                            MarkerOptions()
-                                    .position(it)
-                                    .icon(getPlaceMarkerBitmap(place))
+                        MarkerOptions()
+                            .position(it)
+                            .icon(getPlaceMarkerBitmap(place))
                     )
 
                     marker.tag = place
@@ -499,7 +490,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
 
     private fun loadNearbyPlaces() {
         viewModel.getNearbyPlaces(lastKnownLocation ?: defaultLocation)
-            .observe(this, Observer { handlePlacesLoaded(it) })
+            .observe(this, { handlePlacesLoaded(it) })
     }
 
     private fun moveCameraToSelectedPlace(place: Place) {
@@ -511,7 +502,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
     private fun refreshNearbyPlaces() {
         googleMap?.cameraPosition?.run {
             viewModel.getNearbyPlaces(target)
-                .observe(this@PlacePickerActivity, Observer { handlePlacesLoaded(it) })
+                .observe(this@PlacePickerActivity, { handlePlacesLoaded(it) })
         }
     }
 
@@ -567,7 +558,7 @@ class PlacePickerActivity : AppCompatActivity(), PingKoinComponent,
         googleMap?.cameraPosition?.run {
             selectedLatLng = target
             viewModel.getPlaceByLocation(target).observe(this@PlacePickerActivity,
-                Observer { handlePlaceByLocation(it) })
+                { handlePlaceByLocation(it) })
         }
     }
 

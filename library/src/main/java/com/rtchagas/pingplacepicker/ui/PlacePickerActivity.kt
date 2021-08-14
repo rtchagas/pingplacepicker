@@ -245,13 +245,13 @@ class PlacePickerActivity : AppCompatActivity(),
 
             for (place in places) {
                 place.latLng?.let {
-                    val marker: Marker = addMarker(
+                    val marker: Marker? = addMarker(
                         MarkerOptions()
                             .position(it)
                             .icon(getPlaceMarkerBitmap(place))
                     )
 
-                    marker.tag = place
+                    marker?.tag = place
                 }
             }
         }
@@ -292,8 +292,8 @@ class PlacePickerActivity : AppCompatActivity(),
         try {
             val locationResult = fusedLocationProviderClient.lastLocation
             locationResult
-                ?.addOnFailureListener(this) { setDefaultLocation() }
-                ?.addOnSuccessListener(this) { location: Location? ->
+                .addOnFailureListener(this) { setDefaultLocation() }
+                .addOnSuccessListener(this) { location: Location? ->
 
                     // In rare cases location may be null...
                     if (location == null) {
@@ -320,7 +320,7 @@ class PlacePickerActivity : AppCompatActivity(),
                     lastKnownLocation = LatLng(location.latitude, location.longitude)
 
                     val update = CameraUpdateFactory
-                        .newLatLngZoom(lastKnownLocation, defaultZoom)
+                        .newLatLngZoom(lastKnownLocation!!, defaultZoom)
 
                     if (animate) {
                         googleMap?.animateCamera(update)
@@ -602,8 +602,10 @@ class PlacePickerActivity : AppCompatActivity(),
 
         googleMap?.let {
 
-            it.uiSettings?.isMyLocationButtonEnabled = false
-            it.uiSettings?.isMapToolbarEnabled = false
+            with(it.uiSettings) {
+                isMyLocationButtonEnabled = false
+                isMapToolbarEnabled = false
+            }
 
             if (isLocationPermissionGranted) {
                 it.isMyLocationEnabled = true

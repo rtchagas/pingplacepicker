@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.transition.TransitionManager
 import com.google.android.libraries.places.api.model.Place
 import com.rtchagas.pingplacepicker.Config
@@ -25,7 +24,7 @@ import com.rtchagas.pingplacepicker.viewmodel.Resource
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_dialog_place_confirm.view.*
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 
@@ -72,7 +71,7 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        val builder = AlertDialog.Builder(activity!!)
+        val builder = AlertDialog.Builder(requireActivity())
 
         builder.setTitle(R.string.picker_place_confirm)
             .setView(getContentView(requireContext()))
@@ -138,7 +137,7 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
         ) {
             val photoMetadata = photoMetadatas[0]
             viewModel.getPlacePhoto(photoMetadata).observe(this,
-                Observer { handlePlacePhotoLoaded(contentView, it) })
+                { handlePlacePhotoLoaded(contentView, it) })
         } else {
             handlePlacePhotoLoaded(contentView, Resource.noData())
         }

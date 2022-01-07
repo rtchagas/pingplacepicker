@@ -12,8 +12,11 @@ import kotlin.math.absoluteValue
 /**
  * Place without any additional info. Just latitude and longitude.
  */
-internal class PlaceFromCoordinates(private val latitude: Double, private val longitude: Double) :
-    Place() {
+internal class PlaceFromCoordinates(
+    private val latitude: Double,
+    private val longitude: Double
+) : Place() {
+
     constructor(parcel: Parcel) : this(
         parcel.readDouble(),
         parcel.readDouble()
@@ -59,6 +62,10 @@ internal class PlaceFromCoordinates(private val latitude: Double, private val lo
         return null
     }
 
+    override fun getIconBackgroundColor(): Int? {
+        return null
+    }
+
     override fun getPriceLevel(): Int? {
         return null
     }
@@ -72,6 +79,10 @@ internal class PlaceFromCoordinates(private val latitude: Double, private val lo
     }
 
     override fun getAddress(): String? {
+        return null
+    }
+
+    override fun getIconUrl(): String? {
         return null
     }
 
@@ -118,22 +129,26 @@ internal class PlaceFromCoordinates(private val latitude: Double, private val lo
 
     private fun formatLatitude(latitude: Double): String {
         val direction = if (latitude > 0) "N" else "S"
-        return "${replaceDelimiters(
-            Location.convert(
-                latitude.absoluteValue,
-                Location.FORMAT_SECONDS
+        return "${
+            replaceDelimiters(
+                Location.convert(
+                    latitude.absoluteValue,
+                    Location.FORMAT_SECONDS
+                )
             )
-        )} $direction"
+        } $direction"
     }
 
     private fun formatLongitude(longitude: Double): String {
         val direction = if (longitude > 0) "W" else "E"
-        return "${replaceDelimiters(
-            Location.convert(
-                longitude.absoluteValue,
-                Location.FORMAT_SECONDS
+        return "${
+            replaceDelimiters(
+                Location.convert(
+                    longitude.absoluteValue,
+                    Location.FORMAT_SECONDS
+                )
             )
-        )} $direction"
+        } $direction"
     }
 
     private fun replaceDelimiters(original: String): String {

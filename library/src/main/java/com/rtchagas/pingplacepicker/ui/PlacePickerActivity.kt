@@ -46,7 +46,7 @@ import com.rtchagas.pingplacepicker.viewmodel.Resource
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_place_picker.*
 import org.jetbrains.anko.toast
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.abs
 
 class PlacePickerActivity : AppCompatActivity(),
@@ -178,10 +178,11 @@ class PlacePickerActivity : AppCompatActivity(),
         disposables.clear()
     }
 
-    override fun onMapReady(map: GoogleMap?) {
+    @SuppressLint("PotentialBehaviorOverride")
+    override fun onMapReady(map: GoogleMap) {
         googleMap = map
         setMapStyle()
-        map?.setOnMarkerClickListener(this)
+        map.setOnMarkerClickListener(this)
         checkForPermission()
     }
 

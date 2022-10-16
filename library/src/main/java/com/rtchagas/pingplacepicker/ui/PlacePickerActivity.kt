@@ -7,7 +7,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.location.Location
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -18,6 +17,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -45,6 +45,7 @@ import com.rtchagas.pingplacepicker.viewmodel.PlacePickerViewModel
 import com.rtchagas.pingplacepicker.viewmodel.Resource
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_place_picker.*
+import kotlinx.coroutines.delay
 import org.jetbrains.anko.toast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.abs
@@ -285,56 +286,38 @@ class PlacePickerActivity : AppCompatActivity(),
         return LatLngBounds(southWest, northEast)
     }
 
-    private fun getDeviceLocation(animate: Boolean) {
+    private fun getDeviceLocation(animate: Boolean) = try {
 
         // Get the best and most recent location of the device, which may be null in rare
         // cases when a location is not available.
 
-        try {
-            val locationResult = fusedLocationProviderClient.lastLocation
-            locationResult
-                .addOnFailureListener(this) { setDefaultLocation() }
-                .addOnSuccessListener(this) { location: Location? ->
+        fusedLocationProviderClient.lastLocation
+            .addOnFailureListener(this) { setDefaultLocation() }
+            .addOnSuccessListener(this) { location: Location? ->
 
-                    // In rare cases location may be null...
-                    if (location == null) {
-                        if (maxLocationRetries > 0) {
-                            maxLocationRetries--
-                            Handler().postDelayed({ getDeviceLocation(animate) }, 1000)
-                        } else {
-                            // Location is not available. Give up...
-                            setDefaultLocation()
-                            Snackbar.make(
-                                coordinator,
-                                R.string.picker_location_unavailable,
-                                Snackbar.LENGTH_INDEFINITE
-                            )
-                                .setAction(R.string.places_try_again) {
-                                    getDeviceLocation(animate)
-                                }
-                                .show()
-                        }
-                        return@addOnSuccessListener
-                    }
-
-                    // Set the map's camera position to the current location of the device.
-                    lastKnownLocation = LatLng(location.latitude, location.longitude)
-
-                    val update = CameraUpdateFactory
-                        .newLatLngZoom(lastKnownLocation!!, defaultZoom)
-
-                    if (animate) {
-                        googleMap?.animateCamera(update)
-                    } else {
-                        googleMap?.moveCamera(update)
-                    }
-
-                    // Load the places near this location
-                    loadNearbyPlaces()
+                // In rare cases location may be null...
+                if (location == null) {
+                    retryWhenLocationIsNotAvailable(animate)
+                    return@addOnSuccessListener
                 }
-        } catch (e: SecurityException) {
-            Log.e(TAG, e.toString())
-        }
+
+                // Set the map's camera position to the current location of the device.
+                val latLng = LatLng(location.latitude, location.longitude)
+                lastKnownLocation = latLng
+
+                val update = CameraUpdateFactory.newLatLngZoom(latLng, defaultZoom)
+
+                if (animate) {
+                    googleMap?.animateCamera(update)
+                } else {
+                    googleMap?.moveCamera(update)
+                }
+
+                // Load the places near this location
+                loadNearbyPlaces()
+            }
+    } catch (e: SecurityException) {
+        Log.e(TAG, e.toString())
     }
 
     @Suppress("DEPRECATION")
@@ -440,10 +423,9 @@ class PlacePickerActivity : AppCompatActivity(),
         cardSearch.isVisible = resources.getBoolean(R.bool.show_card_search)
 
         // Add a nice fade effect to toolbar
-        appBarLayout.addOnOffsetChangedListener(
-            AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-                toolbar.alpha = abs(verticalOffset / appBarLayout.totalScrollRange.toFloat())
-            })
+        appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
+            toolbar.alpha = abs(verticalOffset / appBarLayout.totalScrollRange.toFloat())
+        }
 
         // Disable vertical scrolling on appBarLayout (it messes with the map...)
 
@@ -491,7 +473,7 @@ class PlacePickerActivity : AppCompatActivity(),
 
     private fun loadNearbyPlaces() {
         viewModel.getNearbyPlaces(lastKnownLocation ?: defaultLocation)
-            .observe(this, { handlePlacesLoaded(it) })
+            .observe(this) { handlePlacesLoaded(it) }
     }
 
     private fun moveCameraToSelectedPlace(place: Place) {
@@ -503,7 +485,7 @@ class PlacePickerActivity : AppCompatActivity(),
     private fun refreshNearbyPlaces() {
         googleMap?.cameraPosition?.run {
             viewModel.getNearbyPlaces(target)
-                .observe(this@PlacePickerActivity, { handlePlacesLoaded(it) })
+                .observe(this@PlacePickerActivity) { handlePlacesLoaded(it) }
         }
     }
 
@@ -555,11 +537,30 @@ class PlacePickerActivity : AppCompatActivity(),
         }
     }
 
+    private fun retryWhenLocationIsNotAvailable(animate: Boolean) {
+
+        if (maxLocationRetries > 0) {
+            maxLocationRetries--
+            lifecycleScope.launchWhenResumed {
+                delay(1000)
+                getDeviceLocation(animate)
+            }
+            return
+        }
+
+        // Location is not available. Give up...
+        setDefaultLocation()
+        Snackbar
+            .make(coordinator, R.string.picker_location_unavailable, Snackbar.LENGTH_INDEFINITE)
+            .setAction(R.string.places_try_again) { getDeviceLocation(animate) }
+            .show()
+    }
+
     private fun selectThisPlace() {
         googleMap?.cameraPosition?.run {
             selectedLatLng = target
-            viewModel.getPlaceByLocation(target).observe(this@PlacePickerActivity,
-                { handlePlaceByLocation(it) })
+            viewModel.getPlaceByLocation(target)
+                .observe(this@PlacePickerActivity) { handlePlaceByLocation(it) }
         }
     }
 

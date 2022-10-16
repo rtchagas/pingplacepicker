@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
 
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -14,7 +14,7 @@ android {
     defaultConfig {
         applicationId "com.rtchagas.pingsample"
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
 
@@ -41,12 +41,12 @@ dependencies {
     implementation "org.jetbrains.anko:anko-commons:0.10.8"
 
     // Support library
-    implementation 'androidx.appcompat:appcompat:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
-    implementation 'com.google.android.material:material:1.5.0-rc01'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.android.material:material:1.6.1'
 
     // Places library
-    implementation 'com.google.android.libraries.places:places:2.5.0'
+    implementation 'com.google.android.libraries.places:places:2.6.0'
 
     // Other
     implementation 'com.github.mcginty:material-colors:1.1.0'

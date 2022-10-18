@@ -1,6 +1,6 @@
 package com.rtchagas.pingplacepicker
 
-object Config {
+internal object Config {
 
     const val PLACE_IMG_WIDTH = 640
     const val PLACE_IMG_HEIGHT = 320

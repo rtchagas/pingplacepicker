@@ -30,11 +30,11 @@ internal class PlaceFromCoordinates(
      * Default value only.
      * Clients shouldn't rely on this.
      */
-    override fun getBusinessStatus(): BusinessStatus? {
+    override fun getBusinessStatus(): BusinessStatus {
         return BusinessStatus.OPERATIONAL
     }
 
-    override fun getName(): String? {
+    override fun getName(): String {
         return "${formatLatitude(latitude)}, ${formatLongitude(longitude)}"
     }
 
@@ -102,7 +102,7 @@ internal class PlaceFromCoordinates(
         return null
     }
 
-    override fun getLatLng(): LatLng? {
+    override fun getLatLng(): LatLng {
         return LatLng(latitude, longitude)
     }
 

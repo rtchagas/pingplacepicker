@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class Photo(
+internal data class Photo(
     @Json(name = "height")
     val height: Int,
     @Json(name = "html_attributions")

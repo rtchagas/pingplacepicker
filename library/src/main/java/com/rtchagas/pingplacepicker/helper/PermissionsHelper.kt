@@ -9,7 +9,7 @@ import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener
 import com.rtchagas.pingplacepicker.R
 
 
-object PermissionsHelper {
+internal object PermissionsHelper {
 
     fun checkForLocationPermission(activity: Activity, listener: BasePermissionListener?) {
 

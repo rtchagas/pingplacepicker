@@ -10,16 +10,26 @@ import com.google.android.libraries.places.api.model.Place
 import com.rtchagas.pingplacepicker.inject.PingKoinContext
 import com.rtchagas.pingplacepicker.ui.PlacePickerActivity
 
-class PingPlacePicker private constructor() {
+object PingPlacePicker {
 
-    class IntentBuilder {
+    internal var androidApiKey: String = ""
+
+    internal var mapsApiKey: String = ""
+
+    internal var urlSigningSecret = ""
+
+    internal var isNearbySearchEnabled = false
+
+    internal var onPlaceSelectedListener: OnPlaceSelectedListener? = null
+
+    class Builder {
 
         private val intent = Intent()
 
         /**
          * This key will be used to all nearby requests to Google Places API.
          */
-        fun setAndroidApiKey(androidKey: String): IntentBuilder {
+        fun setAndroidApiKey(androidKey: String): Builder {
             androidApiKey = androidKey
             return this
         }
@@ -28,7 +38,7 @@ class PingPlacePicker private constructor() {
          * This key will be used to nearby searches and reverse geocoding
          * requests to Google Maps HTTP API.
          */
-        fun setMapsApiKey(geoKey: String): IntentBuilder {
+        fun setMapsApiKey(geoKey: String): Builder {
             mapsApiKey = geoKey
             return this
         }
@@ -37,8 +47,16 @@ class PingPlacePicker private constructor() {
          * The initial location that the map must be pointing to.
          * If this is set, PING will search for places near this location.
          */
-        fun setLatLng(location: LatLng): IntentBuilder {
+        fun setLatLng(location: LatLng): Builder {
             intent.putExtra(PlacePickerActivity.EXTRA_LOCATION, location)
+            return this
+        }
+
+        /**
+         * Sets the listener to be called when a place is selected.
+         */
+        fun setOnPlaceSelectedListener(listener: OnPlaceSelectedListener): Builder {
+            onPlaceSelectedListener = listener
             return this
         }
 
@@ -49,15 +67,16 @@ class PingPlacePicker private constructor() {
          *
          * More info [here](https://developers.google.com/maps/documentation/maps-static/get-api-key#generating-digital-signatures)
          */
-        fun setUrlSigningSecret(secretKey: String): IntentBuilder {
+        fun setUrlSigningSecret(secretKey: String): Builder {
             urlSigningSecret = secretKey
             return this
         }
 
         /**
-         * Set whether the library should return the place coordinate retrieved from GooglePlace or the actual selected location from google map
+         * Set whether the library should return the place coordinate retrieved from GooglePlace
+         * or the actual selected location from google map
          */
-        fun setShouldReturnActualLatLng(shouldReturnActualLatLng: Boolean): IntentBuilder {
+        fun setShouldReturnActualLatLng(shouldReturnActualLatLng: Boolean): Builder {
             intent.putExtra(
                 PlacePickerActivity.EXTRA_RETURN_ACTUAL_LATLNG,
                 shouldReturnActualLatLng
@@ -84,26 +103,17 @@ class PingPlacePicker private constructor() {
         }
     }
 
-    companion object {
+    /**
+     * Listener to be called when PING returns a selected place.
+     */
+    interface OnPlaceSelectedListener {
 
-        const val EXTRA_PLACE = "extra_place"
-        const val EXTRA_ACTUAL_LATLNG = "extra_actual_latlng"
+        /**
+         * Called when PING returns a place selected by the user.
+         * @param place the selected place.
+         * @param latLng the selected latitude/longitude in the map.
+         */
+        fun onPlaceSelected(place: Place, latLng: LatLng)
 
-        var androidApiKey: String = ""
-        var mapsApiKey: String = ""
-
-        var urlSigningSecret = ""
-
-        var isNearbySearchEnabled = false
-
-        @JvmStatic
-        fun getPlace(intent: Intent): Place? {
-            return intent.getParcelableExtra(EXTRA_PLACE)
-        }
-
-        @JvmStatic
-        fun getActualLatLng(intent: Intent): LatLng? {
-            return intent.getParcelableExtra(EXTRA_ACTUAL_LATLNG)
-        }
     }
 }

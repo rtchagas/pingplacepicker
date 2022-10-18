@@ -1,17 +1,14 @@
 package com.rtchagas.pingsample
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.Place
 import com.rtchagas.pingplacepicker.PingPlacePicker
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
 
-class MainActivity : AppCompatActivity() {
-
-    private val pingActivityRequestCode = 1001
+class MainActivity : AppCompatActivity(), PingPlacePicker.OnPlaceSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,31 +21,25 @@ class MainActivity : AppCompatActivity() {
 
     private fun showPlacePicker() {
 
-        val builder = PingPlacePicker.IntentBuilder()
+        val builder = PingPlacePicker.Builder()
 
         builder.setAndroidApiKey(getString(R.string.key_google_apis_android))
-                .setMapsApiKey(getString(R.string.key_google_apis_maps))
+            .setMapsApiKey(getString(R.string.key_google_apis_maps))
+            .setOnPlaceSelectedListener(this)
 
         // If you want to set a initial location
         // rather then the current device location.
         // pingBuilder.setLatLng(LatLng(37.4219999, -122.0862462))
 
         try {
-            val placeIntent = builder.build(this)
-            startActivityForResult(placeIntent, pingActivityRequestCode)
+            val pingIntent = builder.build(this)
+            startActivity(pingIntent)
         } catch (ex: Exception) {
             toast("Google Play Services is not Available")
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if ((requestCode == pingActivityRequestCode) && (resultCode == Activity.RESULT_OK)) {
-
-            val place: Place? = PingPlacePicker.getPlace(data!!)
-
-            toast("You selected: ${place?.name}\n ${place?.id}")
-        }
+    override fun onPlaceSelected(place: Place, latLng: LatLng) {
+        toast("You selected: ${place.name}\n Map location: $latLng")
     }
 }

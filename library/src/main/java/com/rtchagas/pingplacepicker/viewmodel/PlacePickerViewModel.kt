@@ -10,8 +10,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class PlacePickerViewModel constructor(private var repository: PlaceRepository)
-    : BaseViewModel() {
+internal class PlacePickerViewModel(private val repository: PlaceRepository) : BaseViewModel() {
 
     // Keep the place list in this view model state
     private val placeList: MutableLiveData<Resource<List<Place>>> = MutableLiveData()
@@ -30,19 +29,19 @@ class PlacePickerViewModel constructor(private var repository: PlaceRepository)
         lastLocation = location
 
         val placeQuery =
-                if (PingPlacePicker.isNearbySearchEnabled)
-                    repository.getNearbyPlaces(location)
-                else
-                    repository.getNearbyPlaces()
+            if (PingPlacePicker.isNearbySearchEnabled)
+                repository.getNearbyPlaces(location)
+            else
+                repository.getNearbyPlaces()
 
         val disposable: Disposable = placeQuery
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { placeList.value = Resource.loading() }
-                .subscribe(
-                        { result: List<Place> -> placeList.value = Resource.success(result) },
-                        { error: Throwable -> placeList.value = Resource.error(error) }
-                )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { placeList.value = Resource.loading() }
+            .subscribe(
+                { result: List<Place> -> placeList.value = Resource.success(result) },
+                { error: Throwable -> placeList.value = Resource.error(error) }
+            )
 
         // Keep track of this disposable during the ViewModel lifecycle
         addDisposable(disposable)
@@ -55,13 +54,13 @@ class PlacePickerViewModel constructor(private var repository: PlaceRepository)
         val liveData = MutableLiveData<Resource<Place?>>()
 
         val disposable: Disposable = repository.getPlaceByLocation(location)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { liveData.value = Resource.loading() }
-                .subscribe(
-                        { result: Place? -> liveData.value = Resource.success(result) },
-                        { error: Throwable -> liveData.value = Resource.error(error) }
-                )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { liveData.value = Resource.loading() }
+            .subscribe(
+                { result: Place? -> liveData.value = Resource.success(result) },
+                { error: Throwable -> liveData.value = Resource.error(error) }
+            )
 
         // Keep track of this disposable during the ViewModel lifecycle
         addDisposable(disposable)

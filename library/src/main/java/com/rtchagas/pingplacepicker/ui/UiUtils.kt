@@ -10,7 +10,7 @@ import org.jetbrains.anko.configuration
 import java.util.*
 
 
-object UiUtils {
+internal object UiUtils {
 
     /**
      * Gets the place drawable resource according to its type

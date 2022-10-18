@@ -28,7 +28,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 
-class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent {
+internal class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent {
 
     companion object {
 
@@ -136,8 +136,8 @@ class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent 
             && photoMetadatas.isNotEmpty()
         ) {
             val photoMetadata = photoMetadatas[0]
-            viewModel.getPlacePhoto(photoMetadata).observe(this,
-                { handlePlacePhotoLoaded(contentView, it) })
+            viewModel.getPlacePhoto(photoMetadata)
+                .observe(this) { handlePlacePhotoLoaded(contentView, it) }
         } else {
             handlePlacePhotoLoaded(contentView, Resource.noData())
         }

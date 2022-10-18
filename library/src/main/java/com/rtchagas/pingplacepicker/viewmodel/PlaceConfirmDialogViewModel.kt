@@ -9,8 +9,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class PlaceConfirmDialogViewModel constructor(private var repository: PlaceRepository)
-    : BaseViewModel() {
+internal class PlaceConfirmDialogViewModel(
+    private val repository: PlaceRepository
+) : BaseViewModel() {
 
     private val placePhotoLiveData: MutableLiveData<Resource<Bitmap>> = MutableLiveData()
 
@@ -23,13 +24,13 @@ class PlaceConfirmDialogViewModel constructor(private var repository: PlaceRepos
         }
 
         val disposable: Disposable = repository.getPlacePhoto(photoMetadata)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { placePhotoLiveData.value = Resource.loading() }
-                .subscribe(
-                        { result: Bitmap -> placePhotoLiveData.value = Resource.success(result) },
-                        { error: Throwable -> placePhotoLiveData.value = Resource.error(error) }
-                )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { placePhotoLiveData.value = Resource.loading() }
+            .subscribe(
+                { result: Bitmap -> placePhotoLiveData.value = Resource.success(result) },
+                { error: Throwable -> placePhotoLiveData.value = Resource.error(error) }
+            )
 
         // Keep track of this disposable during the ViewModel lifecycle
         addDisposable(disposable)

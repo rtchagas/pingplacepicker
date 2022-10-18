@@ -8,13 +8,15 @@ import com.google.android.libraries.places.api.model.Place
 import com.rtchagas.pingplacepicker.R
 import kotlinx.android.synthetic.main.item_place.view.*
 
-class PlacePickerAdapter(private var placeList: List<Place>, private val clickListener: (Place) -> Unit)
-    : RecyclerView.Adapter<PlacePickerAdapter.PlaceViewHolder>() {
+internal class PlacePickerAdapter(
+    private var placeList: List<Place>,
+    private val clickListener: (Place) -> Unit
+) : RecyclerView.Adapter<PlacePickerAdapter.PlaceViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceViewHolder {
 
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_place, parent, false)
+            .inflate(R.layout.item_place, parent, false)
 
         return PlaceViewHolder(view)
     }

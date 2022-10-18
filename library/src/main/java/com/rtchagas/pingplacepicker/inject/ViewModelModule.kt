@@ -5,7 +5,7 @@ import com.rtchagas.pingplacepicker.viewmodel.PlacePickerViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val viewModelModule = module {
+internal val viewModelModule = module {
 
     viewModel { PlacePickerViewModel(get()) }
 

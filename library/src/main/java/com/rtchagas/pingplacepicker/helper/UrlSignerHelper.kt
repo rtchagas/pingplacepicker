@@ -12,9 +12,9 @@ import java.security.NoSuchAlgorithmException
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-object UrlSignerHelper {
+internal object UrlSignerHelper {
 
-    const val TAG = "UrlSignerHelper"
+    private const val TAG = "UrlSignerHelper"
 
     fun signUrl(inputUrl: String, inputKey: String): String {
 

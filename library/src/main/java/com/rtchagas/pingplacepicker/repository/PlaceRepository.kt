@@ -12,7 +12,7 @@ import io.reactivex.Single
  * We could have different repositories to fetch places locally from
  * a cached database or from other providers than Google.
  */
-interface PlaceRepository {
+internal interface PlaceRepository {
 
     fun getNearbyPlaces(): Single<List<Place>>
 

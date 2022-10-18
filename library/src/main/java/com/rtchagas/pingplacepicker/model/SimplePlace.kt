@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class SimplePlace(
+internal data class SimplePlace(
     @Json(name = "geometry")
     val geometry: Geometry,
     @Json(name = "name")

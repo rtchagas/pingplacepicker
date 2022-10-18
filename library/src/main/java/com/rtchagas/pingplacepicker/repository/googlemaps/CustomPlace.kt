@@ -7,7 +7,7 @@ import com.google.android.libraries.places.api.model.*
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class CustomPlace(
+internal class CustomPlace(
     var placeId: String,
     var placeName: String,
     var placePhotos: MutableList<PhotoMetadata>,
@@ -24,11 +24,11 @@ class CustomPlace(
      * Default value only.
      * Clients shouldn't rely on this.
      */
-    override fun getBusinessStatus(): BusinessStatus? {
+    override fun getBusinessStatus(): BusinessStatus {
         return BusinessStatus.OPERATIONAL
     }
 
-    override fun getName(): String? {
+    override fun getName(): String {
         return placeName
     }
 
@@ -36,7 +36,7 @@ class CustomPlace(
         return null
     }
 
-    override fun getId(): String? {
+    override fun getId(): String {
         return placeId
     }
 
@@ -72,7 +72,7 @@ class CustomPlace(
         return mutableListOf()
     }
 
-    override fun getAddress(): String? {
+    override fun getAddress(): String {
         return placeAddress
     }
 
@@ -100,7 +100,7 @@ class CustomPlace(
         return 0
     }
 
-    override fun getLatLng(): LatLng? {
+    override fun getLatLng(): LatLng {
         return placeLatLng
     }
 }

@@ -18,7 +18,7 @@ import io.reactivex.Single
 import java.util.*
 
 
-class GoogleMapsRepository constructor(
+internal class GoogleMapsRepository constructor(
     private val googleClient: PlacesClient,
     private val googleMapsAPI: GoogleMapsAPI
 ) : PlaceRepository {
@@ -148,15 +148,13 @@ class GoogleMapsRepository constructor(
         val typeList = mutableListOf<Place.Type>()
         place.types.forEach { simpleType ->
             val placeType = Place.Type.values()
-                .find { it.name == simpleType.toUpperCase(Locale.US) } ?: Place.Type.OTHER
+                .find { it.name == simpleType.uppercase(Locale.US) } ?: Place.Type.OTHER
             typeList.add(placeType)
         }
 
         val latLng = LatLng(place.geometry.location.lat, place.geometry.location.lng)
 
-        val address: String =
-            if (place.formattedAddress.isNotEmpty()) place.formattedAddress
-            else place.vicinity
+        val address: String = place.formattedAddress.ifEmpty { place.vicinity }
 
         val name: String = buildPlaceName(place.name, address)
 

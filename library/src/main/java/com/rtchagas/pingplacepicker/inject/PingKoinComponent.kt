@@ -9,7 +9,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.logger.Level
 import org.koin.dsl.koinApplication
 
-object PingKoinContext {
+internal object PingKoinContext {
 
     private lateinit var appContext: Context
 
@@ -31,7 +31,7 @@ object PingKoinContext {
     }
 }
 
-interface PingKoinComponent : KoinComponent {
+internal interface PingKoinComponent : KoinComponent {
 
     override fun getKoin(): Koin = PingKoinContext.koin
 

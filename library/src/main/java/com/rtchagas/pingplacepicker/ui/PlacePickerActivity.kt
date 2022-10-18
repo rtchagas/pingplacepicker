@@ -50,7 +50,7 @@ import org.jetbrains.anko.toast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.abs
 
-class PlacePickerActivity : AppCompatActivity(),
+internal class PlacePickerActivity : AppCompatActivity(),
     PingKoinComponent,
     OnMapReadyCallback,
     GoogleMap.OnMarkerClickListener,
@@ -88,8 +88,6 @@ class PlacePickerActivity : AppCompatActivity(),
     private var maxLocationRetries: Int = 3
 
     private var placeAdapter: PlacePickerAdapter? = null
-
-    private var selectedLatLng = LatLng(0.0, 0.0)
 
     private val viewModel: PlacePickerViewModel by viewModel()
 
@@ -196,16 +194,8 @@ class PlacePickerActivity : AppCompatActivity(),
     }
 
     override fun onPlaceConfirmed(place: Place) {
-        val data = Intent()
-
-        if (intent.getBooleanExtra(EXTRA_RETURN_ACTUAL_LATLNG, false)) {
-            data.putExtra(PingPlacePicker.EXTRA_ACTUAL_LATLNG, selectedLatLng)
-        } else {
-            data.putExtra(PingPlacePicker.EXTRA_ACTUAL_LATLNG, place.latLng)
-        }
-
-        data.putExtra(PingPlacePicker.EXTRA_PLACE, place)
-        setResult(Activity.RESULT_OK, data)
+        val selectedLatLng = googleMap?.cameraPosition?.target ?: LatLng(0.0, 0.0)
+        PingPlacePicker.onPlaceSelectedListener?.onPlaceSelected(place, selectedLatLng)
         finish()
     }
 
@@ -558,7 +548,6 @@ class PlacePickerActivity : AppCompatActivity(),
 
     private fun selectThisPlace() {
         googleMap?.cameraPosition?.run {
-            selectedLatLng = target
             viewModel.getPlaceByLocation(target)
                 .observe(this@PlacePickerActivity) { handlePlaceByLocation(it) }
         }

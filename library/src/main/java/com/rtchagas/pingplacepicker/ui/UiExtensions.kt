@@ -6,7 +6,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
-fun View.onclick(callback: () -> Unit): Disposable {
+internal fun View.onclick(callback: () -> Unit): Disposable {
 
     return clicks()
             .throttleFirst(1, TimeUnit.SECONDS)

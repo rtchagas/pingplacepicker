@@ -3,7 +3,11 @@ package com.rtchagas.pingplacepicker.viewmodel
 /**
  * Resource holder provided to the UI
  */
-class Resource<T> private constructor(val status: Status, val data: T?, val error: Throwable?) {
+internal class Resource<T> private constructor(
+    val status: Status,
+    val data: T?,
+    val error: Throwable?
+) {
 
     /**
      * Possible status types of a response provided to the UI

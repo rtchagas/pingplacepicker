@@ -8,7 +8,7 @@ import io.reactivex.disposables.Disposable
  * ViewModel that automatically disposes
  * registered [org.reactivestreams.Publisher]s
  */
-abstract class BaseViewModel : ViewModel() {
+internal abstract class BaseViewModel : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 

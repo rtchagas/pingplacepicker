@@ -1,4 +1,4 @@
-package com.rtchagas.pingplacepicker.ui
+package com.rtchagas.pingplacepicker.ui.fragment
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.view.isVisible
@@ -17,44 +16,30 @@ import com.google.android.libraries.places.api.model.Place
 import com.rtchagas.pingplacepicker.Config
 import com.rtchagas.pingplacepicker.PingPlacePicker
 import com.rtchagas.pingplacepicker.R
+import com.rtchagas.pingplacepicker.databinding.FragmentDialogPlaceConfirmBinding
 import com.rtchagas.pingplacepicker.helper.UrlSignerHelper
 import com.rtchagas.pingplacepicker.inject.PingKoinComponent
+import com.rtchagas.pingplacepicker.ui.UiUtils
 import com.rtchagas.pingplacepicker.viewmodel.PlaceConfirmDialogViewModel
 import com.rtchagas.pingplacepicker.viewmodel.Resource
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_dialog_place_confirm.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 
 internal class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent {
 
-    companion object {
+    private var _binding: FragmentDialogPlaceConfirmBinding? = null
 
-        private const val TAG = "Ping#PlaceConfirmDialog"
-        private const val ARG_PLACE = "arg_place"
-
-        fun newInstance(
-            place: Place,
-            listener: OnPlaceConfirmedListener
-        ): PlaceConfirmDialogFragment {
-
-            val args = Bundle()
-            args.putParcelable(ARG_PLACE, place)
-
-            return PlaceConfirmDialogFragment().apply {
-                arguments = args
-                confirmListener = listener
-            }
-        }
-    }
-
-    var confirmListener: OnPlaceConfirmedListener? = null
+    private val binding: FragmentDialogPlaceConfirmBinding
+        get() = _binding!!
 
     private val viewModel: PlaceConfirmDialogViewModel by viewModel()
 
     private lateinit var place: Place
+
+    var confirmListener: OnPlaceConfirmedListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,59 +72,66 @@ internal class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinC
         return builder.create()
     }
 
-    @SuppressLint("InflateParams")
-    private fun getContentView(context: Context): View {
-
-        val content = LayoutInflater.from(context)
-            .inflate(R.layout.fragment_dialog_place_confirm, null)
-
-        if (place.name.isNullOrEmpty()) {
-            content.tvPlaceName.isVisible = false
-        } else {
-            content.tvPlaceName.text = place.name
-        }
-
-        content.tvPlaceAddress.text = place.address
-
-        fetchPlaceMap(content)
-        fetchPlacePhoto(content)
-
-        return content
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
-    private fun fetchPlaceMap(contentView: View) {
+    @SuppressLint("InflateParams")
+    private fun getContentView(context: Context): View {
+        _binding = FragmentDialogPlaceConfirmBinding.inflate(LayoutInflater.from(context))
+        initializeUi()
+        return binding.root
+    }
+
+    private fun initializeUi() = with(binding) {
+
+        if (place.name.isNullOrEmpty()) {
+            tvPlaceName.isVisible = false
+        } else {
+            tvPlaceName.text = place.name
+        }
+
+        tvPlaceAddress.text = place.address
+
+        fetchPlaceMap()
+        fetchPlacePhoto()
+
+    }
+
+    private fun fetchPlaceMap() {
 
         if (resources.getBoolean(R.bool.show_confirmation_map)) {
+
             val staticMapUrl = getFinalMapUrl()
-            Picasso.get().load(staticMapUrl).into(contentView.ivPlaceMap, object : Callback {
+
+            Picasso.get().load(staticMapUrl).into(binding.ivPlaceMap, object : Callback {
 
                 override fun onSuccess() {
-                    contentView.ivPlaceMap.visibility = View.VISIBLE
+                    binding.ivPlaceMap.visibility = View.VISIBLE
                 }
 
                 override fun onError(e: Exception?) {
                     Log.e(TAG, "Error loading map image", e)
-                    contentView.ivPlaceMap.visibility = View.GONE
+                    binding.ivPlaceMap.visibility = View.GONE
                 }
             })
         } else {
-            contentView.ivPlaceMap.visibility = View.GONE
+            binding.ivPlaceMap.visibility = View.GONE
         }
     }
 
-    private fun fetchPlacePhoto(contentView: View) {
+    private fun fetchPlacePhoto() {
 
-        val photoMetadatas = place.photoMetadatas
+        val photoMetadata = place.photoMetadatas?.firstOrNull()
 
         if (resources.getBoolean(R.bool.show_confirmation_photo)
-            && photoMetadatas != null
-            && photoMetadatas.isNotEmpty()
+            && (photoMetadata != null)
         ) {
-            val photoMetadata = photoMetadatas[0]
             viewModel.getPlacePhoto(photoMetadata)
-                .observe(this) { handlePlacePhotoLoaded(contentView, it) }
+                .observe(this) { handlePlacePhotoLoaded(it) }
         } else {
-            handlePlacePhotoLoaded(contentView, Resource.noData())
+            handlePlacePhotoLoaded(Resource.noData())
         }
     }
 
@@ -165,13 +157,13 @@ internal class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinC
         return mapUrl
     }
 
-    private fun handlePlacePhotoLoaded(contentView: View, result: Resource<Bitmap>) {
+    private fun handlePlacePhotoLoaded(result: Resource<Bitmap>) {
         if (result.status == Resource.Status.SUCCESS) {
-            TransitionManager.beginDelayedTransition(contentView as ViewGroup)
-            contentView.ivPlacePhoto.visibility = View.VISIBLE
-            contentView.ivPlacePhoto.setImageBitmap(result.data)
+            TransitionManager.beginDelayedTransition(binding.root)
+            binding.ivPlacePhoto.visibility = View.VISIBLE
+            binding.ivPlacePhoto.setImageBitmap(result.data)
         } else {
-            contentView.ivPlacePhoto.visibility = View.GONE
+            binding.ivPlacePhoto.visibility = View.GONE
         }
     }
 
@@ -180,5 +172,25 @@ internal class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinC
      */
     interface OnPlaceConfirmedListener {
         fun onPlaceConfirmed(place: Place)
+    }
+
+    companion object {
+
+        private const val TAG = "Ping#PlaceConfirmDialog"
+        private const val ARG_PLACE = "arg_place"
+
+        fun newInstance(
+            place: Place,
+            listener: OnPlaceConfirmedListener
+        ): PlaceConfirmDialogFragment {
+
+            val args = Bundle()
+            args.putParcelable(ARG_PLACE, place)
+
+            return PlaceConfirmDialogFragment().apply {
+                arguments = args
+                confirmListener = listener
+            }
+        }
     }
 }

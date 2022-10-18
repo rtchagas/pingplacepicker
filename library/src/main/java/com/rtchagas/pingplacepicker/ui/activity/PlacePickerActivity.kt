@@ -1,4 +1,4 @@
-package com.rtchagas.pingplacepicker.ui
+package com.rtchagas.pingplacepicker.ui.activity
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -39,18 +38,23 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.single.BasePermissionListener
 import com.rtchagas.pingplacepicker.PingPlacePicker
 import com.rtchagas.pingplacepicker.R
+import com.rtchagas.pingplacepicker.databinding.ActivityPlacePickerBinding
 import com.rtchagas.pingplacepicker.helper.PermissionsHelper
 import com.rtchagas.pingplacepicker.inject.PingKoinComponent
+import com.rtchagas.pingplacepicker.ui.UiUtils
+import com.rtchagas.pingplacepicker.ui.adapter.PlacePickerAdapter
+import com.rtchagas.pingplacepicker.ui.fragment.PlaceConfirmDialogFragment
+import com.rtchagas.pingplacepicker.ui.onclick
 import com.rtchagas.pingplacepicker.viewmodel.PlacePickerViewModel
 import com.rtchagas.pingplacepicker.viewmodel.Resource
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.activity_place_picker.*
 import kotlinx.coroutines.delay
 import org.jetbrains.anko.toast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.abs
 
-internal class PlacePickerActivity : AppCompatActivity(),
+internal class PlacePickerActivity :
+    BaseActivity<ActivityPlacePickerBinding>(ActivityPlacePickerBinding::inflate),
     PingKoinComponent,
     OnMapReadyCallback,
     GoogleMap.OnMarkerClickListener,
@@ -97,10 +101,9 @@ internal class PlacePickerActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_place_picker)
 
         // Configure the toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Check whether a pre-defined location was set.
@@ -208,13 +211,16 @@ internal class PlacePickerActivity : AppCompatActivity(),
             UiUtils.getColorAttr(this, R.attr.colorPrimarySurface),
             resources.getDimension(R.dimen.material_elevation_app_bar)
         )
-        collapsingToolbarLayout.setContentScrimColor(scrimColor)
 
         // Set the correct elevation to the content container
         val containerColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
             resources.getDimension(R.dimen.material_elevation_app_bar)
         )
-        mapContainer.setBackgroundColor(containerColor)
+
+        with(binding) {
+            collapsingToolbarLayout.setContentScrimColor(scrimColor)
+            mapContainer.setBackgroundColor(containerColor)
+        }
     }
 
     private fun bindPlaces(places: List<Place>) {
@@ -227,7 +233,7 @@ internal class PlacePickerActivity : AppCompatActivity(),
             placeAdapter?.swapData(places)
         }
 
-        rvNearbyPlaces.adapter = placeAdapter
+        binding.rvNearbyPlaces.adapter = placeAdapter
 
         // Bind to the map
 
@@ -350,53 +356,44 @@ internal class PlacePickerActivity : AppCompatActivity(),
 
     private fun handlePlaceByLocation(result: Resource<Place?>) {
 
-        when (result.status) {
-            Resource.Status.LOADING -> {
-                pbLoading.show()
-            }
-            Resource.Status.SUCCESS -> {
-                result.data?.run { showConfirmPlacePopup(this) }
-                pbLoading.hide()
-            }
-            Resource.Status.ERROR -> {
-                toast(R.string.picker_load_this_place_error)
-                pbLoading.hide()
-            }
-            Resource.Status.NO_DATA -> {
-                Log.d(TAG, "No places data found...")
-            }
-        }
+        binding.pbLoading.hide()
 
+        when (result.status) {
+            Resource.Status.LOADING ->
+                binding.pbLoading.show()
+            Resource.Status.SUCCESS ->
+                result.data?.run { showConfirmPlacePopup(this) }
+            Resource.Status.ERROR ->
+                toast(R.string.picker_load_this_place_error)
+            Resource.Status.NO_DATA ->
+                Log.d(TAG, "No places data found...")
+        }
     }
 
     private fun handlePlacesLoaded(result: Resource<List<Place>>) {
 
+        binding.pbLoading.hide()
+
         when (result.status) {
-            Resource.Status.LOADING -> {
-                pbLoading.show()
-            }
-            Resource.Status.SUCCESS -> {
+            Resource.Status.LOADING ->
+                binding.pbLoading.show()
+            Resource.Status.SUCCESS ->
                 bindPlaces((result.data ?: listOf()))
-                pbLoading.hide()
-            }
-            Resource.Status.ERROR -> {
+            Resource.Status.ERROR ->
                 toast(R.string.picker_load_places_error)
-                pbLoading.hide()
-            }
-            Resource.Status.NO_DATA -> {
+            Resource.Status.NO_DATA ->
                 Log.d(TAG, "No places data found...")
-            }
         }
     }
 
-    private fun initializeUi() {
+    private fun initializeUi() = with(binding) {
 
         // Some material components still don't support setting the correct
         // elevation for dark themes, so we should handle that
         adjustElevationOverlayColors()
 
         // Initialize the recycler view
-        rvNearbyPlaces.layoutManager = LinearLayoutManager(this)
+        rvNearbyPlaces.layoutManager = LinearLayoutManager(this@PlacePickerActivity)
 
         // Bind the click listeners
         disposables.addAll(
@@ -541,7 +538,7 @@ internal class PlacePickerActivity : AppCompatActivity(),
         // Location is not available. Give up...
         setDefaultLocation()
         Snackbar
-            .make(coordinator, R.string.picker_location_unavailable, Snackbar.LENGTH_INDEFINITE)
+            .make(binding.root, R.string.picker_location_unavailable, Snackbar.LENGTH_INDEFINITE)
             .setAction(R.string.places_try_again) { getDeviceLocation(animate) }
             .show()
     }
@@ -600,9 +597,9 @@ internal class PlacePickerActivity : AppCompatActivity(),
 
             if (isLocationPermissionGranted) {
                 it.isMyLocationEnabled = true
-                btnMyLocation.visibility = View.VISIBLE
+                binding.btnMyLocation.visibility = View.VISIBLE
             } else {
-                btnMyLocation.visibility = View.GONE
+                binding.btnMyLocation.visibility = View.GONE
                 it.isMyLocationEnabled = false
             }
         }

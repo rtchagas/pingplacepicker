@@ -14,7 +14,7 @@
     <application>
 
         <activity
-            android:name=".ui.PlacePickerActivity"
+            android:name=".ui.activity.PlacePickerActivity"
             android:launchMode="singleTop"
             android:theme="@style/PingTheme.NoStatus" />
 

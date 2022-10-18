@@ -8,7 +8,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.Place
 import com.rtchagas.pingplacepicker.inject.PingKoinContext
-import com.rtchagas.pingplacepicker.ui.PlacePickerActivity
+import com.rtchagas.pingplacepicker.ui.activity.PlacePickerActivity
 
 object PingPlacePicker {
 

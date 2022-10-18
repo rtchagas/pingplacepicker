@@ -1,6 +1,5 @@
 package com.rtchagas.pingplacepicker.ui.fragment
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Bitmap
@@ -12,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.view.isVisible
 import androidx.transition.TransitionManager
+import coil.load
 import com.google.android.libraries.places.api.model.Place
 import com.rtchagas.pingplacepicker.Config
 import com.rtchagas.pingplacepicker.PingPlacePicker
@@ -22,8 +22,6 @@ import com.rtchagas.pingplacepicker.inject.PingKoinComponent
 import com.rtchagas.pingplacepicker.ui.UiUtils
 import com.rtchagas.pingplacepicker.viewmodel.PlaceConfirmDialogViewModel
 import com.rtchagas.pingplacepicker.viewmodel.Resource
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -77,7 +75,6 @@ internal class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinC
         _binding = null
     }
 
-    @SuppressLint("InflateParams")
     private fun getContentView(context: Context): View {
         _binding = FragmentDialogPlaceConfirmBinding.inflate(LayoutInflater.from(context))
         initializeUi()
@@ -96,28 +93,23 @@ internal class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinC
 
         fetchPlaceMap()
         fetchPlacePhoto()
-
     }
 
-    private fun fetchPlaceMap() {
+    private fun fetchPlaceMap() = with(binding.ivPlaceMap) {
 
-        if (resources.getBoolean(R.bool.show_confirmation_map)) {
+        isVisible =
+            if (resources.getBoolean(R.bool.show_confirmation_map)) true
+            else return@with
 
-            val staticMapUrl = getFinalMapUrl()
+        val staticMapUrl = getFinalMapUrl()
 
-            Picasso.get().load(staticMapUrl).into(binding.ivPlaceMap, object : Callback {
-
-                override fun onSuccess() {
-                    binding.ivPlaceMap.visibility = View.VISIBLE
+        binding.ivPlaceMap.load(staticMapUrl) {
+            listener(
+                onError = { request, error ->
+                    isVisible = false
+                    Log.w(TAG, "Error loading map image: ${request.data}", error.throwable)
                 }
-
-                override fun onError(e: Exception?) {
-                    Log.e(TAG, "Error loading map image", e)
-                    binding.ivPlaceMap.visibility = View.GONE
-                }
-            })
-        } else {
-            binding.ivPlaceMap.visibility = View.GONE
+            )
         }
     }
 
@@ -157,13 +149,13 @@ internal class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinC
         return mapUrl
     }
 
-    private fun handlePlacePhotoLoaded(result: Resource<Bitmap>) {
+    private fun handlePlacePhotoLoaded(result: Resource<Bitmap>) = with(binding.ivPlacePhoto) {
         if (result.status == Resource.Status.SUCCESS) {
             TransitionManager.beginDelayedTransition(binding.root)
-            binding.ivPlacePhoto.visibility = View.VISIBLE
-            binding.ivPlacePhoto.setImageBitmap(result.data)
+            visibility = View.VISIBLE
+            setImageBitmap(result.data)
         } else {
-            binding.ivPlacePhoto.visibility = View.GONE
+            visibility = View.GONE
         }
     }
 

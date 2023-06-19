@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.libraries.places.api.model.*
 import kotlin.math.absoluteValue
+import com.google.android.libraries.places.api.model.Place.BooleanPlaceAttributeValue.UNKNOWN
 
 /**
  * Place without any additional info. Just latitude and longitude.
@@ -42,12 +43,68 @@ internal class PlaceFromCoordinates(
         return null
     }
 
+    override fun getCurbsidePickup(): BooleanPlaceAttributeValue {
+        return UNKNOWN
+    }
+
+    override fun getDelivery(): BooleanPlaceAttributeValue {
+        return UNKNOWN
+    }
+
+    override fun getDineIn(): BooleanPlaceAttributeValue {
+        return UNKNOWN
+    }
+
+    override fun getReservable(): BooleanPlaceAttributeValue {
+        return UNKNOWN
+    }
+
+    override fun getServesBeer(): BooleanPlaceAttributeValue {
+        return UNKNOWN
+    }
+
+    override fun getServesBreakfast(): BooleanPlaceAttributeValue {
+        return UNKNOWN
+    }
+
+    override fun getServesBrunch(): BooleanPlaceAttributeValue {
+        return UNKNOWN
+    }
+
+    override fun getServesDinner(): BooleanPlaceAttributeValue {
+        return UNKNOWN
+    }
+
+    override fun getServesLunch(): BooleanPlaceAttributeValue {
+        return UNKNOWN
+    }
+
+    override fun getServesVegetarianFood(): BooleanPlaceAttributeValue {
+        return UNKNOWN
+    }
+
+    override fun getServesWine(): BooleanPlaceAttributeValue {
+        return UNKNOWN
+    }
+
+    override fun getTakeout(): BooleanPlaceAttributeValue {
+        return UNKNOWN
+    }
+
+    override fun getWheelchairAccessibleEntrance(): BooleanPlaceAttributeValue {
+        return UNKNOWN
+    }
+
     override fun getId(): String? {
         return null
     }
 
     override fun getPhotoMetadatas(): MutableList<PhotoMetadata> {
         return mutableListOf()
+    }
+
+    override fun getSecondaryOpeningHours(): MutableList<OpeningHours>? {
+        return null
     }
 
     override fun getWebsiteUri(): Uri? {
@@ -71,6 +128,10 @@ internal class PlaceFromCoordinates(
     }
 
     override fun getAddressComponents(): AddressComponents? {
+        return null
+    }
+
+    override fun getCurrentOpeningHours(): OpeningHours? {
         return null
     }
 

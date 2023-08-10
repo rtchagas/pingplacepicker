@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 android {
 
@@ -8,20 +7,21 @@ android {
 
     compileSdk 33
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
-    }
-
     defaultConfig {
         applicationId "com.rtchagas.pingsample"
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
 
+    kotlin {
+        jvmToolchain(11)
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 
     buildTypes {

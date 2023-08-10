@@ -1,20 +1,19 @@
 package com.rtchagas.pingsample
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.Place
 import com.rtchagas.pingplacepicker.PingPlacePicker
+import com.rtchagas.pingplacepicker.ui.activity.BaseActivity
 import com.rtchagas.pingplacepicker.ui.toast
-import kotlinx.android.synthetic.main.activity_main.btnOpenPlacePicker
+import com.rtchagas.pingsample.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), PingPlacePicker.OnPlaceSelectedListener {
+class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate),
+    PingPlacePicker.OnPlaceSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        btnOpenPlacePicker.setOnClickListener {
+        binding.btnOpenPlacePicker.setOnClickListener {
             showPlacePicker()
         }
     }

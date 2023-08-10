@@ -45,11 +45,12 @@ import com.rtchagas.pingplacepicker.ui.UiUtils
 import com.rtchagas.pingplacepicker.ui.adapter.PlacePickerAdapter
 import com.rtchagas.pingplacepicker.ui.fragment.PlaceConfirmDialogFragment
 import com.rtchagas.pingplacepicker.ui.onclick
+import com.rtchagas.pingplacepicker.ui.toast
 import com.rtchagas.pingplacepicker.viewmodel.PlacePickerViewModel
 import com.rtchagas.pingplacepicker.viewmodel.Resource
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.delay
-import org.jetbrains.anko.toast
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.abs
 
@@ -361,10 +362,13 @@ internal class PlacePickerActivity :
         when (result.status) {
             Resource.Status.LOADING ->
                 binding.pbLoading.show()
+
             Resource.Status.SUCCESS ->
                 result.data?.run { showConfirmPlacePopup(this) }
+
             Resource.Status.ERROR ->
                 toast(R.string.picker_load_this_place_error)
+
             Resource.Status.NO_DATA ->
                 Log.d(TAG, "No places data found...")
         }
@@ -377,10 +381,13 @@ internal class PlacePickerActivity :
         when (result.status) {
             Resource.Status.LOADING ->
                 binding.pbLoading.show()
+
             Resource.Status.SUCCESS ->
                 bindPlaces((result.data ?: listOf()))
+
             Resource.Status.ERROR ->
                 toast(R.string.picker_load_places_error)
+
             Resource.Status.NO_DATA ->
                 Log.d(TAG, "No places data found...")
         }
@@ -528,7 +535,7 @@ internal class PlacePickerActivity :
 
         if (maxLocationRetries > 0) {
             maxLocationRetries--
-            lifecycleScope.launchWhenResumed {
+            lifecycleScope.launch {
                 delay(1000)
                 getDeviceLocation(animate)
             }
@@ -560,9 +567,7 @@ internal class PlacePickerActivity :
      */
     private fun setMapStyle() {
 
-        if (!UiUtils.isNightModeEnabled(this)) {
-            return
-        }
+        if (!UiUtils.isNightModeEnabled(this)) return
 
         try {
             googleMap?.run {

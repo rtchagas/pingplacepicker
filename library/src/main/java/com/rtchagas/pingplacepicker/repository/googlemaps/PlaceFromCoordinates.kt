@@ -6,9 +6,13 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.libraries.places.api.model.*
-import kotlin.math.absoluteValue
+import com.google.android.libraries.places.api.model.AddressComponents
+import com.google.android.libraries.places.api.model.OpeningHours
+import com.google.android.libraries.places.api.model.PhotoMetadata
+import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.Place.BooleanPlaceAttributeValue.UNKNOWN
+import com.google.android.libraries.places.api.model.PlusCode
+import kotlin.math.absoluteValue
 
 /**
  * Place without any additional info. Just latitude and longitude.
@@ -140,6 +144,14 @@ internal class PlaceFromCoordinates(
     }
 
     override fun getAddress(): String? {
+        return null
+    }
+
+    override fun getEditorialSummary(): String? {
+        return null
+    }
+
+    override fun getEditorialSummaryLanguageCode(): String? {
         return null
     }
 

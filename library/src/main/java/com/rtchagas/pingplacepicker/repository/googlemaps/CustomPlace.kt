@@ -137,6 +137,14 @@ internal class CustomPlace(
         return placeAddress
     }
 
+    override fun getEditorialSummary(): String? {
+        return null
+    }
+
+    override fun getEditorialSummaryLanguageCode(): String? {
+        return null
+    }
+
     override fun getIconUrl(): String? {
         return null
     }

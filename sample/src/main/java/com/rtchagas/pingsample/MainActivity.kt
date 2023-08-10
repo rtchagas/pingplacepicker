@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.Place
 import com.rtchagas.pingplacepicker.PingPlacePicker
-import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.toast
+import com.rtchagas.pingplacepicker.ui.toast
+import kotlinx.android.synthetic.main.activity_main.btnOpenPlacePicker
 
 class MainActivity : AppCompatActivity(), PingPlacePicker.OnPlaceSelectedListener {
 

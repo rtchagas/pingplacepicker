@@ -6,7 +6,9 @@ apply plugin: 'maven-publish'
 
 android {
 
-    compileSdkVersion 33
+    namespace = "com.rtchagas.pingplacepicker"
+
+    compileSdk 33
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
@@ -35,6 +37,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
 }
 
 dependencies {
@@ -48,9 +56,6 @@ dependencies {
 
     // KTX
     implementation 'androidx.core:core-ktx:1.8.0'
-
-    // Anko Commons
-    implementation "org.jetbrains.anko:anko-commons:0.10.8"
 
     // Support library
     implementation 'androidx.appcompat:appcompat:1.5.1'
@@ -67,7 +72,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'com.google.maps.android:android-maps-utils:3.4.0'
-    implementation 'com.google.android.libraries.places:places:3.1.0'
+    implementation 'com.google.android.libraries.places:places:3.2.0'
 
     // Koin for Android
     implementation 'io.insert-koin:koin-android:3.1.5'
@@ -85,18 +90,18 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
 
     // Coil
-    implementation 'io.coil-kt:coil:2.2.2'
+    implementation 'io.coil-kt:coil:2.4.0'
 
     // 3rd party
     implementation 'com.github.mcginty:material-colors:1.1.0'
     implementation 'com.karumi:dexter:6.2.3'
 
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test:runner:1.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
 
 afterEvaluate {

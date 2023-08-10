@@ -4,17 +4,17 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
 
-    compileSdkVersion 32
+    compileSdkVersion 33
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     defaultConfig {
         applicationId "com.rtchagas.pingsample"
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
@@ -46,7 +46,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.1'
 
     // Places library
-    implementation 'com.google.android.libraries.places:places:2.6.0'
+    implementation 'com.google.android.libraries.places:places:3.1.0'
 
     // Other
     implementation 'com.github.mcginty:material-colors:1.1.0'

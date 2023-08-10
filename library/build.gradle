@@ -6,11 +6,11 @@ apply plugin: 'maven-publish'
 
 android {
 
-    compileSdkVersion 32
+    compileSdkVersion 33
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     kotlinOptions {
@@ -23,8 +23,8 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 32
+        minSdkVersion 21
+        targetSdkVersion 33
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -64,10 +64,10 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.5.1'
 
     // Google Play Services
-    implementation 'com.google.android.gms:play-services-location:20.0.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
-    implementation 'com.google.maps.android:android-maps-utils:2.2.5'
-    implementation 'com.google.android.libraries.places:places:2.6.0'
+    implementation 'com.google.maps.android:android-maps-utils:3.4.0'
+    implementation 'com.google.android.libraries.places:places:3.1.0'
 
     // Koin for Android
     implementation 'io.insert-koin:koin-android:3.1.5'

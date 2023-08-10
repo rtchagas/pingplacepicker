@@ -156,7 +156,7 @@ internal class PlacePickerActivity :
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         if (android.R.id.home == item.itemId) {
-            finish()
+            finishAfterTransition()
             return true
         }
 
@@ -201,7 +201,7 @@ internal class PlacePickerActivity :
     override fun onPlaceConfirmed(place: Place) {
         val selectedLatLng = googleMap?.cameraPosition?.target ?: LatLng(0.0, 0.0)
         PingPlacePicker.onPlaceSelectedListener?.onPlaceSelected(place, selectedLatLng)
-        finish()
+        finishAfterTransition()
     }
 
     private fun adjustElevationOverlayColors() {

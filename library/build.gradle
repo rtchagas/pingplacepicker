@@ -15,6 +15,7 @@ android {
         targetSdkVersion 33
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
     }
 
     compileOptions {
@@ -65,10 +66,10 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0'
 
     // Android architecture components
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-    implementation 'androidx.lifecycle:lifecycle-common-java8:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.6.2'
 
     // Google Play Services
     implementation 'com.google.android.gms:play-services-location:21.0.1'

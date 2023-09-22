@@ -16,7 +16,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -49,8 +48,6 @@ import com.rtchagas.pingplacepicker.ui.toast
 import com.rtchagas.pingplacepicker.viewmodel.PlacePickerViewModel
 import com.rtchagas.pingplacepicker.viewmodel.Resource
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.abs
 
@@ -89,8 +86,6 @@ internal class PlacePickerActivity :
     private var defaultZoom = -1f
 
     private var lastKnownLocation: LatLng? = null
-
-    private var maxLocationRetries: Int = 3
 
     private var placeAdapter: PlacePickerAdapter? = null
 
@@ -533,17 +528,7 @@ internal class PlacePickerActivity :
     }
 
     private fun retryWhenLocationIsNotAvailable(animate: Boolean) {
-
-        if (maxLocationRetries > 0) {
-            maxLocationRetries--
-            lifecycleScope.launch {
-                delay(1000)
-                getDeviceLocation(animate)
-            }
-            return
-        }
-
-        // Location is not available. Give up...
+        // Location is not available. Ask the user to retry.
         setDefaultLocation()
         Snackbar
             .make(binding.root, R.string.picker_location_unavailable, Snackbar.LENGTH_INDEFINITE)

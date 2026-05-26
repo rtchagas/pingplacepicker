@@ -1,36 +1,22 @@
 package com.rtchagas.pingplacepicker.helper
 
-import android.Manifest
 import android.app.Activity
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.listener.single.BasePermissionListener
-import com.karumi.dexter.listener.single.CompositePermissionListener
-import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener
+import androidx.appcompat.app.AlertDialog
 import com.rtchagas.pingplacepicker.R
-
 
 internal object PermissionsHelper {
 
-    fun checkForLocationPermission(activity: Activity, listener: BasePermissionListener?) {
-
-        val dialogPermissionListener = DialogOnDeniedPermissionListener.Builder
-            .withContext(activity)
-            .withTitle(R.string.permission_fine_location_title)
-            .withMessage(R.string.permission_fine_location_message)
-            .withButtonText(android.R.string.ok)
-            .withIcon(R.drawable.ic_map_marker_radius_black_24dp)
-            .build()
-
-        val compositeListener =
-            if (listener != null) {
-                CompositePermissionListener(dialogPermissionListener, listener)
-            } else {
-                CompositePermissionListener(dialogPermissionListener)
-            }
-
-        Dexter.withContext(activity)
-            .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-            .withListener(compositeListener)
-            .check()
+    /**
+     * Shows the rationale dialog explaining why location is needed. The dialog
+     * is informational only — it does not request the permission (that happens
+     * via [androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions]).
+     */
+    fun showLocationRationaleDialog(activity: Activity) {
+        AlertDialog.Builder(activity)
+            .setTitle(R.string.permission_fine_location_title)
+            .setMessage(R.string.permission_fine_location_message)
+            .setIcon(R.drawable.ic_map_marker_radius_black_24dp)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
     }
 }

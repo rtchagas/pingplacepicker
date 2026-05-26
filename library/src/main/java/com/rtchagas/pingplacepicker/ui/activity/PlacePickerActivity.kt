@@ -1,8 +1,9 @@
 package com.rtchagas.pingplacepicker.ui.activity
 
+import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.location.Location
@@ -11,9 +12,13 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
+import androidx.core.content.IntentCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.os.BundleCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,9 +37,6 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
 import com.google.maps.android.SphericalUtil
-import com.karumi.dexter.listener.PermissionDeniedResponse
-import com.karumi.dexter.listener.PermissionGrantedResponse
-import com.karumi.dexter.listener.single.BasePermissionListener
 import com.rtchagas.pingplacepicker.PingPlacePicker
 import com.rtchagas.pingplacepicker.R
 import com.rtchagas.pingplacepicker.databinding.ActivityPlacePickerBinding
@@ -64,13 +66,10 @@ internal class PlacePickerActivity :
 
         // For passing extra parameters to this activity.
         const val EXTRA_LOCATION = "extra_location"
-        const val EXTRA_RETURN_ACTUAL_LATLNG = "extra_return_actual_latlng"
 
         // Keys for storing activity state.
         private const val STATE_CAMERA_POSITION = "state_camera_position"
         private const val STATE_LOCATION = "state_location"
-
-        private const val AUTOCOMPLETE_REQUEST_CODE = 1001
 
         private const val DIALOG_CONFIRM_PLACE_TAG = "dialog_place_confirm"
     }
@@ -95,6 +94,28 @@ internal class PlacePickerActivity :
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
+    private val autocompleteLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult(),
+    ) { result ->
+        if (result.resultCode != RESULT_OK) return@registerForActivityResult
+        result.data?.let { data ->
+            val place = Autocomplete.getPlaceFromIntent(data)
+            moveCameraToSelectedPlace(place)
+            showConfirmPlacePopup(place)
+        }
+    }
+
+    private val locationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions(),
+    ) { grants ->
+        isLocationPermissionGranted = grants[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+            grants[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+        if (!isLocationPermissionGranted) {
+            PermissionsHelper.showLocationRationaleDialog(this)
+        }
+        initMap()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -103,15 +124,17 @@ internal class PlacePickerActivity :
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Check whether a pre-defined location was set.
-        intent.getParcelableExtra<LatLng?>(EXTRA_LOCATION)?.let {
+        IntentCompat.getParcelableExtra(intent, EXTRA_LOCATION, LatLng::class.java)?.let {
             lastKnownLocation = it
         }
 
         // Retrieve location and camera position from saved instance state.
-        lastKnownLocation = savedInstanceState
-            ?.getParcelable(STATE_LOCATION) ?: lastKnownLocation
-        cameraPosition = savedInstanceState
-            ?.getParcelable(STATE_CAMERA_POSITION) ?: cameraPosition
+        savedInstanceState?.let { state ->
+            BundleCompat.getParcelable(state, STATE_LOCATION, LatLng::class.java)
+                ?.let { lastKnownLocation = it }
+            BundleCompat.getParcelable(state, STATE_CAMERA_POSITION, CameraPosition::class.java)
+                ?.let { cameraPosition = it }
+        }
 
         // Construct a FusedLocationProviderClient
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
@@ -128,19 +151,6 @@ internal class PlacePickerActivity :
         // Initializes the map
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if ((requestCode == AUTOCOMPLETE_REQUEST_CODE) && (resultCode == Activity.RESULT_OK)) {
-            data?.run {
-                val place = Autocomplete.getPlaceFromIntent(this)
-                moveCameraToSelectedPlace(place)
-                showConfirmPlacePopup(place)
-            }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -195,7 +205,13 @@ internal class PlacePickerActivity :
 
     override fun onPlaceConfirmed(place: Place) {
         val selectedLatLng = googleMap?.cameraPosition?.target ?: LatLng(0.0, 0.0)
-        PingPlacePicker.onPlaceSelectedListener?.onPlaceSelected(place, selectedLatLng)
+        setResult(
+            RESULT_OK,
+            Intent().apply {
+                putExtra(PingPlacePicker.Contract.EXTRA_PLACE, place)
+                putExtra(PingPlacePicker.Contract.EXTRA_LAT_LNG, selectedLatLng)
+            },
+        )
         finishAfterTransition()
     }
 
@@ -253,19 +269,25 @@ internal class PlacePickerActivity :
     }
 
     private fun checkForPermission() {
+        val granted = ContextCompat.checkSelfPermission(
+            this, Manifest.permission.ACCESS_FINE_LOCATION,
+        ) == PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_COARSE_LOCATION,
+            ) == PackageManager.PERMISSION_GRANTED
 
-        PermissionsHelper.checkForLocationPermission(this, object : BasePermissionListener() {
+        if (granted) {
+            isLocationPermissionGranted = true
+            initMap()
+            return
+        }
 
-            override fun onPermissionDenied(response: PermissionDeniedResponse?) {
-                isLocationPermissionGranted = false
-                initMap()
-            }
-
-            override fun onPermissionGranted(response: PermissionGrantedResponse?) {
-                isLocationPermissionGranted = true
-                initMap()
-            }
-        })
+        locationPermissionLauncher.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+            ),
+        )
     }
 
     private fun getCurrentLatLngBounds(): LatLngBounds {
@@ -381,8 +403,10 @@ internal class PlacePickerActivity :
             Resource.Status.SUCCESS ->
                 bindPlaces((result.data ?: listOf()))
 
-            Resource.Status.ERROR ->
+            Resource.Status.ERROR -> {
+                Log.w(TAG, "Error fetching places:" + result.error)
                 toast(R.string.picker_load_places_error)
+            }
 
             Resource.Status.NO_DATA ->
                 Log.d(TAG, "No places data found...")
@@ -510,7 +534,7 @@ internal class PlacePickerActivity :
             .setLocationBias(rectangularBounds)
             .build(this)
 
-        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
+        autocompleteLauncher.launch(intent)
     }
 
     private fun restoreFragments() {

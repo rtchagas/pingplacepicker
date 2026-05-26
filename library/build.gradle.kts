@@ -79,7 +79,6 @@ dependencies {
 
     // 3rd party
     implementation(libs.material.colors)
-    implementation(libs.dexter)
 
     testImplementation(libs.junit)
 }

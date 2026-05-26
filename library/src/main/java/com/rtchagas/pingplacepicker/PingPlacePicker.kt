@@ -1,7 +1,10 @@
 package com.rtchagas.pingplacepicker
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.core.content.IntentCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
@@ -13,107 +16,81 @@ import com.rtchagas.pingplacepicker.ui.activity.PlacePickerActivity
 object PingPlacePicker {
 
     internal var androidApiKey: String = ""
+        private set
 
     internal var mapsApiKey: String = ""
+        private set
 
-    internal var urlSigningSecret = ""
+    internal var urlSigningSecret: String = ""
+        private set
 
-    internal var isNearbySearchEnabled = false
-
-    internal var onPlaceSelectedListener: OnPlaceSelectedListener? = null
-
-    class Builder {
-
-        private val intent = Intent()
-
-        /**
-         * This key will be used to all nearby requests to Google Places API.
-         */
-        fun setAndroidApiKey(androidKey: String): Builder {
-            androidApiKey = androidKey
-            return this
-        }
-
-        /**
-         * This key will be used to nearby searches and reverse geocoding
-         * requests to Google Maps HTTP API.
-         */
-        fun setMapsApiKey(geoKey: String): Builder {
-            mapsApiKey = geoKey
-            return this
-        }
-
-        /**
-         * The initial location that the map must be pointing to.
-         * If this is set, PING will search for places near this location.
-         */
-        fun setLatLng(location: LatLng): Builder {
-            intent.putExtra(PlacePickerActivity.EXTRA_LOCATION, location)
-            return this
-        }
-
-        /**
-         * Sets the listener to be called when a place is selected.
-         */
-        fun setOnPlaceSelectedListener(listener: OnPlaceSelectedListener): Builder {
-            onPlaceSelectedListener = listener
-            return this
-        }
-
-        /**
-         * Enables URL signing for Google APIs that require it.
-         *
-         * Currently only Maps Statics API requires signing for some users.
-         *
-         * More info [here](https://developers.google.com/maps/documentation/maps-static/get-api-key#generating-digital-signatures)
-         */
-        fun setUrlSigningSecret(secretKey: String): Builder {
-            urlSigningSecret = secretKey
-            return this
-        }
-
-        /**
-         * Set whether the library should return the place coordinate retrieved from GooglePlace
-         * or the actual selected location from google map
-         */
-        fun setShouldReturnActualLatLng(shouldReturnActualLatLng: Boolean): Builder {
-            intent.putExtra(
-                PlacePickerActivity.EXTRA_RETURN_ACTUAL_LATLNG,
-                shouldReturnActualLatLng
-            )
-            return this
-        }
-
-        @Throws(GooglePlayServicesNotAvailableException::class)
-        fun build(activity: Activity): Intent {
-
-            PingKoinContext.init(activity.application)
-
-            val result: Int =
-                GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity)
-
-            if (ConnectionResult.SUCCESS != result) {
-                throw GooglePlayServicesNotAvailableException(result)
-            }
-
-            isNearbySearchEnabled = activity.resources.getBoolean(R.bool.enable_nearby_search)
-
-            intent.setClass(activity, PlacePickerActivity::class.java)
-            return intent
-        }
-    }
+    internal var isNearbySearchEnabled: Boolean = false
+        private set
 
     /**
-     * Listener to be called when PING returns a selected place.
+     * Input for [Contract]. Required keys plus optional initial location.
      */
-    interface OnPlaceSelectedListener {
+    data class Request(
+        val androidApiKey: String,
+        val mapsApiKey: String = "",
+        val urlSigningSecret: String = "",
+        val initialLocation: LatLng? = null,
+    )
 
-        /**
-         * Called when PING returns a place selected by the user.
-         * @param place the selected place.
-         * @param latLng the selected latitude/longitude in the map.
-         */
-        fun onPlaceSelected(place: Place, latLng: LatLng)
+    /**
+     * Selection returned from the picker. [latLng] is the map's camera target
+     * at the moment of confirmation, which may differ from [place]'s own LatLng.
+     */
+    data class Result(
+        val place: Place,
+        val latLng: LatLng,
+    )
 
+    /**
+     * [ActivityResultContract] for launching the place picker.
+     *
+     * ```
+     * private val picker = registerForActivityResult(PingPlacePicker.Contract()) { result ->
+     *     result?.let { /* use it.place, it.latLng */ }
+     * }
+     * picker.launch(PingPlacePicker.Request(androidApiKey = "..."))
+     * ```
+     */
+    class Contract : ActivityResultContract<Request, Result?>() {
+
+        @Throws(GooglePlayServicesNotAvailableException::class)
+        override fun createIntent(context: Context, input: Request): Intent {
+            val availability = GoogleApiAvailability.getInstance()
+                .isGooglePlayServicesAvailable(context)
+            if (availability != ConnectionResult.SUCCESS) {
+                throw GooglePlayServicesNotAvailableException(availability)
+            }
+
+            androidApiKey = input.androidApiKey
+            mapsApiKey = input.mapsApiKey
+            urlSigningSecret = input.urlSigningSecret
+            isNearbySearchEnabled = context.resources.getBoolean(R.bool.enable_nearby_search)
+            PingKoinContext.init(context.applicationContext)
+
+            return Intent(context, PlacePickerActivity::class.java).apply {
+                input.initialLocation?.let { putExtra(PlacePickerActivity.EXTRA_LOCATION, it) }
+            }
+        }
+
+        override fun parseResult(resultCode: Int, intent: Intent?): Result? {
+            if (resultCode != Activity.RESULT_OK || intent == null) return null
+            val place = IntentCompat.getParcelableExtra(
+                intent, EXTRA_PLACE, Place::class.java,
+            ) ?: return null
+            val latLng = IntentCompat.getParcelableExtra(
+                intent, EXTRA_LAT_LNG, LatLng::class.java,
+            ) ?: return null
+            return Result(place, latLng)
+        }
+
+        internal companion object {
+            const val EXTRA_PLACE = "ping_extra_place"
+            const val EXTRA_LAT_LNG = "ping_extra_lat_lng"
+        }
     }
 }

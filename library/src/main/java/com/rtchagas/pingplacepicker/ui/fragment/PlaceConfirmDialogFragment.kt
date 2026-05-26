@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.core.os.BundleCompat
 import androidx.core.view.isVisible
 import androidx.transition.TransitionManager
 import coil.load
@@ -42,14 +43,8 @@ internal class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinC
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Check mandatory parameters for this fragment
-        if (requireArguments().getParcelable<Place>(ARG_PLACE) == null) {
-            throw IllegalArgumentException("You must pass a Place as argument to this fragment")
-        }
-
-        arguments?.run {
-            place = getParcelable(ARG_PLACE)!!
-        }
+        place = BundleCompat.getParcelable(requireArguments(), ARG_PLACE, Place::class.java)
+            ?: throw IllegalArgumentException("You must pass a Place as argument to this fragment")
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

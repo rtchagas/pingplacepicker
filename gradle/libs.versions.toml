@@ -46,7 +46,6 @@ coil = "2.7.0"
 
 # 3rd party
 material-colors = "1.1.0"
-dexter = "6.2.3"
 
 # Test
 junit = "4.13.2"
@@ -97,7 +96,6 @@ coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 
 # 3rd party
 material-colors = { module = "com.github.mcginty:material-colors", version.ref = "material-colors" }
-dexter = { module = "com.karumi:dexter", version.ref = "dexter" }
 
 # Test
 junit = { module = "junit:junit", version.ref = "junit" }

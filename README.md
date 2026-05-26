@@ -96,10 +96,12 @@ PING uses one or two keys depending on which features you turn on:
 Override these bools/integers in your app's resources to change behaviour:
 
 ```xml
-<!-- Show the place photo in the confirmation dialog (uses Places SDK photo quota) -->
+<!-- Show the place photo in the confirmation dialog.
+     Place Photo (New) — Enterprise tier, $7/1000 calls after 1000/month free -->
 <bool name="show_confirmation_photo">true</bool>
 
-<!-- Show a static-map preview in the confirmation dialog (uses Maps Static API quota) -->
+<!-- Show a static-map preview in the confirmation dialog.
+     Maps Static API — Essentials tier, $2/1000 calls after 10000/month free -->
 <bool name="show_confirmation_map">true</bool>
 
 <!-- Pan the map to the marker when the user taps it -->
@@ -111,6 +113,39 @@ Override these bools/integers in your app's resources to change behaviour:
 <!-- Initial zoom level applied to the map -->
 <integer name="default_zoom">17</integer>
 ```
+
+## Pricing
+
+PING uses these Places API (New) and Maps Platform SKUs. Prices below are the
+default pay-as-you-go rates for the first 100,000 calls per month, after the
+free monthly allowance is exhausted:
+
+| Action | SKU | Tier | Free / month | Price |
+| --- | --- | --- | --- | --- |
+| Opening the picker | Nearby Search (New) | Pro | 5,000 | **$32 / 1K** |
+| Tapping a search prediction | Place Details (New) — `fetchPlace` | Pro | 5,000 | **$17 / 1K** |
+| Typing in the search bar | Autocomplete (New) | — | unlimited¹ | **$0** |
+| Confirmation photo (optional) | Place Photo (New) — `fetchResolvedPhotoUri` | Enterprise | 1,000 | **$7 / 1K** |
+| Confirmation static-map preview (optional) | Maps Static API | Essentials | 10,000 | **$2 / 1K** |
+
+¹ Autocomplete keystrokes are billed under "Autocomplete Session Usage" ($0)
+because each session is terminated by a Place Details Pro call (`fetchPlace`).
+If the user dismisses the picker without selecting a prediction the keystrokes
+fall back to "Autocomplete Requests" at $2.83 / 1K (first 10,000/month free).
+
+The tier of `searchNearby` and `fetchPlace` is driven by the
+[field mask](https://developers.google.com/maps/documentation/places/web-service/place-details#fieldmask)
+PING requests — `ID`, `DISPLAY_NAME`, `FORMATTED_ADDRESS`, `LOCATION`, `TYPES`,
+`PHOTO_METADATAS`. Adding atmosphere/enterprise fields (rating, reviews, opening
+hours, etc.) would bump the whole call up to the Enterprise tier.
+
+Disable `show_confirmation_photo` and `show_confirmation_map` if you want to
+keep usage strictly within the Places SDK Pro tier and avoid the Static Maps
+key altogether.
+
+For the full SKU breakdown and volume discounts, see the
+[Google Maps Platform pricing page](https://developers.google.com/maps/billing-and-pricing/pricing)
+and the [SKU details](https://developers.google.com/maps/billing-and-pricing/sku-details).
 
 ## Theming
 

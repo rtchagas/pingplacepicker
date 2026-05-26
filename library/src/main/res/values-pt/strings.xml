@@ -10,4 +10,8 @@
     <string name="picker_place_confirm">Utilizar este local?</string>
     <string name="picker_place_confirm_cancel">Alterar localização</string>
     <string name="picker_title">Escolha um local</string>
+    <!-- Autocomplete -->
+    <string name="picker_autocomplete_hint">Pesquisar um local</string>
+    <string name="picker_autocomplete_close">Fechar pesquisa</string>
+
 </resources>

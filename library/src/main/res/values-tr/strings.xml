@@ -15,5 +15,8 @@
     <!-- Permissions -->
     <string name="permission_fine_location_title">Konum İzini</string>
     <string name="permission_fine_location_message">Yakındaki yerleri gösterebilmek için konum izinine ihtiyacımız var.</string>
+    <!-- Autocomplete -->
+    <string name="picker_autocomplete_hint">Yer ara</string>
+    <string name="picker_autocomplete_close">Aramayı kapat</string>
 
 </resources>

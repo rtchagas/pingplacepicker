@@ -10,4 +10,8 @@
     <string name="permission_fine_location_message">Wir benötigen Ihre Orte nur um Ihnen dabei zu helfen Orte in der Nähe zu finden.</string>
     <string name="description_place_map">Eine Karte des ausgewählten Ortes</string>
     <string name="description_place_image">Ein Foto des ausgewählten Ortes</string>
+    <!-- Autocomplete -->
+    <string name="picker_autocomplete_hint">Ort suchen</string>
+    <string name="picker_autocomplete_close">Suche schließen</string>
+
 </resources>

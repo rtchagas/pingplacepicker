@@ -10,4 +10,8 @@
     <string name="description_place_map">El mapa de la ubicació seleccionada</string>
     <string name="permission_fine_location_title">Permís de localització</string>
     <string name="permission_fine_location_message">Necessitem la teva localització per ajudar-te a trobar llocs propers</string>
+    <!-- Autocomplete -->
+    <string name="picker_autocomplete_hint">Cerca un lloc</string>
+    <string name="picker_autocomplete_close">Tanca la cerca</string>
+
 </resources>

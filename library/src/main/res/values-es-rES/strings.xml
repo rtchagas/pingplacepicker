@@ -10,4 +10,8 @@
     <string name="description_place_map">El mapa de la ubicación seleccionada</string>
     <string name="permission_fine_location_title">Permiso de localización</string>
     <string name="permission_fine_location_message">Necesitamos tu localización para ayudarte a encontrar sitios cercanos</string>
+    <!-- Autocomplete -->
+    <string name="picker_autocomplete_hint">Buscar un lugar</string>
+    <string name="picker_autocomplete_close">Cerrar búsqueda</string>
+
 </resources>

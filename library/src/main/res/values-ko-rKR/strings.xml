@@ -14,4 +14,8 @@
     <!-- Permissions -->
     <string name="permission_fine_location_title">위치 권한</string>
     <string name="permission_fine_location_message">주변 장소를 찾기 위해 위치 권한이 필요합니다.</string>
+    <!-- Autocomplete -->
+    <string name="picker_autocomplete_hint">장소 검색</string>
+    <string name="picker_autocomplete_close">검색 닫기</string>
+
 </resources>

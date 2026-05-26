@@ -13,5 +13,8 @@
 <!-- Permissions -->
 <string name="permission_fine_location_title">اذن الموقع</string>
 <string name="permission_fine_location_message">نحن فى حاجة الى موقعك حتى نستطيع العثور على الاماكن المجاورة المرتبطة بك.</string>
+    <!-- Autocomplete -->
+    <string name="picker_autocomplete_hint">ابحث عن مكان</string>
+    <string name="picker_autocomplete_close">إغلاق البحث</string>
 
 </resources>

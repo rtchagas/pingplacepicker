@@ -15,5 +15,8 @@
     <!-- Permissions -->
     <string name="permission_fine_location_title">定位權限</string>
     <string name="permission_fine_location_message">我們需要你的定位，以便協助你快速找到地點</string>
+    <!-- Autocomplete -->
+    <string name="picker_autocomplete_hint">搜尋地點</string>
+    <string name="picker_autocomplete_close">關閉搜尋</string>
 
 </resources>

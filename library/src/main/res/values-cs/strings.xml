@@ -13,5 +13,8 @@
     <!-- Permissions -->
     <string name="permission_fine_location_title">Oprávnění k přístupu k poloze</string>
     <string name="permission_fine_location_message">Potřebujeme znát vaši polohu, abychom mohli najít vhodná místa v okolí.</string>
+    <!-- Autocomplete -->
+    <string name="picker_autocomplete_hint">Hledat místo</string>
+    <string name="picker_autocomplete_close">Zavřít vyhledávání</string>
 
 </resources>

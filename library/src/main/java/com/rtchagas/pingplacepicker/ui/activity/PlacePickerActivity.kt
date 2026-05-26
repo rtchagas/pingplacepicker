@@ -33,13 +33,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.model.RectangularBounds
-import com.google.android.libraries.places.widget.Autocomplete
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
-import com.google.maps.android.SphericalUtil
 import com.rtchagas.pingplacepicker.PingPlacePicker
 import com.rtchagas.pingplacepicker.R
 import com.rtchagas.pingplacepicker.databinding.ActivityPlacePickerBinding
@@ -47,6 +43,7 @@ import com.rtchagas.pingplacepicker.helper.PermissionsHelper
 import com.rtchagas.pingplacepicker.inject.PingKoinComponent
 import com.rtchagas.pingplacepicker.ui.UiUtils
 import com.rtchagas.pingplacepicker.ui.adapter.PlacePickerAdapter
+import com.rtchagas.pingplacepicker.ui.fragment.AutocompleteDialogFragment
 import com.rtchagas.pingplacepicker.ui.fragment.PlaceConfirmDialogFragment
 import com.rtchagas.pingplacepicker.ui.onClickDebounced
 import com.rtchagas.pingplacepicker.ui.toast
@@ -61,7 +58,8 @@ internal class PlacePickerActivity :
     PingKoinComponent,
     OnMapReadyCallback,
     GoogleMap.OnMarkerClickListener,
-    PlaceConfirmDialogFragment.OnPlaceConfirmedListener {
+    PlaceConfirmDialogFragment.OnPlaceConfirmedListener,
+    AutocompleteDialogFragment.OnPlacePickedListener {
 
     companion object {
 
@@ -75,6 +73,7 @@ internal class PlacePickerActivity :
         private const val STATE_LOCATION = "state_location"
 
         private const val DIALOG_CONFIRM_PLACE_TAG = "dialog_place_confirm"
+        private const val DIALOG_AUTOCOMPLETE_TAG = "dialog_autocomplete"
     }
 
     private var googleMap: GoogleMap? = null
@@ -94,17 +93,6 @@ internal class PlacePickerActivity :
     private val viewModel: PlacePickerViewModel by viewModel()
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-
-    private val autocompleteLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult(),
-    ) { result ->
-        if (result.resultCode != RESULT_OK) return@registerForActivityResult
-        result.data?.let { data ->
-            val place = Autocomplete.getPlaceFromIntent(data)
-            moveCameraToSelectedPlace(place)
-            showConfirmPlacePopup(place)
-        }
-    }
 
     private val locationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions(),
@@ -161,7 +149,6 @@ internal class PlacePickerActivity :
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.places.collect { handlePlacesLoaded(it) } }
-                launch { viewModel.placeByLocation.collect { handlePlaceByLocation(it) } }
             }
         }
     }
@@ -223,6 +210,11 @@ internal class PlacePickerActivity :
         finishAfterTransition()
     }
 
+    override fun onAutocompletePlacePicked(place: Place) {
+        moveCameraToSelectedPlace(place)
+        showConfirmPlacePopup(place)
+    }
+
     private fun adjustElevationOverlayColors() {
 
         // Set the correct elevation overlay to the CollapsingToolbarLayout
@@ -263,7 +255,7 @@ internal class PlacePickerActivity :
             clear()
 
             for (place in places) {
-                place.latLng?.let {
+                place.location?.let {
                     val marker: Marker? = addMarker(
                         MarkerOptions()
                             .position(it)
@@ -298,16 +290,8 @@ internal class PlacePickerActivity :
         )
     }
 
-    private fun getCurrentLatLngBounds(): LatLngBounds {
-
-        val radius = resources.getInteger(R.integer.autocomplete_search_bias_radius).toDouble()
-        val location: LatLng = lastKnownLocation ?: defaultLocation
-
-        val northEast: LatLng = SphericalUtil.computeOffset(location, radius, 45.0)
-        val southWest: LatLng = SphericalUtil.computeOffset(location, radius, 225.0)
-
-        return LatLngBounds(southWest, northEast)
-    }
+    private fun getSearchRadiusMeters(): Double =
+        resources.getInteger(R.integer.autocomplete_search_bias_radius).toDouble()
 
     private fun getDeviceLocation(animate: Boolean) = try {
 
@@ -381,25 +365,6 @@ internal class PlacePickerActivity :
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
-    private fun handlePlaceByLocation(result: Resource<Place?>) {
-
-        binding.pbLoading.hide()
-
-        when (result.status) {
-            Resource.Status.LOADING ->
-                binding.pbLoading.show()
-
-            Resource.Status.SUCCESS ->
-                result.data?.run { showConfirmPlacePopup(this) }
-
-            Resource.Status.ERROR ->
-                toast(R.string.picker_load_this_place_error)
-
-            Resource.Status.NO_DATA ->
-                Log.d(TAG, "No places data found...")
-        }
-    }
-
     private fun handlePlacesLoaded(result: Resource<List<Place>>) {
 
         binding.pbLoading.hide()
@@ -434,10 +399,6 @@ internal class PlacePickerActivity :
         btnMyLocation.onClickDebounced { getDeviceLocation(true) }
         btnRefreshLocation.onClickDebounced { refreshNearbyPlaces() }
         cardSearch.onClickDebounced { requestPlacesSearch() }
-        mapContainer.onClickDebounced { selectThisPlace() }
-
-        // Hide or show the refresh places button according to nearby search flag
-        btnRefreshLocation.isVisible = PingPlacePicker.isNearbySearchEnabled
 
         // Hide or show the card search according to the width
         cardSearch.isVisible = resources.getBoolean(R.bool.show_card_search)
@@ -492,61 +453,39 @@ internal class PlacePickerActivity :
     }
 
     private fun loadNearbyPlaces() {
-        viewModel.loadNearbyPlaces(lastKnownLocation ?: defaultLocation)
+        viewModel.loadNearbyPlaces(
+            lastKnownLocation ?: defaultLocation,
+            getSearchRadiusMeters(),
+        )
     }
 
     private fun moveCameraToSelectedPlace(place: Place) {
-        place.latLng?.let {
+        place.location?.let {
             googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(it, defaultZoom))
         }
     }
 
     private fun refreshNearbyPlaces() {
         googleMap?.cameraPosition?.run {
-            viewModel.loadNearbyPlaces(target)
+            viewModel.loadNearbyPlaces(target, getSearchRadiusMeters())
         }
     }
 
     private fun requestPlacesSearch() {
-
-        // This only works if location permission is granted
         if (!isLocationPermissionGranted) {
             checkForPermission()
             return
         }
-
-        // Places API needs a location as well...
-        if (lastKnownLocation == null) {
-            return
-        }
-
-        // These fields are not charged by Google:
-        // https://developers.google.com/places/android-sdk/usage-and-billing#basic-data
-        val placeFields = listOf(
-            Place.Field.ID,
-            Place.Field.NAME,
-            Place.Field.ADDRESS,
-            Place.Field.LAT_LNG,
-            Place.Field.TYPES,
-            Place.Field.PHOTO_METADATAS
-        )
-
-        val rectangularBounds = RectangularBounds.newInstance(getCurrentLatLngBounds())
-
-        // Start the autocomplete intent.
-        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, placeFields)
-            .setLocationBias(rectangularBounds)
-            .build(this)
-
-        autocompleteLauncher.launch(intent)
+        val bias = lastKnownLocation ?: defaultLocation
+        AutocompleteDialogFragment.newInstance(bias, getSearchRadiusMeters(), this)
+            .show(supportFragmentManager, DIALOG_AUTOCOMPLETE_TAG)
     }
 
     private fun restoreFragments() {
-        val confirmFragment = supportFragmentManager
-            .findFragmentByTag(DIALOG_CONFIRM_PLACE_TAG) as PlaceConfirmDialogFragment?
-        confirmFragment?.run {
-            confirmListener = this@PlacePickerActivity
-        }
+        (supportFragmentManager.findFragmentByTag(DIALOG_CONFIRM_PLACE_TAG)
+            as? PlaceConfirmDialogFragment)?.confirmListener = this
+        (supportFragmentManager.findFragmentByTag(DIALOG_AUTOCOMPLETE_TAG)
+            as? AutocompleteDialogFragment)?.listener = this
     }
 
     private fun restoreMapState() {
@@ -562,12 +501,6 @@ internal class PlacePickerActivity :
             .make(binding.root, R.string.picker_location_unavailable, Snackbar.LENGTH_INDEFINITE)
             .setAction(R.string.places_try_again) { getDeviceLocation(animate) }
             .show()
-    }
-
-    private fun selectThisPlace() {
-        googleMap?.cameraPosition?.run {
-            viewModel.loadPlaceByLocation(target)
-        }
     }
 
     private fun setDefaultLocation() {

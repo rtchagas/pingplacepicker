@@ -2,6 +2,8 @@ package com.rtchagas.pingplacepicker.repository
 
 import android.graphics.Bitmap
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.libraries.places.api.model.AutocompletePrediction
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken
 import com.google.android.libraries.places.api.model.PhotoMetadata
 import com.google.android.libraries.places.api.model.Place
 
@@ -11,11 +13,16 @@ import com.google.android.libraries.places.api.model.Place
  */
 internal interface PlaceRepository {
 
-    suspend fun getNearbyPlaces(): List<Place>
+    suspend fun searchNearby(location: LatLng, radiusMeters: Double): List<Place>
 
-    suspend fun getNearbyPlaces(location: LatLng): List<Place>
+    suspend fun fetchPhoto(photoMetadata: PhotoMetadata): Bitmap
 
-    suspend fun getPlacePhoto(photoMetadata: PhotoMetadata): Bitmap
+    suspend fun autocomplete(
+        query: String,
+        bias: LatLng,
+        radiusMeters: Double,
+        sessionToken: AutocompleteSessionToken,
+    ): List<AutocompletePrediction>
 
-    suspend fun getPlaceByLocation(location: LatLng): Place
+    suspend fun fetchPlace(placeId: String, sessionToken: AutocompleteSessionToken): Place
 }

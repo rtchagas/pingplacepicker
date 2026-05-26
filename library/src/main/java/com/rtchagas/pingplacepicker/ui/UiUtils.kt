@@ -7,41 +7,29 @@ import android.util.TypedValue
 import androidx.annotation.ColorInt
 import com.google.android.libraries.places.api.model.Place
 import com.rtchagas.pingplacepicker.R
-import java.util.*
-
 
 internal object UiUtils {
 
     /**
-     * Gets the place drawable resource according to its type
+     * Gets the place drawable resource according to its type. Place types in
+     * Places SDK 5.x are strings (e.g. "restaurant", "cafe"), so we look up
+     * `ic_places_<type>` drawables directly.
      */
     @SuppressLint("DiscouragedApi")
     fun getPlaceDrawableRes(context: Context, place: Place): Int {
-
         val defType = "drawable"
         val defPackage = context.packageName
 
-        place.types?.let {
-            for (type: Place.Type in it) {
-                val name = type.name.lowercase(Locale.ENGLISH)
-                val id: Int =
-                    context.resources.getIdentifier("ic_places_$name", defType, defPackage)
-                if (id > 0) return id
-            }
+        for (type in place.placeTypes.orEmpty()) {
+            val id = context.resources.getIdentifier("ic_places_$type", defType, defPackage)
+            if (id > 0) return id
         }
 
-        // Default resource
         return R.drawable.ic_map_marker_black_24dp
     }
 
-    /**
-     * Returns whether the current selected theme is night mode or not
-     */
     fun isNightModeEnabled(context: Context): Boolean {
-
-        val nightMode: Int =
-            (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
-
+        val nightMode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         return nightMode == Configuration.UI_MODE_NIGHT_YES
     }
 

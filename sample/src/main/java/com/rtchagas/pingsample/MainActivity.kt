@@ -13,7 +13,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     private val placePickerLauncher = registerForActivityResult(PingPlacePicker.Contract()) { result ->
         result ?: return@registerForActivityResult
-        toast("You selected: ${result.place.name}\n Map location: ${result.latLng}")
+        toast("You selected: ${result.place.displayName}\n Map location: ${result.latLng}")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

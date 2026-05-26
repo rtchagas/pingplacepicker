@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.ksp)
     `maven-publish`
 }
 
@@ -63,13 +62,6 @@ dependencies {
 
     // Koin for Android
     implementation(libs.koin.android)
-
-    // Moshi
-    implementation(libs.moshi)
-    ksp(libs.moshi.kotlin.codegen)
-
-    // Retrofit
-    implementation(libs.bundles.retrofit)
 
     // Coil
     implementation(libs.coil)

@@ -21,19 +21,18 @@ object PingPlacePicker {
     internal var mapsApiKey: String = ""
         private set
 
-    internal var urlSigningSecret: String = ""
-        private set
-
-    internal var isNearbySearchEnabled: Boolean = false
-        private set
-
     /**
-     * Input for [Contract]. Required keys plus optional initial location.
+     * Input for [Contract].
+     *
+     * @param androidApiKey Places SDK key (Android-restricted is fine).
+     * @param mapsApiKey Maps Static API key used only to render the preview
+     *   image in the confirmation dialog. Leave empty to disable that preview.
+     * @param initialLocation If provided, the map opens here; otherwise the
+     *   picker uses the device's last known location.
      */
     data class Request(
         val androidApiKey: String,
         val mapsApiKey: String = "",
-        val urlSigningSecret: String = "",
         val initialLocation: LatLng? = null,
     )
 
@@ -68,8 +67,6 @@ object PingPlacePicker {
 
             androidApiKey = input.androidApiKey
             mapsApiKey = input.mapsApiKey
-            urlSigningSecret = input.urlSigningSecret
-            isNearbySearchEnabled = context.resources.getBoolean(R.bool.enable_nearby_search)
             PingKoinContext.init(context.applicationContext)
 
             return Intent(context, PlacePickerActivity::class.java).apply {

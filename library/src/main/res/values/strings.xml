@@ -18,4 +18,8 @@
     <string name="permission_fine_location_title">Location Permission</string>
     <string name="permission_fine_location_message">We only need your location to help you find relevant nearby places.</string>
 
+    <!-- Autocomplete -->
+    <string name="picker_autocomplete_hint">Search for a place</string>
+    <string name="picker_autocomplete_close">Close search</string>
+
 </resources>

@@ -21,7 +21,6 @@ import com.rtchagas.pingplacepicker.Config
 import com.rtchagas.pingplacepicker.PingPlacePicker
 import com.rtchagas.pingplacepicker.R
 import com.rtchagas.pingplacepicker.databinding.FragmentDialogPlaceConfirmBinding
-import com.rtchagas.pingplacepicker.helper.UrlSignerHelper
 import com.rtchagas.pingplacepicker.inject.PingKoinComponent
 import com.rtchagas.pingplacepicker.ui.UiUtils
 import com.rtchagas.pingplacepicker.viewmodel.PlaceConfirmDialogViewModel
@@ -29,7 +28,6 @@ import com.rtchagas.pingplacepicker.viewmodel.Resource
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
-
 
 internal class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinComponent {
 
@@ -88,13 +86,13 @@ internal class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinC
 
     private fun initializeUi() = with(binding) {
 
-        if (place.name.isNullOrEmpty()) {
+        if (place.displayName.isNullOrEmpty()) {
             tvPlaceName.isVisible = false
         } else {
-            tvPlaceName.text = place.name
+            tvPlaceName.text = place.displayName
         }
 
-        tvPlaceAddress.text = place.address
+        tvPlaceAddress.text = place.formattedAddress
 
         fetchPlaceMap()
         fetchPlacePhoto()
@@ -103,10 +101,12 @@ internal class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinC
     private fun fetchPlaceMap() = with(binding.ivPlaceMap) {
 
         isVisible =
-            if (resources.getBoolean(R.bool.show_confirmation_map)) true
+            if (resources.getBoolean(R.bool.show_confirmation_map) &&
+                PingPlacePicker.mapsApiKey.isNotEmpty()
+            ) true
             else return@with
 
-        val staticMapUrl = getFinalMapUrl()
+        val staticMapUrl = getFinalMapUrl() ?: return@with
 
         binding.ivPlaceMap.load(staticMapUrl) {
             listener(
@@ -127,25 +127,17 @@ internal class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinC
         }
     }
 
-    private fun getFinalMapUrl(): String {
-
-        var mapUrl = Config.STATIC_MAP_URL
-            .format(
-                place.latLng?.latitude,
-                place.latLng?.longitude,
-                PingPlacePicker.mapsApiKey,
-                Locale.getDefault().language
-            )
-
+    private fun getFinalMapUrl(): String? {
+        val location = place.location ?: return null
+        var mapUrl = Config.STATIC_MAP_URL.format(
+            location.latitude,
+            location.longitude,
+            PingPlacePicker.mapsApiKey,
+            Locale.getDefault().language,
+        )
         if (UiUtils.isNightModeEnabled(requireContext())) {
             mapUrl += Config.STATIC_MAP_URL_STYLE_DARK
         }
-
-        if (PingPlacePicker.urlSigningSecret.isNotEmpty()) {
-            // Sign the URL
-            return UrlSignerHelper.signUrl(mapUrl, PingPlacePicker.urlSigningSecret)
-        }
-
         return mapUrl
     }
 

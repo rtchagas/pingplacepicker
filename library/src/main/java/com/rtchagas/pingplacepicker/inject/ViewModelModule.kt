@@ -1,5 +1,6 @@
 package com.rtchagas.pingplacepicker.inject
 
+import com.rtchagas.pingplacepicker.viewmodel.AutocompleteViewModel
 import com.rtchagas.pingplacepicker.viewmodel.PlaceConfirmDialogViewModel
 import com.rtchagas.pingplacepicker.viewmodel.PlacePickerViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -11,4 +12,5 @@ internal val viewModelModule = module {
 
     viewModel { PlaceConfirmDialogViewModel(get()) }
 
+    viewModel { AutocompleteViewModel(get()) }
 }

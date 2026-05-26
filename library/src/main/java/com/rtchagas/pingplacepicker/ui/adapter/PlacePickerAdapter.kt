@@ -9,7 +9,7 @@ import com.rtchagas.pingplacepicker.ui.UiUtils
 
 internal class PlacePickerAdapter(
     private var placeList: List<Place>,
-    private val clickListener: (Place) -> Unit
+    private val clickListener: (Place) -> Unit,
 ) : RecyclerView.Adapter<PlacePickerAdapter.PlaceViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceViewHolder {
@@ -22,9 +22,9 @@ internal class PlacePickerAdapter(
         holder.bind(placeList[position], clickListener)
     }
 
-    override fun getItemCount(): Int =
-        placeList.size
+    override fun getItemCount(): Int = placeList.size
 
+    @SuppressWarnings("NotifyDataSetChanged")
     fun swapData(newPlaceList: List<Place>) {
         placeList = newPlaceList
         notifyDataSetChanged()
@@ -34,12 +34,11 @@ internal class PlacePickerAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(place: Place, listener: (Place) -> Unit) {
-
             with(binding) {
                 root.setOnClickListener { listener(place) }
                 ivPlaceType.setImageResource(UiUtils.getPlaceDrawableRes(itemView.context, place))
-                tvPlaceName.text = place.name
-                tvPlaceAddress.text = place.address
+                tvPlaceName.text = place.displayName
+                tvPlaceAddress.text = place.formattedAddress
             }
         }
     }

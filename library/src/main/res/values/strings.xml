@@ -1,9 +1,6 @@
 <resources>
-    <string name="app_name" translatable="false">Ping Place Picker</string>
 
     <string name="picker_title">Select a location</string>
-    <string name="picker_select_this">Select this location</string>
-    <string name="picker_or_select_nearby">Or choose a nearby place</string>
     <string name="picker_load_places_error">"Couldn't load nearby places…"</string>
     <string name="picker_load_this_place_error">"Couldn't find the selected place…"</string>
     <string name="picker_place_confirm">Use this place?</string>

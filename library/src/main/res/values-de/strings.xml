@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="picker_title">Einen Ort auswählen</string>
-    <string name="picker_select_this">Diesen Ort auswählen</string>
     <string name="picker_place_confirm_cancel">Ort ändern</string>
     <string name="picker_place_confirm">Diesen Ort verwenden?</string>
-    <string name="picker_or_select_nearby">Oder Ort in der Nähe auswählen</string>
     <string name="picker_location_unavailable">Ort ist nicht verfügbar</string>
     <string name="picker_load_this_place_error">Konnte den ausgewählten Ort nicht finden…</string>
     <string name="picker_load_places_error">Konnte Orte in der Nähe nicht laden…</string>

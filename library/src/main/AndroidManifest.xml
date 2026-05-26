@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application>
 
@@ -16,10 +15,6 @@
             android:name=".ui.activity.PlacePickerActivity"
             android:launchMode="singleTop"
             android:theme="@style/PingTheme.NoStatus" />
-
-        <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" />
 
         <meta-data
             android:name="com.google.android.gms.version"

@@ -194,6 +194,26 @@ This release is a major rewrite. Highlights of the breaking changes:
 
 You'll also need to enable **Places API (New)** in your Google Cloud project — the legacy "Places API" is not enough.
 
+### A note on `enable_nearby_search` and pricing
+
+The 3.x library exposed an `enable_nearby_search` boolean that toggled between
+two backends:
+
+- `false` (default) — Places SDK `findCurrentPlace`, $30 / 1K
+- `true` — Places Web API `/nearbysearch`, $40 / 1K
+
+Google deprecated **both** of these in favor of the single new SDK call
+`searchNearby`, which is what PING 4.x uses unconditionally. There's nothing
+left to toggle to, so the boolean is gone.
+
+The new call costs **$32 / 1K** at the Pro tier with PING's default field mask
+— $0.002 per call more than the old default (`findCurrentPlace`) and $0.008
+per call less than the old opt-in (`/nearbysearch`). If you were relying on
+the default cheaper path, expect a ~7 % bump in nearby-search billing; if you
+had `enable_nearby_search=true`, you'll actually pay less.
+
+See [Pricing](#pricing) for the full per-flow cost breakdown.
+
 ## License
 
 ```

@@ -21,9 +21,6 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.os.BundleCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -43,13 +40,13 @@ import com.rtchagas.pingplacepicker.helper.PermissionsHelper
 import com.rtchagas.pingplacepicker.inject.PingKoinComponent
 import com.rtchagas.pingplacepicker.ui.UiUtils
 import com.rtchagas.pingplacepicker.ui.adapter.PlacePickerAdapter
+import com.rtchagas.pingplacepicker.ui.collectWithLifecycle
 import com.rtchagas.pingplacepicker.ui.fragment.AutocompleteDialogFragment
 import com.rtchagas.pingplacepicker.ui.fragment.PlaceConfirmDialogFragment
 import com.rtchagas.pingplacepicker.ui.onClickDebounced
 import com.rtchagas.pingplacepicker.ui.toast
 import com.rtchagas.pingplacepicker.viewmodel.PlacePickerViewModel
 import com.rtchagas.pingplacepicker.viewmodel.Resource
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.abs
 
@@ -146,11 +143,7 @@ internal class PlacePickerActivity :
     }
 
     private fun observeViewModel() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.places.collect { handlePlacesLoaded(it) } }
-            }
-        }
+        viewModel.places.collectWithLifecycle(this) { handlePlacesLoaded(it) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

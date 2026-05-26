@@ -1,14 +1,14 @@
 package com.rtchagas.pingplacepicker.repository.googlemaps
 
-import android.graphics.Bitmap
+import android.net.Uri
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
 import com.google.android.libraries.places.api.model.CircularBounds
 import com.google.android.libraries.places.api.model.PhotoMetadata
 import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.net.FetchPhotoRequest
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
+import com.google.android.libraries.places.api.net.FetchResolvedPhotoUriRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.libraries.places.api.net.SearchNearbyRequest
@@ -28,12 +28,13 @@ internal class GoogleMapsRepository(
         return placesClient.searchNearby(request).await().places
     }
 
-    override suspend fun fetchPhoto(photoMetadata: PhotoMetadata): Bitmap {
-        val request = FetchPhotoRequest.builder(photoMetadata)
+    override suspend fun fetchPhotoUri(photoMetadata: PhotoMetadata): Uri {
+        val request = FetchResolvedPhotoUriRequest.builder(photoMetadata)
             .setMaxWidth(Config.PLACE_IMG_WIDTH)
             .setMaxHeight(Config.PLACE_IMG_HEIGHT)
             .build()
-        return placesClient.fetchPhoto(request).await().bitmap
+        return placesClient.fetchResolvedPhotoUri(request).await().uri
+            ?: error("Places SDK returned null photo URI")
     }
 
     override suspend fun autocomplete(

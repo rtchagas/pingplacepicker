@@ -8,9 +8,6 @@ import android.view.Window
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.AutocompletePrediction
@@ -19,10 +16,10 @@ import com.rtchagas.pingplacepicker.R
 import com.rtchagas.pingplacepicker.databinding.FragmentDialogAutocompleteBinding
 import com.rtchagas.pingplacepicker.inject.PingKoinComponent
 import com.rtchagas.pingplacepicker.ui.adapter.AutocompleteAdapter
+import com.rtchagas.pingplacepicker.ui.collectWithLifecycle
 import com.rtchagas.pingplacepicker.ui.toast
 import com.rtchagas.pingplacepicker.viewmodel.AutocompleteViewModel
 import com.rtchagas.pingplacepicker.viewmodel.Resource
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -76,12 +73,8 @@ internal class AutocompleteDialogFragment :
         binding.etQuery.doAfterTextChanged { viewModel.setQuery(it?.toString().orEmpty()) }
         binding.etQuery.requestFocus()
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.predictions.collect { handlePredictions(it) } }
-                launch { viewModel.selectedPlace.collect { handleSelectedPlace(it) } }
-            }
-        }
+        viewModel.predictions.collectWithLifecycle(viewLifecycleOwner) { handlePredictions(it) }
+        viewModel.selectedPlace.collectWithLifecycle(viewLifecycleOwner) { handleSelectedPlace(it) }
     }
 
     override fun onStart() {

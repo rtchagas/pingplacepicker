@@ -1,6 +1,6 @@
 package com.rtchagas.pingplacepicker.viewmodel
 
-import android.graphics.Bitmap
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.places.api.model.PhotoMetadata
@@ -14,21 +14,21 @@ internal class PlaceConfirmDialogViewModel(
     private val repository: PlaceRepository,
 ) : ViewModel() {
 
-    private val _placePhoto = MutableStateFlow<Resource<Bitmap>>(Resource.noData())
-    val placePhoto: StateFlow<Resource<Bitmap>> = _placePhoto.asStateFlow()
+    private val _placePhotoUri = MutableStateFlow<Resource<Uri>>(Resource.noData())
+    val placePhotoUri: StateFlow<Resource<Uri>> = _placePhotoUri.asStateFlow()
 
     fun loadPlacePhoto(photoMetadata: PhotoMetadata) {
         // Don't refetch (and recharge) if we already have a result.
-        if (_placePhoto.value.status == Resource.Status.SUCCESS) return
+        if (_placePhotoUri.value.status == Resource.Status.SUCCESS) return
 
         viewModelScope.launch {
-            _placePhoto.value = Resource.loading()
+            _placePhotoUri.value = Resource.loading()
             runCatching {
-                repository.fetchPhoto(photoMetadata)
+                repository.fetchPhotoUri(photoMetadata)
             }.onSuccess {
-                _placePhoto.value = Resource.success(it)
+                _placePhotoUri.value = Resource.success(it)
             }.onFailure {
-                _placePhoto.value = Resource.error(it)
+                _placePhotoUri.value = Resource.error(it)
             }
         }
     }

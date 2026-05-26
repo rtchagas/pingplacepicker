@@ -14,171 +14,109 @@ import com.rtchagas.pingplacepicker.PingPlacePicker
 import com.rtchagas.pingplacepicker.model.SearchResult
 import com.rtchagas.pingplacepicker.model.SimplePlace
 import com.rtchagas.pingplacepicker.repository.PlaceRepository
-import io.reactivex.Single
+import kotlinx.coroutines.tasks.await
 import java.util.*
 
-
-internal class GoogleMapsRepository constructor(
+internal class GoogleMapsRepository(
     private val googleClient: PlacesClient,
-    private val googleMapsAPI: GoogleMapsAPI
+    private val googleMapsAPI: GoogleMapsAPI,
 ) : PlaceRepository {
-
 
     /**
      * Finds all nearby places ranked by likelihood of being the place where the device is.
      *
-     * This call will be charged according to
-     * [Places SDK for Android Usage and
-       Billing](https://developers.google.com/places/android-sdk/usage-and-billing#find-current-place)
+     * Charged per
+     * [Places SDK billing](https://developers.google.com/places/android-sdk/usage-and-billing#find-current-place).
      */
     @SuppressLint("MissingPermission")
-    override fun getNearbyPlaces(): Single<List<Place>> {
-
-        // Create request
+    override suspend fun getNearbyPlaces(): List<Place> {
         val request = FindCurrentPlaceRequest.builder(getPlaceFields()).build()
-
-        return Single.create { emitter ->
-            googleClient.findCurrentPlace(request).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    task.result?.let {
-                        val placeList = sortByLikelihood(it.placeLikelihoods)
-                        emitter.onSuccess(placeList.map { likelihood -> likelihood.place })
-                    }
-                    // Empty result
-                    emitter.onSuccess(listOf())
-                } else {
-                    emitter.tryOnError(task.exception ?: Exception("No places for you..."))
-                }
-            }
-        }
+        val response = googleClient.findCurrentPlace(request).await()
+        return sortByLikelihood(response.placeLikelihoods).map { it.place }
     }
 
-    /** Finds all nearby places ranked by distance from the requested location.
+    /**
+     * Finds all nearby places ranked by distance from the requested location.
      *
-     * This call will be charged according to
-     * [Places SDK WEB API Usage and
-    Billing](https://developers.google.com/maps/billing/understanding-cost-of-use#nearby-search)
+     * Charged per
+     * [Places Web API billing](https://developers.google.com/maps/billing/understanding-cost-of-use#nearby-search).
      */
-    override fun getNearbyPlaces(location: LatLng): Single<List<Place>> {
-
+    override suspend fun getNearbyPlaces(location: LatLng): List<Place> {
         val locationParam = "${location.latitude},${location.longitude}"
-
-        return googleMapsAPI.searchNearby(locationParam, PingPlacePicker.mapsApiKey)
-            .map { searchResult ->
-                val placeList = mutableListOf<CustomPlace>()
-                for (simplePlace in searchResult.results) {
-                    placeList.add(mapToCustomPlace(simplePlace))
-                }
-                placeList
-            }
+        val searchResult = googleMapsAPI.searchNearby(locationParam, PingPlacePicker.mapsApiKey)
+        return searchResult.results.map { mapToCustomPlace(it) }
     }
 
     /**
      * Fetches a photo for the place.
      *
-     * This call will be charged according to
-     * [Places SDK for Android Usage and
-       Billing](https://developers.google.com/places/android-sdk/usage-and-billing#places-photo)
+     * Charged per
+     * [Places SDK billing](https://developers.google.com/places/android-sdk/usage-and-billing#places-photo).
      */
-    override fun getPlacePhoto(photoMetadata: PhotoMetadata): Single<Bitmap> {
-
-        // Create a FetchPhotoRequest.
+    override suspend fun getPlacePhoto(photoMetadata: PhotoMetadata): Bitmap {
         val photoRequest = FetchPhotoRequest.builder(photoMetadata)
             .setMaxWidth(Config.PLACE_IMG_WIDTH)
             .setMaxHeight(Config.PLACE_IMG_HEIGHT)
             .build()
+        return googleClient.fetchPhoto(photoRequest).await().bitmap
+    }
 
-        return Single.create { emitter ->
-            googleClient.fetchPhoto(photoRequest).addOnSuccessListener {
-                val bitmap = it.bitmap
-                emitter.onSuccess(bitmap)
-            }.addOnFailureListener {
-                emitter.tryOnError(it)
-            }
+    /**
+     * Resolves a place from its latitude/longitude via Google Maps Geocoding API.
+     *
+     * Charged per
+     * [Geocoding API billing](https://developers.google.com/maps/documentation/geocoding/usage-and-billing#pricing-for-the-geocoding-api).
+     */
+    override suspend fun getPlaceByLocation(location: LatLng): Place {
+        val paramLocation = "${location.latitude},${location.longitude}"
+        val result: SearchResult = googleMapsAPI.findByLocation(paramLocation, PingPlacePicker.mapsApiKey)
+        return if ("OK" == result.status && result.results.isNotEmpty()) {
+            mapToCustomPlace(result.results[0])
+        } else {
+            PlaceFromCoordinates(location.latitude, location.longitude)
         }
     }
 
     /**
-     * Uses Google Maps GeoLocation API to retrieve a place by its latitude and longitude.
-     * This call will be charged according to
-     * [Places SDK for Android Usage and
-       Billing](https://developers.google.com/maps/documentation/geocoding/usage-and-billing#pricing-for-the-geocoding-api)
-     */
-    override fun getPlaceByLocation(location: LatLng): Single<Place> {
-
-        val paramLocation = "${location.latitude},${location.longitude}"
-
-        return googleMapsAPI.findByLocation(paramLocation, PingPlacePicker.mapsApiKey)
-            .map { result: SearchResult ->
-                if (("OK" == result.status) && result.results.isNotEmpty()) {
-                    return@map mapToCustomPlace(result.results[0])
-                }
-                return@map PlaceFromCoordinates(location.latitude, location.longitude)
-            }
-    }
-
-    /**
-     * These fields are not charged by Google.
+     * Free Place.Field set.
      * https://developers.google.com/places/android-sdk/usage-and-billing#basic-data
      */
-    private fun getPlaceFields(): List<Place.Field> {
-
-        return listOf(
-            Place.Field.ID,
-            Place.Field.NAME,
-            Place.Field.ADDRESS,
-            Place.Field.LAT_LNG,
-            Place.Field.TYPES,
-            Place.Field.PHOTO_METADATAS
-        )
-    }
+    private fun getPlaceFields(): List<Place.Field> = listOf(
+        Place.Field.ID,
+        Place.Field.NAME,
+        Place.Field.ADDRESS,
+        Place.Field.LAT_LNG,
+        Place.Field.TYPES,
+        Place.Field.PHOTO_METADATAS,
+    )
 
     private fun mapToCustomPlace(place: SimplePlace): CustomPlace {
-
-        val photoList = mutableListOf<PhotoMetadata>()
-        place.photos.forEach {
-            val photoMetadata = PhotoMetadata.builder(it.photoReference)
+        val photoList = place.photos.mapTo(mutableListOf()) {
+            PhotoMetadata.builder(it.photoReference)
                 .setAttributions(it.htmlAttributions.toString())
                 .setHeight(it.height)
                 .setWidth(it.width)
                 .build()
-            photoList.add(photoMetadata)
         }
 
-        val typeList = mutableListOf<Place.Type>()
-        place.types.forEach { simpleType ->
-            val placeType = Place.Type.values()
+        val typeList = place.types.mapTo(mutableListOf()) { simpleType ->
+            Place.Type.values()
                 .find { it.name == simpleType.uppercase(Locale.US) } ?: Place.Type.OTHER
-            typeList.add(placeType)
         }
 
         val latLng = LatLng(place.geometry.location.lat, place.geometry.location.lng)
-
         val address: String = place.formattedAddress.ifEmpty { place.vicinity }
-
         val name: String = buildPlaceName(place.name, address)
 
         return CustomPlace(place.placeId, name, photoList, address, typeList, latLng)
     }
 
     private fun buildPlaceName(originalName: String, address: String): String {
-        // We have a nice name, use it
-        if (originalName.isNotEmpty()) {
-            return originalName
-        }
-        // Return the first part of the address, usually the street + number
+        if (originalName.isNotEmpty()) return originalName
         return address.split(",").first()
     }
 
-    /**
-     * Sorts the list by Likelihood. The best ranked places come first.
-     */
-    private fun sortByLikelihood(placeLikelihoods: List<PlaceLikelihood>): List<PlaceLikelihood> {
-
-        val mutableList = placeLikelihoods.toMutableList()
-
-        mutableList.sortByDescending { it.likelihood }
-
-        return mutableList
-    }
+    /** Returns place likelihoods sorted with the best ranked first. */
+    private fun sortByLikelihood(placeLikelihoods: List<PlaceLikelihood>): List<PlaceLikelihood> =
+        placeLikelihoods.sortedByDescending { it.likelihood }
 }

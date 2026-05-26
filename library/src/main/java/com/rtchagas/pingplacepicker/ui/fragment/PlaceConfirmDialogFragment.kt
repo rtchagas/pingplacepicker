@@ -11,6 +11,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.os.BundleCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.transition.TransitionManager
 import coil.load
 import com.google.android.libraries.places.api.model.Place
@@ -23,6 +26,7 @@ import com.rtchagas.pingplacepicker.inject.PingKoinComponent
 import com.rtchagas.pingplacepicker.ui.UiUtils
 import com.rtchagas.pingplacepicker.viewmodel.PlaceConfirmDialogViewModel
 import com.rtchagas.pingplacepicker.viewmodel.Resource
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -45,6 +49,12 @@ internal class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinC
 
         place = BundleCompat.getParcelable(requireArguments(), ARG_PLACE, Place::class.java)
             ?: throw IllegalArgumentException("You must pass a Place as argument to this fragment")
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.placePhoto.collect { handlePlacePhotoLoaded(it) }
+            }
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -109,14 +119,9 @@ internal class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinC
     }
 
     private fun fetchPlacePhoto() {
-
         val photoMetadata = place.photoMetadatas?.firstOrNull()
-
-        if (resources.getBoolean(R.bool.show_confirmation_photo)
-            && (photoMetadata != null)
-        ) {
-            viewModel.getPlacePhoto(photoMetadata)
-                .observe(this) { handlePlacePhotoLoaded(it) }
+        if (resources.getBoolean(R.bool.show_confirmation_photo) && photoMetadata != null) {
+            viewModel.loadPlacePhoto(photoMetadata)
         } else {
             handlePlacePhotoLoaded(Resource.noData())
         }
@@ -144,13 +149,17 @@ internal class PlaceConfirmDialogFragment : AppCompatDialogFragment(), PingKoinC
         return mapUrl
     }
 
-    private fun handlePlacePhotoLoaded(result: Resource<Bitmap>) = with(binding.ivPlacePhoto) {
-        if (result.status == Resource.Status.SUCCESS) {
-            TransitionManager.beginDelayedTransition(binding.root)
-            visibility = View.VISIBLE
-            setImageBitmap(result.data)
-        } else {
-            visibility = View.GONE
+    private fun handlePlacePhotoLoaded(result: Resource<Bitmap>) {
+        // The view may not be inflated yet on early flow emissions.
+        val binding = _binding ?: return
+        with(binding.ivPlacePhoto) {
+            if (result.status == Resource.Status.SUCCESS) {
+                TransitionManager.beginDelayedTransition(binding.root)
+                visibility = View.VISIBLE
+                setImageBitmap(result.data)
+            } else {
+                visibility = View.GONE
+            }
         }
     }
 

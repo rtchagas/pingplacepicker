@@ -21,6 +21,9 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.os.BundleCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -45,11 +48,11 @@ import com.rtchagas.pingplacepicker.inject.PingKoinComponent
 import com.rtchagas.pingplacepicker.ui.UiUtils
 import com.rtchagas.pingplacepicker.ui.adapter.PlacePickerAdapter
 import com.rtchagas.pingplacepicker.ui.fragment.PlaceConfirmDialogFragment
-import com.rtchagas.pingplacepicker.ui.onclick
+import com.rtchagas.pingplacepicker.ui.onClickDebounced
 import com.rtchagas.pingplacepicker.ui.toast
 import com.rtchagas.pingplacepicker.viewmodel.PlacePickerViewModel
 import com.rtchagas.pingplacepicker.viewmodel.Resource
-import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.abs
 
@@ -89,8 +92,6 @@ internal class PlacePickerActivity :
     private var placeAdapter: PlacePickerAdapter? = null
 
     private val viewModel: PlacePickerViewModel by viewModel()
-
-    private val disposables = CompositeDisposable()
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
@@ -148,9 +149,21 @@ internal class PlacePickerActivity :
         // Restore any active fragment
         restoreFragments()
 
+        // Wire up the view model flows
+        observeViewModel()
+
         // Initializes the map
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+    }
+
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.places.collect { handlePlacesLoaded(it) } }
+                launch { viewModel.placeByLocation.collect { handlePlaceByLocation(it) } }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -180,11 +193,6 @@ internal class PlacePickerActivity :
         super.onSaveInstanceState(outState)
         outState.putParcelable(STATE_CAMERA_POSITION, googleMap?.cameraPosition)
         outState.putParcelable(STATE_LOCATION, lastKnownLocation)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposables.clear()
     }
 
     @SuppressLint("PotentialBehaviorOverride")
@@ -423,12 +431,10 @@ internal class PlacePickerActivity :
         rvNearbyPlaces.layoutManager = LinearLayoutManager(this@PlacePickerActivity)
 
         // Bind the click listeners
-        disposables.addAll(
-            btnMyLocation.onclick { getDeviceLocation(true) },
-            btnRefreshLocation.onclick { refreshNearbyPlaces() },
-            cardSearch.onclick { requestPlacesSearch() },
-            mapContainer.onclick { selectThisPlace() }
-        )
+        btnMyLocation.onClickDebounced { getDeviceLocation(true) }
+        btnRefreshLocation.onClickDebounced { refreshNearbyPlaces() }
+        cardSearch.onClickDebounced { requestPlacesSearch() }
+        mapContainer.onClickDebounced { selectThisPlace() }
 
         // Hide or show the refresh places button according to nearby search flag
         btnRefreshLocation.isVisible = PingPlacePicker.isNearbySearchEnabled
@@ -486,8 +492,7 @@ internal class PlacePickerActivity :
     }
 
     private fun loadNearbyPlaces() {
-        viewModel.getNearbyPlaces(lastKnownLocation ?: defaultLocation)
-            .observe(this) { handlePlacesLoaded(it) }
+        viewModel.loadNearbyPlaces(lastKnownLocation ?: defaultLocation)
     }
 
     private fun moveCameraToSelectedPlace(place: Place) {
@@ -498,8 +503,7 @@ internal class PlacePickerActivity :
 
     private fun refreshNearbyPlaces() {
         googleMap?.cameraPosition?.run {
-            viewModel.getNearbyPlaces(target)
-                .observe(this@PlacePickerActivity) { handlePlacesLoaded(it) }
+            viewModel.loadNearbyPlaces(target)
         }
     }
 
@@ -562,8 +566,7 @@ internal class PlacePickerActivity :
 
     private fun selectThisPlace() {
         googleMap?.cameraPosition?.run {
-            viewModel.getPlaceByLocation(target)
-                .observe(this@PlacePickerActivity) { handlePlaceByLocation(it) }
+            viewModel.loadPlaceByLocation(target)
         }
     }
 

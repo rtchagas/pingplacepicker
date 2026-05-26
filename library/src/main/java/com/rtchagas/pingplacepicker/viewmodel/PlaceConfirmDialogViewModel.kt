@@ -1,40 +1,33 @@
 package com.rtchagas.pingplacepicker.viewmodel
 
 import android.graphics.Bitmap
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.places.api.model.PhotoMetadata
 import com.rtchagas.pingplacepicker.repository.PlaceRepository
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 internal class PlaceConfirmDialogViewModel(
-    private val repository: PlaceRepository
-) : BaseViewModel() {
+    private val repository: PlaceRepository,
+) : ViewModel() {
 
-    private val placePhotoLiveData: MutableLiveData<Resource<Bitmap>> = MutableLiveData()
+    private val _placePhoto = MutableStateFlow<Resource<Bitmap>>(Resource.noData())
+    val placePhoto: StateFlow<Resource<Bitmap>> = _placePhoto.asStateFlow()
 
-    fun getPlacePhoto(photoMetadata: PhotoMetadata): LiveData<Resource<Bitmap>> {
+    fun loadPlacePhoto(photoMetadata: PhotoMetadata) {
+        // Don't refetch (and recharge) if we already have a result.
+        if (_placePhoto.value.status == Resource.Status.SUCCESS) return
 
-        // If we already loaded the places for this location, return the same live data
-        // instead of fetching (and charging) again.
-        placePhotoLiveData.value?.run {
-            return placePhotoLiveData
+        viewModelScope.launch {
+            _placePhoto.value = Resource.loading()
+            _placePhoto.value = try {
+                Resource.success(repository.getPlacePhoto(photoMetadata))
+            } catch (t: Throwable) {
+                Resource.error(t)
+            }
         }
-
-        val disposable: Disposable = repository.getPlacePhoto(photoMetadata)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { placePhotoLiveData.value = Resource.loading() }
-            .subscribe(
-                { result: Bitmap -> placePhotoLiveData.value = Resource.success(result) },
-                { error: Throwable -> placePhotoLiveData.value = Resource.error(error) }
-            )
-
-        // Keep track of this disposable during the ViewModel lifecycle
-        addDisposable(disposable)
-
-        return placePhotoLiveData
     }
 }

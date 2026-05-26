@@ -64,15 +64,12 @@ dependencies {
     // Koin for Android
     implementation(libs.koin.android)
 
-    // Rx (removed in Phase 3)
-    implementation(libs.bundles.rx)
-
     // Moshi
     implementation(libs.moshi)
     ksp(libs.moshi.kotlin.codegen)
 
     // Retrofit
-    implementation(libs.bundles.retrofit.rx)
+    implementation(libs.bundles.retrofit)
 
     // Coil
     implementation(libs.coil)

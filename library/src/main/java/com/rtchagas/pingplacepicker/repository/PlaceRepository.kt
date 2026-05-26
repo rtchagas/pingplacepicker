@@ -4,21 +4,18 @@ import android.graphics.Bitmap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.PhotoMetadata
 import com.google.android.libraries.places.api.model.Place
-import io.reactivex.Single
 
 /**
- * We decided to interface the Places repository as there's a lot of
- * room to improve the place search and retrieval.
- * We could have different repositories to fetch places locally from
- * a cached database or from other providers than Google.
+ * Abstraction over the place data source so the picker can later swap in a
+ * cached or non-Google backend without touching the UI layer.
  */
 internal interface PlaceRepository {
 
-    fun getNearbyPlaces(): Single<List<Place>>
+    suspend fun getNearbyPlaces(): List<Place>
 
-    fun getNearbyPlaces(location: LatLng): Single<List<Place>>
+    suspend fun getNearbyPlaces(location: LatLng): List<Place>
 
-    fun getPlacePhoto(photoMetadata: PhotoMetadata): Single<Bitmap>
+    suspend fun getPlacePhoto(photoMetadata: PhotoMetadata): Bitmap
 
-    fun getPlaceByLocation(location: LatLng): Single<Place>
+    suspend fun getPlaceByLocation(location: LatLng): Place
 }

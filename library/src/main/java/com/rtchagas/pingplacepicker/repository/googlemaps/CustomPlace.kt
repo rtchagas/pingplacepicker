@@ -4,6 +4,7 @@ import android.net.Uri
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.libraries.places.api.model.*
+import com.google.android.libraries.places.api.model.Review
 import kotlinx.parcelize.Parcelize
 import com.google.android.libraries.places.api.model.Place.BooleanPlaceAttributeValue.UNKNOWN
 
@@ -13,7 +14,7 @@ internal class CustomPlace(
     var placeName: String,
     var placePhotos: MutableList<PhotoMetadata>,
     var placeAddress: String,
-    var placeTypes: MutableList<Type>,
+    var placeTypeList: MutableList<Type>,
     var placeLatLng: LatLng
 ) : Place() {
 
@@ -158,7 +159,7 @@ internal class CustomPlace(
     }
 
     override fun getTypes(): MutableList<Type> {
-        return placeTypes
+        return placeTypeList
     }
 
     override fun getViewport(): LatLngBounds? {
@@ -172,4 +173,13 @@ internal class CustomPlace(
     override fun getLatLng(): LatLng {
         return placeLatLng
     }
+
+    // Added in Places SDK 3.3+
+    override fun getNameLanguageCode(): String? = null
+
+    override fun getPrimaryType(): String? = null
+
+    override fun getPlaceTypes(): MutableList<String> = mutableListOf()
+
+    override fun getReviews(): MutableList<Review>? = null
 }

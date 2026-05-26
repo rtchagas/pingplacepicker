@@ -179,6 +179,15 @@ internal class PlaceFromCoordinates(
         return LatLng(latitude, longitude)
     }
 
+    // Added in Places SDK 3.3+
+    override fun getNameLanguageCode(): String? = null
+
+    override fun getPrimaryType(): String? = null
+
+    override fun getPlaceTypes(): MutableList<String> = mutableListOf()
+
+    override fun getReviews(): MutableList<com.google.android.libraries.places.api.model.Review>? = null
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeDouble(latitude)
         parcel.writeDouble(longitude)

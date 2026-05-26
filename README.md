@@ -175,13 +175,13 @@ PING follows your app's Material colors. Override these in `res/values/colors.xm
 
 See the [sample app](sample/) for a complete example.
 
-## Migrating from 2.x
+## Migrating from 3.0.1
 
 This release is a major rewrite. Highlights of the breaking changes:
 
-| Before (2.x) | After |
+| Before (≤ 3.0.1) | After |
 | --- | --- |
-| `PingPlacePicker.IntentBuilder().build(activity)` + `startActivityForResult` | `registerForActivityResult(PingPlacePicker.Contract())` + `launcher.launch(Request(...))` |
+| `PingPlacePicker.Builder().build(activity)` + `startActivityForResult` | `registerForActivityResult(PingPlacePicker.Contract())` + `launcher.launch(Request(...))` |
 | `OnPlaceSelectedListener` (static) | `Result(place, latLng)` returned via the contract |
 | `PingPlacePicker.getPlace(data)` in `onActivityResult` | Receive `Result` in the registered callback |
 | `setMapsApiKey` (required) | `mapsApiKey` (optional — only needed for the static-map preview) |

@@ -23,10 +23,12 @@ internal class PlaceConfirmDialogViewModel(
 
         viewModelScope.launch {
             _placePhoto.value = Resource.loading()
-            _placePhoto.value = try {
-                Resource.success(repository.fetchPhoto(photoMetadata))
-            } catch (t: Throwable) {
-                Resource.error(t)
+            runCatching {
+                repository.fetchPhoto(photoMetadata)
+            }.onSuccess {
+                _placePhoto.value = Resource.success(it)
+            }.onFailure {
+                _placePhoto.value = Resource.error(it)
             }
         }
     }

@@ -41,14 +41,8 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <style name="PingTheme.FullScreenDialog" parent="Theme.MaterialComponents.DayNight.Dialog">
-        <item name="android:windowFullscreen">false</item>
-        <item name="android:windowNoTitle">true</item>
+    <style name="PingTheme.FullScreenDialog" parent="PingThemeBase">
         <item name="android:windowIsFloating">false</item>
-        <item name="android:windowBackground">@color/colorBackground</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorSurface">@color/colorSurface</item>
-        <item name="colorOnSurface">@color/colorOnSurface</item>
     </style>
 
     <style name="PingToolbarStyle" parent="Widget.MaterialComponents.Toolbar.Surface">

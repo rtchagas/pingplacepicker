@@ -26,10 +26,12 @@ internal class PlacePickerViewModel(private val repository: PlaceRepository) : V
 
         viewModelScope.launch {
             _places.value = Resource.loading()
-            _places.value = try {
-                Resource.success(repository.searchNearby(location, radiusMeters))
-            } catch (t: Throwable) {
-                Resource.error(t)
+            runCatching {
+                repository.searchNearby(location, radiusMeters)
+            }.onSuccess {
+                _places.value = Resource.success(it)
+            }.onFailure {
+                _places.value = Resource.error(it)
             }
         }
     }

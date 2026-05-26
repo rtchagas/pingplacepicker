@@ -33,9 +33,8 @@ internal class AutocompleteViewModel(
 
     private val _query = MutableStateFlow("")
 
-    private val _predictions = MutableStateFlow<Resource<List<AutocompletePrediction>>>(
-        Resource.noData(),
-    )
+    private val _predictions =
+        MutableStateFlow<Resource<List<AutocompletePrediction>>>(Resource.noData())
     val predictions: StateFlow<Resource<List<AutocompletePrediction>>> = _predictions.asStateFlow()
 
     private val _selectedPlace = MutableSharedFlow<Resource<Place>>(
@@ -65,12 +64,13 @@ internal class AutocompleteViewModel(
     fun selectPrediction(prediction: AutocompletePrediction) {
         viewModelScope.launch {
             _selectedPlace.emit(Resource.loading())
-            val result = try {
-                Resource.success(repository.fetchPlace(prediction.placeId, sessionToken))
-            } catch (t: Throwable) {
-                Resource.error(t)
+            runCatching {
+                repository.fetchPlace(prediction.placeId, sessionToken)
+            }.onSuccess {
+                _selectedPlace.emit(Resource.success(it))
+            }.onFailure {
+                _selectedPlace.emit(Resource.error(it))
             }
-            _selectedPlace.emit(result)
         }
     }
 
@@ -80,12 +80,12 @@ internal class AutocompleteViewModel(
             return
         }
         _predictions.value = Resource.loading()
-        _predictions.value = try {
-            Resource.success(
-                repository.autocomplete(query, bias, radiusMeters, sessionToken),
-            )
-        } catch (t: Throwable) {
-            Resource.error(t)
+        runCatching {
+            repository.autocomplete(query, bias, radiusMeters, sessionToken)
+        }.onSuccess {
+            _predictions.value = Resource.success(it)
+        }.onFailure {
+            _predictions.value = Resource.error(it)
         }
     }
 

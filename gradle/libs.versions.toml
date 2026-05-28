@@ -1,6 +1,6 @@
 [versions]
 # Build tools
-agp = "9.2.0"
+agp = "9.2.1"
 # Kotlin 2.2.x KGP still references AGP's removed BaseExtension class and fails
 # to apply on AGP 9.x. KGP 2.3.x dropped that reference and is the supported
 # combination for AGP 9.
@@ -13,23 +13,23 @@ targetSdk = "36"
 jvmTarget = "17"
 
 # AndroidX
-androidx-appcompat = "1.7.0"
-androidx-constraintlayout = "2.2.0"
-androidx-core-ktx = "1.15.0"
-androidx-lifecycle = "2.9.0"
+androidx-appcompat = "1.7.1"
+androidx-constraintlayout = "2.2.1"
+androidx-core-ktx = "1.18.0"
+androidx-lifecycle = "2.10.0"
 
 # Google
 play-services-location = "21.3.0"
-play-services-maps = "19.0.0"
-maps-utils = "3.8.2"
-places = "5.1.1"
-material = "1.12.0"
+play-services-maps = "20.0.0"
+maps-utils = "4.4.0"
+places = "5.2.0"
+material = "1.14.0"
 
 # Async
-coroutines = "1.9.0"
+coroutines = "1.11.0"
 
 # DI
-koin = "3.5.6"
+koin = "4.2.1"
 
 # Image loading
 coil = "2.7.0"

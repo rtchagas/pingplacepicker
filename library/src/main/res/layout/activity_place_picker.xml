@@ -120,7 +120,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="@dimen/card_search_content_margin"
                     android:text="@android:string/search_go"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:textColor="@color/material_on_surface_emphasis_medium" />
 
             </com.google.android.material.card.MaterialCardView>

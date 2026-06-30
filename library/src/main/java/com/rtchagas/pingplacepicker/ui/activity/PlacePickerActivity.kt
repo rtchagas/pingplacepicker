@@ -39,6 +39,7 @@ import com.google.android.libraries.places.api.model.CircularBounds
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.PlaceAutocomplete
 import com.google.android.libraries.places.widget.PlaceAutocompleteActivity
+import com.google.android.libraries.places.widget.model.AutocompleteUiCustomization
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
@@ -498,9 +499,13 @@ internal class PlacePickerActivity :
         val bias = lastKnownLocation ?: defaultLocation
         // Launch the official Places Autocomplete (New) widget. It mints its own
         // session token, which we read back to keep details billing in session.
+        val uiCustomization = AutocompleteUiCustomization.builder()
+            .theme(R.style.PingTheme_PlacesAutocomplete)
+            .build()
         val intent = PlaceAutocomplete.IntentBuilder()
             .setOrigin(bias)
             .setLocationBias(CircularBounds.newInstance(bias, getSearchRadiusMeters()))
+            .setAutocompleteUiCustomization(uiCustomization)
             .build(this)
         autocompleteLauncher.launch(intent)
     }

@@ -72,4 +72,34 @@
         <item name="android:tint">?attr/colorSecondary</item>
     </style>
 
+    <!--
+      Theme applied to the Places Autocomplete (New) widget via
+      AutocompleteUiCustomization so its full-screen search screen matches the
+      picker's palette. Only the color tokens that visibly deviate from the
+      default are overridden; typography/spacing/corners keep Google's defaults.
+      Token reference:
+      https://developers.google.com/maps/documentation/places/android-sdk/widget-customization
+    -->
+    <style name="PingTheme.PlacesAutocomplete" parent="PlacesMaterialTheme">
+        <!-- Screen / input surfaces -->
+        <item name="placesColorSurface">@color/colorSurface</item>
+        <item name="placesColorOnSurface">@color/colorOnSurface</item>
+        <item name="placesColorOnSurfaceVariant">@color/textColorSecondary</item>
+
+        <!-- Prediction rows -->
+        <item name="placesColorNeutralContainer">@color/colorSurface</item>
+        <item name="placesColorOnNeutralContainer">@color/colorOnSurface</item>
+        <item name="placesColorOnNeutralContainerVariant">@color/textColorSecondary</item>
+
+        <!-- Interactive accents (cursor, progress, primary button) -->
+        <item name="placesColorPrimary">@color/colorSecondary</item>
+        <item name="placesColorPrimaryContainer">@color/colorSecondaryDark</item>
+        <item name="placesColorOnPrimaryContainer">@color/colorOnSecondary</item>
+
+        <!-- Title typography to match the PING's search card -->
+        <item name="placesTextAppearanceTitleSmall">@style/TextAppearance.MaterialComponents.Subtitle2</item>
+        <item name="placesTextAppearanceTitleMedium">@style/TextAppearance.MaterialComponents.Subtitle2</item>
+        <item name="placesTextAppearanceTitleLarge">@style/TextAppearance.MaterialComponents.Subtitle1</item>
+    </style>
+
 </resources>

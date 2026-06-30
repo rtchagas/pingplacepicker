@@ -3,15 +3,16 @@
 [![](https://jitpack.io/v/rtchagas/pingplacepicker.svg)](https://jitpack.io/#rtchagas/pingplacepicker) [![](https://img.shields.io/badge/MinSDK-24-blue)](#)
 
 A modern, drop-in replacement for the long-deprecated Google Place Picker. Built on
-the Places SDK for Android (**New**) — `searchNearby` for the picker grid,
-programmatic autocomplete for the search bar, and a Coil-loaded photo preview in
-the confirmation dialog.
+the Places SDK for Android (**New**) — `searchNearby` for the picker grid, the
+official **Place Autocomplete (New) widget** for the search bar, and a Coil-loaded
+photo preview in the confirmation dialog.
 
 <img src="images/screenshot_1.jpg" alt="Map expanded" width="210"/> <img src="images/screenshot_4.jpg" alt="Place selected" width="210"/> <img src="images/screenshot_2.jpg" alt="Results expanded" width="210"/> <img src="images/screenshot_6.jpg" alt="Search result" width="210"/>
 
 ## At a glance
 
-- **Places SDK 5.x (New)** — uses `SearchNearbyRequest`, `FindAutocompletePredictionsRequest`, `FetchPlaceRequest`, and `FetchResolvedPhotoUriRequest`
+- **Places SDK 5.x (New)** — `SearchNearbyRequest` for the grid, `FetchPlaceRequest` for details, and `FetchResolvedPhotoUriRequest` for photos
+- **Official Place Autocomplete widget** — Google's `PlaceAutocomplete` full-screen search, themed to match your app via `AutocompleteUiCustomization` (no hand-rolled search UI to maintain)
 - **Coroutines / Flow** end to end — no RxJava, no `LiveData`, no `AsyncTask`
 - **ActivityResultContract API** — no `startActivityForResult`, no static result callbacks
 - **min SDK 24**, AGP 9, Kotlin 2.3, Gradle 9.4
@@ -36,7 +37,7 @@ Add the dependency:
 ```kotlin
 // app/build.gradle.kts
 dependencies {
-    implementation("com.google.android.libraries.places:places:5.1.1")
+    implementation("com.google.android.libraries.places:places:5.2.0")
     implementation("com.github.rtchagas:pingplacepicker:<latest-version>")
 }
 ```
@@ -44,7 +45,7 @@ dependencies {
 ## Setup
 
 1. **Enable APIs in Google Cloud Console** on the project tied to your keys:
-    - **Places API (New)** — required for `searchNearby`, `findAutocompletePredictions`, `fetchPlace`, and `fetchResolvedPhotoUri`
+    - **Places API (New)** — required for `searchNearby`, the Place Autocomplete widget, `fetchPlace`, and `fetchResolvedPhotoUri`
     - **Maps SDK for Android** — required for the map fragment
     - **Maps Static API** — only if you want the static map preview in the confirmation dialog
 2. **Add Google Play Services** to your project — [setup guide](https://developers.google.com/android/guides/setup)
@@ -172,6 +173,11 @@ PING follows your app's Material colors. Override these in `res/values/colors.xm
 <color name="colorMarker">@color/material_deeporange400</color>
 <color name="colorMarkerInnerIcon">@color/material_white</color>
 ```
+
+The Place Autocomplete search screen is themed from these same color tokens (via
+an `AutocompleteUiCustomization` mapped onto `PlacesMaterialTheme`), so overriding
+`colorPrimary`, `colorSecondary`, `colorSurface`, etc. restyles the search widget
+along with the rest of the picker — no extra setup needed.
 
 See the [sample app](sample/) for a complete example.
 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">Изберете местоположение</string>
+    <string name="picker_load_places_error">Зареждането на близките места е неуспешно…</string>
+    <string name="picker_load_this_place_error">Избраното място не може да бъде намерено…</string>
+    <string name="picker_place_confirm">Да се използва ли това място?</string>
+    <string name="picker_place_confirm_cancel">Промяна на местоположението</string>
+    <string name="picker_location_unavailable">Местоположението не е налично</string>
+    <string name="description_place_image">Снимка на избраното място</string>
+    <string name="description_place_map">Карта на избраното място</string>
+    <string name="permission_fine_location_title">Разрешение за местоположение</string>
+    <string name="permission_fine_location_message">Нуждаем се от местоположението ви само за да ви помогнем да намерите подходящи места наблизо.</string>
+</resources>

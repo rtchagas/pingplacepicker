@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">場所を選択</string>
+    <string name="picker_load_places_error">近くの場所を読み込めませんでした…</string>
+    <string name="picker_load_this_place_error">選択した場所が見つかりませんでした…</string>
+    <string name="picker_place_confirm">この場所を使用しますか？</string>
+    <string name="picker_place_confirm_cancel">場所を変更</string>
+    <string name="picker_location_unavailable">位置情報を利用できません</string>
+    <string name="description_place_image">選択した場所の写真</string>
+    <string name="description_place_map">選択した場所の地図</string>
+    <string name="permission_fine_location_title">位置情報の許可</string>
+    <string name="permission_fine_location_message">付近の関連する場所を見つけるためにのみ、位置情報を使用します。</string>
+</resources>

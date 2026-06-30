@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">Chọn một vị trí</string>
+    <string name="picker_load_places_error">Không thể tải các địa điểm lân cận…</string>
+    <string name="picker_load_this_place_error">Không thể tìm thấy địa điểm đã chọn…</string>
+    <string name="picker_place_confirm">Sử dụng địa điểm này?</string>
+    <string name="picker_place_confirm_cancel">Thay đổi vị trí</string>
+    <string name="picker_location_unavailable">Vị trí không khả dụng</string>
+    <string name="description_place_image">Ảnh của địa điểm đã chọn</string>
+    <string name="description_place_map">Bản đồ của địa điểm đã chọn</string>
+    <string name="permission_fine_location_title">Quyền truy cập vị trí</string>
+    <string name="permission_fine_location_message">Chúng tôi chỉ cần vị trí của bạn để giúp bạn tìm các địa điểm liên quan ở gần.</string>
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">Wybierz lokalizację</string>
+    <string name="picker_load_places_error">Nie udało się załadować pobliskich miejsc…</string>
+    <string name="picker_load_this_place_error">Nie udało się znaleźć wybranego miejsca…</string>
+    <string name="picker_place_confirm">Użyć tego miejsca?</string>
+    <string name="picker_place_confirm_cancel">Zmień lokalizację</string>
+    <string name="picker_location_unavailable">Lokalizacja jest niedostępna</string>
+    <string name="description_place_image">Zdjęcie wybranego miejsca</string>
+    <string name="description_place_map">Mapa wybranego miejsca</string>
+    <string name="permission_fine_location_title">Uprawnienie do lokalizacji</string>
+    <string name="permission_fine_location_message">Potrzebujemy Twojej lokalizacji tylko po to, aby pomóc Ci znaleźć odpowiednie miejsca w pobliżu.</string>
+</resources>

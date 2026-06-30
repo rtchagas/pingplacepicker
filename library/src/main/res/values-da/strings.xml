@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">Vælg en placering</string>
+    <string name="picker_load_places_error">Kunne ikke indlæse steder i nærheden…</string>
+    <string name="picker_load_this_place_error">Kunne ikke finde det valgte sted…</string>
+    <string name="picker_place_confirm">Brug dette sted?</string>
+    <string name="picker_place_confirm_cancel">Skift placering</string>
+    <string name="picker_location_unavailable">Placeringen er ikke tilgængelig</string>
+    <string name="description_place_image">Et foto af det valgte sted</string>
+    <string name="description_place_map">Et kort over det valgte sted</string>
+    <string name="permission_fine_location_title">Placeringstilladelse</string>
+    <string name="permission_fine_location_message">Vi har kun brug for din placering for at hjælpe dig med at finde relevante steder i nærheden.</string>
+</resources>

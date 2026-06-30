@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">เลือกสถานที่</string>
+    <string name="picker_load_places_error">ไม่สามารถโหลดสถานที่ใกล้เคียงได้…</string>
+    <string name="picker_load_this_place_error">ไม่พบสถานที่ที่เลือก…</string>
+    <string name="picker_place_confirm">ใช้สถานที่นี้ไหม</string>
+    <string name="picker_place_confirm_cancel">เปลี่ยนสถานที่</string>
+    <string name="picker_location_unavailable">ไม่สามารถระบุตำแหน่งได้</string>
+    <string name="description_place_image">รูปภาพของสถานที่ที่เลือก</string>
+    <string name="description_place_map">แผนที่ของสถานที่ที่เลือก</string>
+    <string name="permission_fine_location_title">สิทธิ์เข้าถึงตำแหน่ง</string>
+    <string name="permission_fine_location_message">เราต้องการตำแหน่งของคุณเพียงเพื่อช่วยคุณค้นหาสถานที่ใกล้เคียงที่เกี่ยวข้อง</string>
+</resources>

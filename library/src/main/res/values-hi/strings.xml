@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">स्थान चुनें</string>
+    <string name="picker_load_places_error">आस-पास के स्थान लोड नहीं हो सके…</string>
+    <string name="picker_load_this_place_error">चयनित स्थान नहीं मिल सका…</string>
+    <string name="picker_place_confirm">इस स्थान का उपयोग करें?</string>
+    <string name="picker_place_confirm_cancel">स्थान बदलें</string>
+    <string name="picker_location_unavailable">स्थान उपलब्ध नहीं है</string>
+    <string name="description_place_image">चयनित स्थान का फ़ोटो</string>
+    <string name="description_place_map">चयनित स्थान का मानचित्र</string>
+    <string name="permission_fine_location_title">स्थान अनुमति</string>
+    <string name="permission_fine_location_message">हमें आपके आस-पास के प्रासंगिक स्थान खोजने में आपकी मदद करने के लिए केवल आपके स्थान की आवश्यकता है।</string>
+</resources>

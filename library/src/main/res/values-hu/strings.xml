@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">Válasszon helyet</string>
+    <string name="picker_load_places_error">Nem sikerült betölteni a közeli helyeket…</string>
+    <string name="picker_load_this_place_error">A kiválasztott hely nem található…</string>
+    <string name="picker_place_confirm">Ezt a helyet használja?</string>
+    <string name="picker_place_confirm_cancel">Hely módosítása</string>
+    <string name="picker_location_unavailable">A hely nem érhető el</string>
+    <string name="description_place_image">A kiválasztott hely fényképe</string>
+    <string name="description_place_map">A kiválasztott hely térképe</string>
+    <string name="permission_fine_location_title">Helyhozzáférési engedély</string>
+    <string name="permission_fine_location_message">Csak azért van szükségünk a tartózkodási helyére, hogy segítsünk releváns közeli helyeket találni.</string>
+</resources>

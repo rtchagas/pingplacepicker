@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">Pilih lokasi</string>
+    <string name="picker_load_places_error">Tidak dapat memuat tempat di sekitar…</string>
+    <string name="picker_load_this_place_error">Tidak dapat menemukan tempat yang dipilih…</string>
+    <string name="picker_place_confirm">Gunakan tempat ini?</string>
+    <string name="picker_place_confirm_cancel">Ubah lokasi</string>
+    <string name="picker_location_unavailable">Lokasi tidak tersedia</string>
+    <string name="description_place_image">Foto tempat yang dipilih</string>
+    <string name="description_place_map">Peta tempat yang dipilih</string>
+    <string name="permission_fine_location_title">Izin Lokasi</string>
+    <string name="permission_fine_location_message">Kami hanya memerlukan lokasi Anda untuk membantu menemukan tempat relevan di sekitar.</string>
+</resources>

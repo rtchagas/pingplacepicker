@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">Een locatie selecteren</string>
+    <string name="picker_load_places_error">Kan locaties in de buurt niet laden…</string>
+    <string name="picker_load_this_place_error">Kan de geselecteerde locatie niet vinden…</string>
+    <string name="picker_place_confirm">Deze locatie gebruiken?</string>
+    <string name="picker_place_confirm_cancel">Locatie wijzigen</string>
+    <string name="picker_location_unavailable">Locatie is niet beschikbaar</string>
+    <string name="description_place_image">Een foto van de geselecteerde locatie</string>
+    <string name="description_place_map">Een kaart van de geselecteerde locatie</string>
+    <string name="permission_fine_location_title">Locatietoestemming</string>
+    <string name="permission_fine_location_message">We hebben alleen je locatie nodig om je te helpen relevante plaatsen in de buurt te vinden.</string>
+</resources>

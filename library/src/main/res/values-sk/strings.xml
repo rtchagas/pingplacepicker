@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">Vyberte miesto</string>
+    <string name="picker_load_places_error">Nepodarilo sa načítať miesta v okolí…</string>
+    <string name="picker_load_this_place_error">Vybrané miesto sa nepodarilo nájsť…</string>
+    <string name="picker_place_confirm">Použiť toto miesto?</string>
+    <string name="picker_place_confirm_cancel">Zmeniť polohu</string>
+    <string name="picker_location_unavailable">Poloha nie je k dispozícii</string>
+    <string name="description_place_image">Fotografia vybraného miesta</string>
+    <string name="description_place_map">Mapa vybraného miesta</string>
+    <string name="permission_fine_location_title">Povolenie polohy</string>
+    <string name="permission_fine_location_message">Vašu polohu potrebujeme len na to, aby sme vám pomohli nájsť relevantné miesta v okolí.</string>
+</resources>

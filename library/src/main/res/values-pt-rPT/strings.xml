@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">Selecionar uma localização</string>
+    <string name="picker_load_places_error">Não foi possível carregar locais próximos…</string>
+    <string name="picker_load_this_place_error">Não foi possível encontrar o local selecionado…</string>
+    <string name="picker_place_confirm">Utilizar este local?</string>
+    <string name="picker_place_confirm_cancel">Alterar localização</string>
+    <string name="picker_location_unavailable">A localização não está disponível</string>
+    <string name="description_place_image">Uma fotografia do local selecionado</string>
+    <string name="description_place_map">Um mapa do local selecionado</string>
+    <string name="permission_fine_location_title">Permissão de localização</string>
+    <string name="permission_fine_location_message">Apenas precisamos da sua localização para o ajudar a encontrar locais relevantes nas proximidades.</string>
+</resources>

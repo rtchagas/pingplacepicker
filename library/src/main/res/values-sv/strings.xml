@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">Välj en plats</string>
+    <string name="picker_load_places_error">Det gick inte att läsa in närliggande platser…</string>
+    <string name="picker_load_this_place_error">Det gick inte att hitta den valda platsen…</string>
+    <string name="picker_place_confirm">Använda den här platsen?</string>
+    <string name="picker_place_confirm_cancel">Ändra plats</string>
+    <string name="picker_location_unavailable">Platsen är inte tillgänglig</string>
+    <string name="description_place_image">Ett foto av den valda platsen</string>
+    <string name="description_place_map">En karta över den valda platsen</string>
+    <string name="permission_fine_location_title">Platsbehörighet</string>
+    <string name="permission_fine_location_message">Vi behöver bara din plats för att hjälpa dig att hitta relevanta platser i närheten.</string>
+</resources>

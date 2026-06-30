@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">Selectați o locație</string>
+    <string name="picker_load_places_error">Nu s-au putut încărca locurile din apropiere…</string>
+    <string name="picker_load_this_place_error">Locul selectat nu a putut fi găsit…</string>
+    <string name="picker_place_confirm">Folosiți acest loc?</string>
+    <string name="picker_place_confirm_cancel">Schimbați locația</string>
+    <string name="picker_location_unavailable">Locația nu este disponibilă</string>
+    <string name="description_place_image">O fotografie a locului selectat</string>
+    <string name="description_place_map">O hartă a locului selectat</string>
+    <string name="permission_fine_location_title">Permisiune de localizare</string>
+    <string name="permission_fine_location_message">Avem nevoie de locația dvs. doar pentru a vă ajuta să găsiți locuri relevante din apropiere.</string>
+</resources>

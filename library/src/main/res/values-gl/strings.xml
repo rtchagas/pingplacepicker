@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">Seleccionar unha localización</string>
+    <string name="picker_load_places_error">Non se puideron cargar os lugares próximos…</string>
+    <string name="picker_load_this_place_error">Non se puido atopar o lugar seleccionado…</string>
+    <string name="picker_place_confirm">Usar este lugar?</string>
+    <string name="picker_place_confirm_cancel">Cambiar a localización</string>
+    <string name="picker_location_unavailable">A localización non está dispoñible</string>
+    <string name="description_place_image">Unha foto do lugar seleccionado</string>
+    <string name="description_place_map">Un mapa do lugar seleccionado</string>
+    <string name="permission_fine_location_title">Permiso de localización</string>
+    <string name="permission_fine_location_message">Só necesitamos a túa localización para axudarche a atopar lugares relevantes preto de ti.</string>
+</resources>

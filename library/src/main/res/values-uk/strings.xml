@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">Виберіть місцезнаходження</string>
+    <string name="picker_load_places_error">Не вдалося завантажити місця поблизу…</string>
+    <string name="picker_load_this_place_error">Не вдалося знайти вибране місце…</string>
+    <string name="picker_place_confirm">Використати це місце?</string>
+    <string name="picker_place_confirm_cancel">Змінити місцезнаходження</string>
+    <string name="picker_location_unavailable">Місцезнаходження недоступне</string>
+    <string name="description_place_image">Фотографія вибраного місця</string>
+    <string name="description_place_map">Карта вибраного місця</string>
+    <string name="permission_fine_location_title">Дозвіл на доступ до місцезнаходження</string>
+    <string name="permission_fine_location_message">Нам потрібне ваше місцезнаходження лише для того, щоб допомогти знайти відповідні місця поблизу.</string>
+</resources>

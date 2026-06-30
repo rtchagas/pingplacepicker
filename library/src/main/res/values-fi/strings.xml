@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">Valitse sijainti</string>
+    <string name="picker_load_places_error">Lähellä olevia paikkoja ei voitu ladata…</string>
+    <string name="picker_load_this_place_error">Valittua paikkaa ei löytynyt…</string>
+    <string name="picker_place_confirm">Käytetäänkö tätä paikkaa?</string>
+    <string name="picker_place_confirm_cancel">Vaihda sijaintia</string>
+    <string name="picker_location_unavailable">Sijainti ei ole käytettävissä</string>
+    <string name="description_place_image">Valokuva valitusta paikasta</string>
+    <string name="description_place_map">Kartta valitusta paikasta</string>
+    <string name="permission_fine_location_title">Sijaintilupa</string>
+    <string name="permission_fine_location_message">Tarvitsemme sijaintiasi vain auttaaksemme sinua löytämään olennaisia paikkoja läheltä.</string>
+</resources>

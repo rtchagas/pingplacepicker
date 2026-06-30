@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">Odaberite lokaciju</string>
+    <string name="picker_load_places_error">Nije moguće učitati obližnja mjesta…</string>
+    <string name="picker_load_this_place_error">Nije moguće pronaći odabrano mjesto…</string>
+    <string name="picker_place_confirm">Upotrijebiti ovo mjesto?</string>
+    <string name="picker_place_confirm_cancel">Promijeni lokaciju</string>
+    <string name="picker_location_unavailable">Lokacija nije dostupna</string>
+    <string name="description_place_image">Fotografija odabranog mjesta</string>
+    <string name="description_place_map">Karta odabranog mjesta</string>
+    <string name="permission_fine_location_title">Dopuštenje za lokaciju</string>
+    <string name="permission_fine_location_message">Vaša nam je lokacija potrebna samo kako bismo vam pomogli pronaći relevantna mjesta u blizini.</string>
+</resources>

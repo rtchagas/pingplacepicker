@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="picker_title">Επιλέξτε μια τοποθεσία</string>
+    <string name="picker_load_places_error">Δεν ήταν δυνατή η φόρτωση κοντινών τοποθεσιών…</string>
+    <string name="picker_load_this_place_error">Δεν ήταν δυνατή η εύρεση της επιλεγμένης τοποθεσίας…</string>
+    <string name="picker_place_confirm">Χρήση αυτής της τοποθεσίας;</string>
+    <string name="picker_place_confirm_cancel">Αλλαγή τοποθεσίας</string>
+    <string name="picker_location_unavailable">Η τοποθεσία δεν είναι διαθέσιμη</string>
+    <string name="description_place_image">Μια φωτογραφία της επιλεγμένης τοποθεσίας</string>
+    <string name="description_place_map">Ένας χάρτης της επιλεγμένης τοποθεσίας</string>
+    <string name="permission_fine_location_title">Άδεια τοποθεσίας</string>
+    <string name="permission_fine_location_message">Χρειαζόμαστε την τοποθεσία σας μόνο για να σας βοηθήσουμε να βρείτε σχετικές κοντινές τοποθεσίες.</string>
+</resources>

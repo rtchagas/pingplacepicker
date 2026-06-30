@@ -7,7 +7,7 @@ agp = "9.2.1"
 kotlin = "2.3.21"
 
 # SDK
-compileSdk = "36"
+compileSdk = "37"
 minSdk = "24"
 targetSdk = "36"
 jvmTarget = "17"
@@ -15,11 +15,11 @@ jvmTarget = "17"
 # AndroidX
 androidx-appcompat = "1.7.1"
 androidx-constraintlayout = "2.2.1"
-androidx-core-ktx = "1.18.0"
-androidx-lifecycle = "2.10.0"
+androidx-core-ktx = "1.19.0"
+androidx-lifecycle = "2.11.0"
 
 # Google
-play-services-location = "21.3.0"
+play-services-location = "21.4.0"
 play-services-maps = "20.0.0"
 places = "5.2.0"
 material = "1.14.0"
@@ -28,7 +28,7 @@ material = "1.14.0"
 coroutines = "1.11.0"
 
 # DI
-koin = "4.2.1"
+koin = "4.2.2"
 
 # Image loading
 coil = "2.7.0"

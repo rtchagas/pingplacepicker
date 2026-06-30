@@ -2,14 +2,12 @@ package com.rtchagas.pingplacepicker.repository.googlemaps
 
 import android.net.Uri
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
 import com.google.android.libraries.places.api.model.CircularBounds
 import com.google.android.libraries.places.api.model.PhotoMetadata
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FetchResolvedPhotoUriRequest
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.libraries.places.api.net.SearchNearbyRequest
 import com.rtchagas.pingplacepicker.Config
@@ -35,21 +33,6 @@ internal class GoogleMapsRepository(
             .build()
         return placesClient.fetchResolvedPhotoUri(request).await().uri
             ?: error("Places SDK returned null photo URI")
-    }
-
-    override suspend fun autocomplete(
-        query: String,
-        bias: LatLng,
-        radiusMeters: Double,
-        sessionToken: AutocompleteSessionToken,
-    ): List<AutocompletePrediction> {
-        val request = FindAutocompletePredictionsRequest.builder()
-            .setQuery(query)
-            .setOrigin(bias)
-            .setLocationBias(CircularBounds.newInstance(bias, radiusMeters))
-            .setSessionToken(sessionToken)
-            .build()
-        return placesClient.findAutocompletePredictions(request).await().autocompletePredictions
     }
 
     override suspend fun fetchPlace(placeId: String, sessionToken: AutocompleteSessionToken): Place {

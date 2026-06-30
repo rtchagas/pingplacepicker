@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.location.Location
 import android.os.Bundle
@@ -17,6 +16,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.os.BundleCompat
 import androidx.core.view.doOnLayout
@@ -28,8 +28,17 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.libraries.places.api.model.CircularBounds
 import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.PlaceAutocomplete
+import com.google.android.libraries.places.widget.PlaceAutocompleteActivity
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
@@ -41,7 +50,6 @@ import com.rtchagas.pingplacepicker.inject.PingKoinComponent
 import com.rtchagas.pingplacepicker.ui.UiUtils
 import com.rtchagas.pingplacepicker.ui.adapter.PlacePickerAdapter
 import com.rtchagas.pingplacepicker.ui.collectWithLifecycle
-import com.rtchagas.pingplacepicker.ui.fragment.AutocompleteDialogFragment
 import com.rtchagas.pingplacepicker.ui.fragment.PlaceConfirmDialogFragment
 import com.rtchagas.pingplacepicker.ui.onClickDebounced
 import com.rtchagas.pingplacepicker.ui.toast
@@ -55,11 +63,9 @@ internal class PlacePickerActivity :
     PingKoinComponent,
     OnMapReadyCallback,
     GoogleMap.OnMarkerClickListener,
-    PlaceConfirmDialogFragment.OnPlaceConfirmedListener,
-    AutocompleteDialogFragment.OnPlacePickedListener {
+    PlaceConfirmDialogFragment.OnPlaceConfirmedListener {
 
     companion object {
-
         private const val TAG = "Ping#PlacePicker"
 
         // For passing extra parameters to this activity.
@@ -70,7 +76,6 @@ internal class PlacePickerActivity :
         private const val STATE_LOCATION = "state_location"
 
         private const val DIALOG_CONFIRM_PLACE_TAG = "dialog_place_confirm"
-        private const val DIALOG_AUTOCOMPLETE_TAG = "dialog_autocomplete"
     }
 
     private var googleMap: GoogleMap? = null
@@ -95,11 +100,37 @@ internal class PlacePickerActivity :
         ActivityResultContracts.RequestMultiplePermissions(),
     ) { grants ->
         isLocationPermissionGranted = grants[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
-            grants[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+                grants[Manifest.permission.ACCESS_COARSE_LOCATION] == true
         if (!isLocationPermissionGranted) {
             PermissionsHelper.showLocationRationaleDialog(this)
         }
         initMap()
+    }
+
+    private val autocompleteLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult(),
+    ) { result ->
+        val data = result.data
+        when (result.resultCode) {
+            PlaceAutocompleteActivity.RESULT_OK -> {
+                val prediction = data?.let { PlaceAutocomplete.getPredictionFromIntent(it) }
+                val token = data?.let { PlaceAutocomplete.getSessionTokenFromIntent(it) }
+                if (prediction != null && token != null) {
+                    // Reuse the widget's session token so autocomplete + details bill together.
+                    viewModel.fetchPlace(prediction.placeId, token)
+                } else {
+                    toast(R.string.picker_load_this_place_error)
+                }
+            }
+
+            PlaceAutocompleteActivity.RESULT_ERROR -> {
+                val status = data?.let { PlaceAutocomplete.getResultStatusFromIntent(it) }
+                Log.e(TAG, "Autocomplete error: $status")
+                toast(R.string.picker_load_this_place_error)
+            }
+
+            // RESULT_CANCELED: the user backed out, nothing to do.
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -144,6 +175,7 @@ internal class PlacePickerActivity :
 
     private fun observeViewModel() {
         viewModel.places.collectWithLifecycle(this) { handlePlacesLoaded(it) }
+        viewModel.selectedPlace.collectWithLifecycle(this) { handleSelectedPlace(it) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -203,9 +235,25 @@ internal class PlacePickerActivity :
         finishAfterTransition()
     }
 
-    override fun onAutocompletePlacePicked(place: Place) {
-        moveCameraToSelectedPlace(place)
-        showConfirmPlacePopup(place)
+    private fun handleSelectedPlace(resource: Resource<Place>) {
+        when (resource.status) {
+            Resource.Status.LOADING -> binding.pbLoading.show()
+            Resource.Status.SUCCESS -> {
+                binding.pbLoading.hide()
+                resource.data?.let {
+                    moveCameraToSelectedPlace(it)
+                    showConfirmPlacePopup(it)
+                }
+            }
+
+            Resource.Status.ERROR -> {
+                binding.pbLoading.hide()
+                Log.w(TAG, "Error fetching selected place:" + resource.error)
+                toast(R.string.picker_load_this_place_error)
+            }
+
+            Resource.Status.NO_DATA -> binding.pbLoading.hide()
+        }
     }
 
     private fun adjustElevationOverlayColors() {
@@ -230,9 +278,7 @@ internal class PlacePickerActivity :
     }
 
     private fun bindPlaces(places: List<Place>) {
-
         // Bind to the recycler view
-
         if (placeAdapter == null) {
             placeAdapter = PlacePickerAdapter(places) { showConfirmPlacePopup(it) }
         } else {
@@ -242,11 +288,8 @@ internal class PlacePickerActivity :
         binding.rvNearbyPlaces.adapter = placeAdapter
 
         // Bind to the map
-
         googleMap?.run {
-
             clear()
-
             for (place in places) {
                 place.location?.let {
                     val marker: Marker? = addMarker(
@@ -262,12 +305,9 @@ internal class PlacePickerActivity :
     }
 
     private fun checkForPermission() {
-        val granted = ContextCompat.checkSelfPermission(
-            this, Manifest.permission.ACCESS_FINE_LOCATION,
-        ) == PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_COARSE_LOCATION,
-            ) == PackageManager.PERMISSION_GRANTED
+        val granted =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
         if (granted) {
             isLocationPermissionGranted = true
@@ -287,7 +327,6 @@ internal class PlacePickerActivity :
         resources.getInteger(R.integer.autocomplete_search_bias_radius).toDouble()
 
     private fun getDeviceLocation(animate: Boolean) = try {
-
         // Get the best and most recent location of the device, which may be null in rare
         // cases when a location is not available.
 
@@ -322,25 +361,18 @@ internal class PlacePickerActivity :
 
     @Suppress("DEPRECATION")
     private fun getPlaceMarkerBitmap(place: Place): BitmapDescriptor {
-
         val innerIconSize: Int = resources.getDimensionPixelSize(R.dimen.marker_inner_icon_size)
 
-        val bgDrawable = ResourcesCompat.getDrawable(
-            resources,
-            R.drawable.ic_map_marker_solid_red_32dp, null
-        )!!
+        val bgDrawable =
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_map_marker_solid_red_32dp, null)
+                ?: return BitmapDescriptorFactory.defaultMarker()
 
-        val fgDrawable = ResourcesCompat.getDrawable(
-            resources,
-            UiUtils.getPlaceDrawableRes(this, place), null
-        )!!
+        val fgDrawable =
+            ResourcesCompat.getDrawable(resources, UiUtils.getPlaceDrawableRes(this, place), null)
+                ?: return BitmapDescriptorFactory.defaultMarker()
         DrawableCompat.setTint(fgDrawable, resources.getColor(R.color.colorMarkerInnerIcon))
 
-        val bitmap = Bitmap.createBitmap(
-            bgDrawable.intrinsicWidth,
-            bgDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888
-        )
-
+        val bitmap = createBitmap(bgDrawable.intrinsicWidth, bgDrawable.intrinsicHeight)
         val canvas = Canvas(bitmap)
 
         bgDrawable.setBounds(0, 0, canvas.width, canvas.height)
@@ -359,28 +391,23 @@ internal class PlacePickerActivity :
     }
 
     private fun handlePlacesLoaded(result: Resource<List<Place>>) {
-
         binding.pbLoading.hide()
 
         when (result.status) {
-            Resource.Status.LOADING ->
-                binding.pbLoading.show()
+            Resource.Status.LOADING -> binding.pbLoading.show()
 
-            Resource.Status.SUCCESS ->
-                bindPlaces((result.data ?: listOf()))
+            Resource.Status.SUCCESS -> bindPlaces((result.data ?: listOf()))
+
+            Resource.Status.NO_DATA -> Log.i(TAG, "No places data found...")
 
             Resource.Status.ERROR -> {
                 Log.w(TAG, "Error fetching places:" + result.error)
                 toast(R.string.picker_load_places_error)
             }
-
-            Resource.Status.NO_DATA ->
-                Log.d(TAG, "No places data found...")
         }
     }
 
     private fun initializeUi() = with(binding) {
-
         // Some material components still don't support setting the correct
         // elevation for dark themes, so we should handle that
         adjustElevationOverlayColors()
@@ -423,7 +450,6 @@ internal class PlacePickerActivity :
     }
 
     private fun initMap() {
-
         // Turn on/off the My Location layer and the related control on the map
         updateLocationUI()
 
@@ -470,15 +496,18 @@ internal class PlacePickerActivity :
             return
         }
         val bias = lastKnownLocation ?: defaultLocation
-        AutocompleteDialogFragment.newInstance(bias, getSearchRadiusMeters(), this)
-            .show(supportFragmentManager, DIALOG_AUTOCOMPLETE_TAG)
+        // Launch the official Places Autocomplete (New) widget. It mints its own
+        // session token, which we read back to keep details billing in session.
+        val intent = PlaceAutocomplete.IntentBuilder()
+            .setOrigin(bias)
+            .setLocationBias(CircularBounds.newInstance(bias, getSearchRadiusMeters()))
+            .build(this)
+        autocompleteLauncher.launch(intent)
     }
 
     private fun restoreFragments() {
         (supportFragmentManager.findFragmentByTag(DIALOG_CONFIRM_PLACE_TAG)
-            as? PlaceConfirmDialogFragment)?.confirmListener = this
-        (supportFragmentManager.findFragmentByTag(DIALOG_AUTOCOMPLETE_TAG)
-            as? AutocompleteDialogFragment)?.listener = this
+                as? PlaceConfirmDialogFragment)?.confirmListener = this
     }
 
     private fun restoreMapState() {
@@ -502,19 +531,13 @@ internal class PlacePickerActivity :
     }
 
     /**
-     * Customise the styling of the base map using a JSON object defined in a raw resource file.
+     * Customize the styling of the base map using a JSON object defined in a raw resource file.
      */
     private fun setMapStyle() {
-
         if (!UiUtils.isNightModeEnabled(this)) return
-
         try {
             googleMap?.run {
-                val success = setMapStyle(
-                    MapStyleOptions.loadRawResourceStyle(
-                        this@PlacePickerActivity, R.raw.maps_night_style
-                    )
-                )
+                val success = setMapStyle(MapStyleOptions.loadRawResourceStyle(this@PlacePickerActivity, R.raw.maps_night_style))
                 if (!success) {
                     Log.e(TAG, "Style parsing failed.")
                 }
@@ -531,14 +554,11 @@ internal class PlacePickerActivity :
 
     @SuppressLint("MissingPermission")
     private fun updateLocationUI() {
-
         googleMap?.let {
-
             with(it.uiSettings) {
                 isMyLocationButtonEnabled = false
                 isMapToolbarEnabled = false
             }
-
             if (isLocationPermissionGranted) {
                 it.isMyLocationEnabled = true
                 binding.btnMyLocation.visibility = View.VISIBLE

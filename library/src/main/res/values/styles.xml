@@ -41,10 +41,6 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <style name="PingTheme.FullScreenDialog" parent="PingThemeBase">
-        <item name="android:windowIsFloating">false</item>
-    </style>
-
     <style name="PingToolbarStyle" parent="Widget.MaterialComponents.Toolbar.Surface">
         <!-- Toolbar should always be within an AppBarLayout which provides the background. -->
         <item name="android:background">@null</item>
@@ -75,8 +71,5 @@
         <item name="android:alpha">1</item>
         <item name="android:tint">?attr/colorSecondary</item>
     </style>
-
-    <!-- Do not change or inherit -->
-    <style name="PlacesAutocompleteBase" parent="PingTheme" />
 
 </resources>
